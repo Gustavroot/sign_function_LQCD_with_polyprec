@@ -1,4 +1,12 @@
 
+Project with codebase being DDalphaAMG, but here we focus on evaluating the sign function in LQCD via a new algorithmic development : by using a 
+polynomial preconditioner.
+
+-----------
+
+From DDalphaAMG:
+
+
 The DDalphaAMG solver library is an inverter for Wilson-Clover fermions from lattice QCD.
 
 ## INSTALL:

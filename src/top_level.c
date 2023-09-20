@@ -78,7 +78,35 @@ int wilson_driver( vector_double solution, vector_double source, level_struct *l
     double tmp_t = -MPI_Wtime();
 #endif
   
-  vector_double_copy( rhs, source, start, end, l );  
+  vector_double_copy( rhs, source, start, end, l );
+
+  // this is where we want to place a call to the function that
+  // computes the sign function
+
+  printf0( "\nsign function computation under construction ... timing matmuls and dot products first (average over 100 runs)\n\n" );
+
+  // for now, let us measure some times for matmul and dot products
+
+  int i, nr_calls=100;
+  double t1=0, t2=0;
+
+  for ( i=0; i<nr_calls; i++ ) {
+    t1 -= MPI_Wtime();
+    apply_operator_double( g.p.w, g.p.x, &(g.p), l, threading );
+    t1 += MPI_Wtime();
+  }
+
+  for ( i=0; i<nr_calls; i++ ) {
+    t2 -= MPI_Wtime();
+    double dotprod = global_inner_product_double( g.p.w, g.p.x, g.p.v_start, g.p.v_end, l, threading );
+    t2 += MPI_Wtime();
+  }
+
+  printf0( "avg matmul time : %lf seconds \n", t1/nr_calls );
+  printf0( "avg matmul time : %lf seconds \n", t2/nr_calls );
+
+  /*
+
   if ( g.method == -1 ) {
     cgn_double( &(g.p), l, threading );
   } else if ( g.mixed_precision == 2 ) {
@@ -86,6 +114,9 @@ int wilson_driver( vector_double solution, vector_double source, level_struct *l
   } else {
     iter = fgmres_double( &(g.p), l, threading );
   }
+
+  */
+
   vector_double_copy( solution, sol, start, end, l );
 #ifdef WILSON_BENCHMARK
     tmp_t += MPI_Wtime();
