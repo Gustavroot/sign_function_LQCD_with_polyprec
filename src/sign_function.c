@@ -209,6 +209,29 @@ void check_arnoldi_double( gmres_double_struct *p, level_struct *l, struct Threa
   //  printf0( "\n" );
   //}
 
-  printf0( "\ncheck of Arnoldi relation ongoing ... \n\n" );
+  int i,j,start,end;
+  double frob_norm = 0.0;
+  vector_double v1 = p->x;
+  vector_double v2 = p->w;
+  vector_double v3 = p->r;
 
+  compute_core_start_end(p->v_start, p->v_end, &start, &end, l, threading);
+
+  for ( i=0;i<p->restart_length;i++ ) {
+
+    // first, compute the vector from the LHS of the Arnoldi relation
+    apply_operator_double( v1, p->V[i], p, l, threading );
+
+    // second, the RHS one
+    vector_double_define( v2, 0, start, end, l );
+    for ( j=0;j<p->restart_length+1;j++ ) {
+      vector_double_saxpy( v2, v2, p->V[j], p->H[i][j], start, end, l );
+    }
+
+    vector_double_minus( v3, v1, v2, start, end, l );
+
+    frob_norm += global_inner_product_double( v3, v3, p->v_start, p->v_end, l, threading );
+  }
+
+  printf0( "relative error in Arnoldi relation :%.14e\n\n", frob_norm/(12*l->inner_vector_size*g.num_processes) );
 }
