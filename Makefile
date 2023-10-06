@@ -22,7 +22,7 @@ OBJDB = $(patsubst %.o,%_db.o,$(OBJ))
 DEP = $(patsubst %.c,%.dep,$(GSRC))
 
 # --- FLAGS -------------------------------------------
-OPT_FLAGS = -fopenmp -msse4.2 #-DSSE -DOPENMP
+OPT_FLAGS = -fopenmp -msse4.2 -DORTH_MGS #-DSSE -DOPENMP
 CFLAGS = -DPARAMOUTPUT -DTRACK_RES -DFGMRES_RESTEST -DPROFILING
 # -DSINGLE_ALLREDUCE_ARNOLDI
 # -DCOARSE_RES -DSCHWARZ_RES -DTESTVECTOR_ANALYSIS

@@ -856,6 +856,8 @@ int arnoldi_step_PRECISION( vector_PRECISION *V, vector_PRECISION *Z, vector_PRE
     if ( shift ) vector_PRECISION_saxpy( w, w, V[j], shift, start, end, l );
   }
 
+#ifdef ORTH_CGS
+
   // orthogonalization
   complex_PRECISION tmp[j+1];
   process_multi_inner_product_PRECISION( j+1, tmp, V, w, p->v_start, p->v_end, l, threading );
@@ -874,7 +876,17 @@ int arnoldi_step_PRECISION( vector_PRECISION *V, vector_PRECISION *Z, vector_PRE
   SYNC_MASTER_TO_ALL(threading)
   for( i=0; i<=j; i++ )
     vector_PRECISION_saxpy( w, w, V[i], -H[j][i], start, end, l );
-  
+
+// this second option is ORTH_MGS
+#else
+
+  for ( i=0;i<j+1;i++ ) {
+    H[j][i] = global_inner_product_PRECISION( V[i], w, start, end, l, threading );
+    vector_PRECISION_saxpy( w, w, V[i], -H[j][i], start, end, l );
+  }
+
+#endif
+
 #ifdef REORTH
   // re-orthogonalization
   process_multi_inner_product_PRECISION( j+1, tmp, V, w, p->v_start, p->v_end, l, threading );
