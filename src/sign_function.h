@@ -40,4 +40,6 @@
 
   void invsqrt_of_H( complex_double** His, complex_double** H, int n );
 
+  void check_orthonormality( vector_double* V, gmres_double_struct* p, level_struct* l, struct Thread* threading );
+
 #endif

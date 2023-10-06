@@ -219,6 +219,9 @@ void check_arnoldi_double( gmres_double_struct *p, level_struct *l, struct Threa
   }
 
   printf0( "relative error in Arnoldi relation :%.14e\n\n", frob_norm/(12*l->inner_vector_size*g.num_processes) );
+
+  // check orthonormality of Arnoldi basis
+  check_orthonormality( p->V, p, l, threading );
 }
 
 
@@ -242,6 +245,7 @@ void sign_function_double( gmres_double_struct *p, level_struct *l, struct Threa
   // create buffer small matrix for storing H^{-1/2}
   complex_double** His = NULL;
   MALLOC( His, complex_double*, p->restart_length );
+  His[0] = NULL;
   MALLOC( His[0], complex_double, p->restart_length*p->restart_length );
   for ( i=1;i<p->restart_length;i++ ) {
     His[i] = His[0] + i*p->restart_length;
@@ -302,4 +306,43 @@ void invsqrt_of_H( complex_double** His, complex_double** H, int n ) {
       His[j][i] = (double) (((double)rand()/(double)RAND_MAX));
     }
   }
+}
+
+
+void check_orthonormality( vector_double* V, gmres_double_struct* p, level_struct* l, struct Thread* threading ) {
+
+  int i,j;
+
+  // variable to store the relative error
+  double frob_norm = 0.0;
+
+  complex_double buff;
+
+  // buffer for dot products
+  complex_double* dotprods1 = NULL;
+  complex_double* dotprods2 = NULL;
+  MALLOC( dotprods1, complex_double, p->restart_length+1 );
+  MALLOC( dotprods2, complex_double, p->restart_length+1 );
+
+  for ( i=0;i<p->restart_length+1;i++ ) {
+
+    process_multi_inner_product_double( p->restart_length+1, dotprods1, V, V[i], 0, l->inner_vector_size, l, threading );
+
+    MPI_Allreduce( dotprods1, dotprods2, p->restart_length+1, MPI_COMPLEX_double, MPI_SUM, g.comm_cart );
+
+    for ( j=0;j<p->restart_length+1;j++ ) {
+      if ( j==i ) {
+        buff = dotprods2[j] - 1.0;
+      }
+      else {
+        buff = dotprods2[j];
+      }
+      frob_norm += buff*conj(buff);
+    }
+  }
+
+  printf0( "relative error in orthonormality : %.14e\n\n", frob_norm/(p->restart_length+1) );
+
+  FREE( dotprods1, complex_double, p->restart_length+1 );
+  FREE( dotprods2, complex_double, p->restart_length+1 );
 }
