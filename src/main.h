@@ -497,6 +497,7 @@
 #include "ghost_double.h"
 #include "linsolve_float.h"
 #include "linsolve_double.h"
+#include "sign_function.h"
 #include "linsolve.h"
 #include "preconditioner.h"
 #include "vcycle_float.h"
