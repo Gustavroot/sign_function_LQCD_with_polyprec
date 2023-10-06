@@ -46,24 +46,10 @@ int arnoldi_double( gmres_double_struct *p, level_struct *l, struct Thread *thre
   // this puts zero for all other hyperthreads, so we can call functions below with all hyperthreads
   compute_core_start_end(p->v_start, p->v_end, &start, &end, l, threading);
 
-  p->initial_guess_zero = 1;
-
   for( ol=0; ol<p->num_restart && finish==0; ol++ )  {
   
-    if( ol == 0 && p->initial_guess_zero ) {
-      res = _NO_RES;
-      vector_double_copy( p->r, p->b, start, end, l );
-    } else {
-      res = _RES;
-      if ( p->kind == _LEFT && p->preconditioner ) {
-        apply_operator_double( p->Z[0], p->x, p, l, threading );
-        if ( p->shift ) vector_double_saxpy( p->Z[0], p->Z[0], p->x, p->shift, start, end, l );
-        p->preconditioner( p->w, NULL, p->Z[0], _NO_RES, l, threading );
-      } else {
-        apply_operator_double( p->w, p->x, p, l, threading ); // compute w = D*x
-      }
-      vector_double_minus( p->r, p->b, p->w, start, end, l ); // compute r = b - w
-    }
+    vector_double_copy( p->r, p->b, start, end, l );
+
     gamma0 = (complex_double) global_norm_double( p->r, p->v_start, p->v_end, l, threading ); // gamma_0 = norm(r)
     START_MASTER(threading)
     p->gamma[0] = gamma0;
@@ -234,4 +220,36 @@ void check_arnoldi_double( gmres_double_struct *p, level_struct *l, struct Threa
   }
 
   printf0( "relative error in Arnoldi relation :%.14e\n\n", frob_norm/(12*l->inner_vector_size*g.num_processes) );
+}
+
+
+void sign_function_double( gmres_double_struct *p, level_struct *l, struct Thread *threading ) {
+
+  printf0( "\nCOMPUTING THE SIGN FUNCTION NOW\n\n" );
+
+  // first, call the Arnoldi relation on the preconditioned system
+  arnoldi_double( p, l, threading );
+
+  // TODO ...
+
+}
+
+
+void sign_function_prec_pow1( vector_double out, vector_double in, gmres_double_struct* p, level_struct* l, struct Thread* threading ) {
+
+  // UNDER CONSTRUCTION
+
+  int start,end;
+  compute_core_start_end(p->v_start, p->v_end, &start, &end, l, threading);
+  vector_double_copy( out, in, start, end, l );
+}
+
+
+void sign_function_prec_pow2( vector_double out, vector_double in, gmres_double_struct* p, level_struct* l, struct Thread* threading ) {
+
+  // UNDER CONSTRUCTION
+
+  int start,end;
+  compute_core_start_end(p->v_start, p->v_end, &start, &end, l, threading);
+  vector_double_copy( out, in, start, end, l );
 }

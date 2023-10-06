@@ -75,10 +75,10 @@ void fgmres_PRECISION_struct_alloc( int m, int n, int vl, PRECISION tol, const i
   if(m > 0) {
   total += (m+1)*m; // Hessenberg matrix
   MALLOC( p->H, complex_PRECISION*, m );
-  
-  total += (5+m)*vl; // x, r, b, w, V
+
+  total += (6+m)*vl; // x, r, b, w, wy, V
   MALLOC( p->V, complex_PRECISION*, m+1 );
-  
+
   if ( precond != NULL ) {
     if ( prec_kind == _RIGHT ) {
       total += (m+1)*vl; // Z
@@ -96,7 +96,11 @@ void fgmres_PRECISION_struct_alloc( int m, int n, int vl, PRECISION tol, const i
       MALLOC( p->Z, complex_PRECISION*, k );
     }
 #else
-    k = 0;
+
+    // IMPORTANT : modifying this for the sign function application
+    total += (m+1)*vl;
+    k = m+1;
+    MALLOC( p->Z, complex_PRECISION*, k );
 #endif
   }
   
@@ -107,7 +111,7 @@ void fgmres_PRECISION_struct_alloc( int m, int n, int vl, PRECISION tol, const i
   
   p->total_storage = total;
   total = 0;
-  
+
   // ordering: H, y, gamma, c, s, w, V, Z, x, r, b
   // H
   for ( i=1; i<m; i++ )
@@ -124,6 +128,8 @@ void fgmres_PRECISION_struct_alloc( int m, int n, int vl, PRECISION tol, const i
   p->s = p->H[0] + total; total += m+1;
   // w
   p->w = p->H[0] + total; total += vl;
+  // wy
+  p->wy = p->H[0] + total; total += vl;
   // V
   for ( i=0; i<m+1; i++ ) {
     p->V[i] = p->H[0] + total; total += vl;
@@ -198,7 +204,8 @@ void fgmres_PRECISION_struct_free( gmres_PRECISION_struct *p, level_struct *l ) 
       k = p->restart_length+2;
     }
 #else
-    k = 0;
+    // IMPORTANT : modifying this for the sign function application
+    k = p->restart_length+1;
 #endif
   }
 
@@ -836,7 +843,16 @@ int arnoldi_step_PRECISION( vector_PRECISION *V, vector_PRECISION *Z, vector_PRE
       }
     }
   } else {
-    apply_operator_PRECISION( w, V[j], p, l, threading ); // w = D*V[j]
+
+    // IMPORTANT : this scope is being modified to be used with the sign function
+    //             with polynomial preconditioning
+
+    sign_function_prec_pow1( Z[j], V[j], p, l, threading ); // Z[j] = q(D)*V[j]
+
+    sign_function_prec_pow1( p->wy, Z[j], p, l, threading ); // wy = q(D)*Z[j]
+
+    apply_operator_PRECISION( w, p->wy, p, l, threading ); // w = D*wy
+
     if ( shift ) vector_PRECISION_saxpy( w, w, V[j], shift, start, end, l );
   }
 
