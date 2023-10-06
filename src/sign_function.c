@@ -98,6 +98,7 @@ int arnoldi_double( gmres_double_struct *p, level_struct *l, struct Thread *thre
   END_LOCKED_MASTER(threading)
   
   if ( p->print ) {
+    printf0( "some specific timings from Arnoldi :\n\n" );
   //  beta = gamma_jp1;
     START_MASTER(threading)
   //  g.norm_res = creal(beta)/norm_r0;
@@ -228,13 +229,17 @@ void check_arnoldi_double( gmres_double_struct *p, level_struct *l, struct Threa
 void sign_function_double( gmres_double_struct *p, level_struct *l, struct Thread *threading ) {
 
   int i,start,end;
+  double t0,t1;
 
   compute_core_start_end(p->v_start, p->v_end, &start, &end, l, threading);
 
   printf0( "\nCOMPUTING THE SIGN FUNCTION NOW\n\n" );
 
   // call the Arnoldi relation on the preconditioned system
+  t0 = MPI_Wtime();
   arnoldi_double( p, l, threading );
+  t1 = MPI_Wtime();
+  printf0( "total time spent on Arnoldi : %f seconds\n", t1-t0 );
 
   // create the first unit vector and buffer vector
   complex_double* e1 = NULL;
@@ -252,18 +257,24 @@ void sign_function_double( gmres_double_struct *p, level_struct *l, struct Threa
   }
 
   // compute H^{-1/2} -- TODO : internals of this function still under construction
+  t0 = MPI_Wtime();
   START_MASTER(threading)
   invsqrt_of_H( His, p->H, p->restart_length );
   END_MASTER(threading)
+  t1 = MPI_Wtime();
+  printf0( "\ntime spent on invsqrt_of_H : %f\n", t1-t0 );
 
   // do H^{-1/2}*e1
   memcpy( b1, His[0], p->restart_length*sizeof(complex_double) );
 
   // do Zm*b1 and store this in p->x
+  t0 = MPI_Wtime();
   vector_double_define( p->x, 0, start, end, l );
   for ( i=0;i<p->restart_length;i++ ) {
     vector_double_saxpy( p->x, p->x, p->Z[i], b1[i], start, end, l );
   }
+  t1 = MPI_Wtime();
+  printf0( "\ntime spent on Zm*b1 : %f\n\n", t1-t0 );
 
   // finally, scale with p->gamma[0]
   vector_double_scale( p->x, p->x, p->gamma[0], start, end, l );
