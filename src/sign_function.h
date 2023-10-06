@@ -38,4 +38,6 @@
   void sign_function_prec_pow1( vector_double out, vector_double in, gmres_double_struct* p, level_struct* l, struct Thread* threading );
   void sign_function_prec_pow2( vector_double out, vector_double in, gmres_double_struct* p, level_struct* l, struct Thread* threading );
 
+  void invsqrt_of_H( complex_double** His, complex_double** H, int n );
+
 #endif

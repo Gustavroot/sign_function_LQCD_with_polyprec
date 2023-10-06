@@ -31,9 +31,8 @@ int arnoldi_double( gmres_double_struct *p, level_struct *l, struct Thread *thre
   int start;
   int end;
 
-  int j=-1, finish=0, iter=0, il, ol, res;
+  int j=-1, finish=0, iter=0, il, ol;
   complex_double gamma0 = 0;
-  complex_double beta = 0;
 
   double norm_r0=1, gamma_jp1=1, t0=0, t1=0;
   START_LOCKED_MASTER(threading)
@@ -165,7 +164,7 @@ void timings_probe_matvec_vs_dotprod( level_struct* l, struct Thread* threading 
 
   for ( i=0; i<nr_calls; i++ ) {
     t2 -= MPI_Wtime();
-    double dotprod = global_inner_product_double( g.p.w, g.p.x, g.p.v_start, g.p.v_end, l, threading );
+    global_inner_product_double( g.p.w, g.p.x, g.p.v_start, g.p.v_end, l, threading );
     t2 += MPI_Wtime();
   }
 
@@ -225,13 +224,50 @@ void check_arnoldi_double( gmres_double_struct *p, level_struct *l, struct Threa
 
 void sign_function_double( gmres_double_struct *p, level_struct *l, struct Thread *threading ) {
 
+  int i,start,end;
+
+  compute_core_start_end(p->v_start, p->v_end, &start, &end, l, threading);
+
   printf0( "\nCOMPUTING THE SIGN FUNCTION NOW\n\n" );
 
-  // first, call the Arnoldi relation on the preconditioned system
+  // call the Arnoldi relation on the preconditioned system
   arnoldi_double( p, l, threading );
 
-  // TODO ...
+  // create the first unit vector and buffer vector
+  complex_double* e1 = NULL;
+  complex_double* b1 = NULL;
+  MALLOC( e1, complex_double, p->restart_length );
+  MALLOC( b1, complex_double, p->restart_length );
 
+  // create buffer small matrix for storing H^{-1/2}
+  complex_double** His = NULL;
+  MALLOC( His, complex_double*, p->restart_length );
+  MALLOC( His[0], complex_double, p->restart_length*p->restart_length );
+  for ( i=1;i<p->restart_length;i++ ) {
+    His[i] = His[0] + i*p->restart_length;
+  }
+
+  // compute H^{-1/2} -- TODO : internals of this function still under construction
+  START_MASTER(threading)
+  invsqrt_of_H( His, p->H, p->restart_length );
+  END_MASTER(threading)
+
+  // do H^{-1/2}*e1
+  memcpy( b1, His[0], p->restart_length*sizeof(complex_double) );
+
+  // do Zm*b1 and store this in p->x
+  vector_double_define( p->x, 0, start, end, l );
+  for ( i=0;i<p->restart_length;i++ ) {
+    vector_double_saxpy( p->x, p->x, p->Z[i], b1[i], start, end, l );
+  }
+
+  // finally, scale with p->gamma[0]
+  vector_double_scale( p->x, p->x, p->gamma[0], start, end, l );
+
+  FREE( e1, complex_double, p->restart_length );
+  FREE( b1, complex_double, p->restart_length );
+  FREE( His[0], complex_double, p->restart_length*p->restart_length );
+  FREE( His, complex_double*, p->restart_length );
 }
 
 
@@ -252,4 +288,18 @@ void sign_function_prec_pow2( vector_double out, vector_double in, gmres_double_
   int start,end;
   compute_core_start_end(p->v_start, p->v_end, &start, &end, l, threading);
   vector_double_copy( out, in, start, end, l );
+}
+
+
+void invsqrt_of_H( complex_double** His, complex_double** H, int n ) {
+
+  // TODO : implement this correctly
+
+  int i,j;
+
+  for ( i=0;i<n;i++ ) {
+    for ( j=0;j<n;j++ ) {
+      His[j][i] = (double) (((double)rand()/(double)RAND_MAX));
+    }
+  }
 }
