@@ -1,3 +1,6 @@
 module purge
 module load GCC/11.3.0
-module load OpenMPI/4.1.4
+
+module load ParaStationMPI/5.8.1-1-mt
+
+module load SLEPc/3.18.2
