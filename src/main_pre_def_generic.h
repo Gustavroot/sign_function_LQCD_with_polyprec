@@ -60,7 +60,7 @@
   } operator_PRECISION_struct;
   
   typedef struct {
-    vector_PRECISION x, b, r, w, wy, *V, *Z;
+    vector_PRECISION x, b, r, w, wy, wx, *V, *Z;
     complex_PRECISION **H, *y, *gamma, *c, *s, shift;
     config_PRECISION *D, *clover;
     operator_PRECISION_struct *op;

@@ -33,7 +33,7 @@
   void sign_function_double( gmres_double_struct *p, level_struct *l, struct Thread *threading );
 
   // the preconditioner used in conjunction with the sign function : the first polynomial approximates
-  // the the inverse square root, and the second one the inverse. The second function is not currently being
+  // the the inverse square root, and the second one the inverse. The first function is not currently
   // being used in practice, but we leave it here for illustration purposes
   void sign_function_prec_pow1( vector_double out, vector_double in, gmres_double_struct* p, level_struct* l, struct Thread* threading );
   void sign_function_prec_pow2( vector_double out, vector_double in, gmres_double_struct* p, level_struct* l, struct Thread* threading );

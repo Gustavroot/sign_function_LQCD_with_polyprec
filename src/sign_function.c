@@ -267,14 +267,16 @@ void sign_function_double( gmres_double_struct *p, level_struct *l, struct Threa
   // do H^{-1/2}*e1
   memcpy( b1, His[0], p->restart_length*sizeof(complex_double) );
 
-  // do Zm*b1 and store this in p->x
+  // do Zm*b1 and store this in p->w
   t0 = MPI_Wtime();
-  vector_double_define( p->x, 0, start, end, l );
+  vector_double_define( p->w, 0, start, end, l );
   for ( i=0;i<p->restart_length;i++ ) {
-    vector_double_saxpy( p->x, p->x, p->Z[i], b1[i], start, end, l );
+    vector_double_saxpy( p->w, p->w, p->Z[i], b1[i], start, end, l );
   }
   t1 = MPI_Wtime();
   printf0( "\ntime spent on Zm*b1 : %f\n\n", t1-t0 );
+
+  apply_operator_double( p->x, p->w, p, l, threading ); // x = D*w
 
   // finally, scale with p->gamma[0]
   vector_double_scale( p->x, p->x, p->gamma[0], start, end, l );

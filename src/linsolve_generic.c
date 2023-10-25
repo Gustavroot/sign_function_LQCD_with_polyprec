@@ -76,7 +76,7 @@ void fgmres_PRECISION_struct_alloc( int m, int n, int vl, PRECISION tol, const i
   total += (m+1)*m; // Hessenberg matrix
   MALLOC( p->H, complex_PRECISION*, m );
 
-  total += (6+m)*vl; // x, r, b, w, wy, V
+  total += (7+m)*vl; // x, r, b, w, wy, wx, V
   MALLOC( p->V, complex_PRECISION*, m+1 );
 
   if ( precond != NULL ) {
@@ -130,6 +130,8 @@ void fgmres_PRECISION_struct_alloc( int m, int n, int vl, PRECISION tol, const i
   p->w = p->H[0] + total; total += vl;
   // wy
   p->wy = p->H[0] + total; total += vl;
+  // wx
+  p->wx = p->H[0] + total; total += vl;
   // V
   for ( i=0; i<m+1; i++ ) {
     p->V[i] = p->H[0] + total; total += vl;
@@ -847,11 +849,13 @@ int arnoldi_step_PRECISION( vector_PRECISION *V, vector_PRECISION *Z, vector_PRE
     // IMPORTANT : this scope is being modified to be used with the sign function
     //             with polynomial preconditioning
 
-    sign_function_prec_pow1( Z[j], V[j], p, l, threading ); // Z[j] = q(D)*V[j]
+    sign_function_prec_pow2( Z[j], V[j], p, l, threading ); // Z[j] = q(D)*V[j]
 
-    sign_function_prec_pow1( p->wy, Z[j], p, l, threading ); // wy = q(D)*Z[j]
+    sign_function_prec_pow2( p->wy, Z[j], p, l, threading ); // wy = q(D)*Z[j]
 
-    apply_operator_PRECISION( w, p->wy, p, l, threading ); // w = D*wy
+    apply_operator_PRECISION( p->wx, p->wy, p, l, threading ); // wx = D*wy
+
+    apply_operator_PRECISION( w, p->wx, p, l, threading ); // w = D*wx
 
     if ( shift ) vector_PRECISION_saxpy( w, w, V[j], shift, start, end, l );
   }
