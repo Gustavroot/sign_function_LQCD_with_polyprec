@@ -206,7 +206,8 @@ void check_arnoldi_double( gmres_double_struct *p, level_struct *l, struct Threa
   for ( i=0;i<p->restart_length;i++ ) {
 
     // first, compute the vector from the LHS of the Arnoldi relation
-    apply_operator_double( v1, p->V[i], p, l, threading );
+    apply_operator_double( p->w, p->V[i], p, l, threading );
+    apply_operator_double( v1, p->w, p, l, threading );
 
     // second, the RHS one
     vector_double_define( v2, 0, start, end, l );
