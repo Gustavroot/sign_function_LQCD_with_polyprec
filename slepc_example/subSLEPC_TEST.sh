@@ -12,4 +12,4 @@
 
 
 
-srun a.out -fn_scale 1.0,1.0 -n 10 -fn_method 0 -verbose 1
+srun a.out

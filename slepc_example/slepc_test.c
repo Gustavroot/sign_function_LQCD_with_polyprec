@@ -8,16 +8,30 @@
    - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 */
 
-static char help[] = "Test matrix inverse square root.\n\n";
-
 #include <slepcfn.h>
+#include <complex.h>
+
+typedef double complex complex_double;
+typedef double complex *vector_double;
+
+typedef struct {
+    vector_double x, b, r, w, wy, wx, wz, *V, *Z;
+    complex_double **H, *y, *gamma, *c, *s, shift;
+    double tol;
+    int num_restart, restart_length, timing, print, kind,
+        initial_guess_zero, layout, v_start, v_end, total_storage;
+} gmres_double_struct;
+
+gmres_double_struct gp;
+
+static char help[] = "Test matrix inverse square root.\n\n";
 
 /*
    Compute matrix inverse square root B = inv(sqrtm(A))
    Check result as norm(B*B*A-I)
 */
 
-PetscErrorCode TestMatInvSqrt(FN fn,Mat A,PetscViewer viewer,PetscBool verbose,PetscBool inplace)
+PetscErrorCode MatInvSqrt(FN fn,Mat A,PetscViewer viewer,PetscBool verbose,PetscBool inplace)
 {
   PetscScalar    tau,eta;
   PetscReal      nrm;
@@ -71,11 +85,11 @@ PetscErrorCode TestMatInvSqrt(FN fn,Mat A,PetscViewer viewer,PetscBool verbose,P
   PetscCall(VecDestroy(&f0));
 }
 
-int main(int argc,char **argv)
+PetscErrorCode small_dense_invsqrt( int argcx,char **argvx, gmres_double_struct *p )
 {
   FN             fn;
   Mat            A=NULL;
-  PetscInt       i,j,n=10;
+  PetscInt       i,j;
   PetscScalar    x,y,yp,*As;
   PetscViewer    viewer;
   PetscBool      verbose,inplace,matcuda;
@@ -84,12 +98,11 @@ int main(int argc,char **argv)
   char           strx[50],str[50];
 
   PetscFunctionBeginUser;
-  PetscCall(SlepcInitialize(&argc,&argv,(char*)0,help));
-  PetscCall(PetscOptionsGetInt(NULL,NULL,"-n",&n,NULL));
+  PetscCall(SlepcInitialize(&argcx,&argvx,(char*)0,help));
   PetscCall(PetscOptionsHasName(NULL,NULL,"-verbose",&verbose));
   PetscCall(PetscOptionsHasName(NULL,NULL,"-inplace",&inplace));
   PetscCall(PetscOptionsHasName(NULL,NULL,"-matcuda",&matcuda));
-  PetscCall(PetscPrintf(PETSC_COMM_WORLD,"Matrix inverse square root, n=%" PetscInt_FMT ".\n",n));
+  PetscCall(PetscPrintf(PETSC_COMM_WORLD,"Matrix inverse square root, n=%" PetscInt_FMT ".\n",p->restart_length));
 
   // Create function object
   PetscCall(FNCreate(PETSC_COMM_WORLD,&fn));
@@ -101,37 +114,72 @@ int main(int argc,char **argv)
   PetscCall(FNView(fn,viewer));
   if (verbose) PetscCall(PetscViewerPushFormat(viewer,PETSC_VIEWER_ASCII_MATLAB));
 
-  PetscCall(MatCreateSeqDense(PETSC_COMM_SELF,n,n,NULL,&A));
+  PetscCall(MatCreateSeqDense(PETSC_COMM_SELF,p->restart_length,p->restart_length,NULL,&A));
   PetscCall(PetscObjectSetName((PetscObject)A,"A"));
 
-  // Repeat with non-symmetic A
+  // compute invsqrt for non-symmetic A
   PetscCall(PetscRandomCreate(PETSC_COMM_WORLD,&myrand));
   PetscCall(PetscRandomSetFromOptions(myrand));
-  PetscCall(PetscRandomSetInterval(myrand,0.0,1.0));
+  PetscCall(PetscRandomSetInterval(myrand,0.1,1.0));
   PetscCall(MatDenseGetArray(A,&As));
 
-  for (i=0;i<n;i++) As[i+i*n]=2.5;
+  for (i=0;i<p->restart_length;i++) As[i+i*p->restart_length]=2.5;
   for (j=1;j<3;j++) {
-    for (i=0;i<n-j;i++) { As[i+(i+j)*n]=1.0; As[(i+j)+i*n]=1.0; }
+    for (i=0;i<p->restart_length-j;i++) { As[i+(i+j)*p->restart_length]=1.0; As[(i+j)+i*p->restart_length]=1.0; }
   }
   for (j=1;j<3;j++) {
-    for (i=0;i<n-j;i++) As[(i+j)+i*n]=0.0;
+    for (i=0;i<p->restart_length-j;i++) As[(i+j)+i*p->restart_length]=0.0;
   }
   for (j=1;j<3;j++) {
-    for (i=0;i<n-j;i++) {
+    for (i=0;i<p->restart_length-j;i++) {
       PetscCall(PetscRandomGetValueReal(myrand,&v));
-      As[(i+j)+i*n]=v;
+      As[(i+j)+i*p->restart_length]=v;
     }
   }
 
   PetscCall(MatDenseRestoreArray(A,&As));
   PetscCall(PetscRandomDestroy(&myrand));
   PetscCall(MatSetOption(A,MAT_HERMITIAN,PETSC_FALSE));
-  PetscCall(TestMatInvSqrt(fn,A,viewer,verbose,inplace));
+  PetscCall(MatInvSqrt(fn,A,viewer,verbose,inplace));
 
   PetscCall(MatDestroy(&A));
   PetscCall(FNDestroy(&fn));
   PetscCall(SlepcFinalize());
+}
+
+int main( int argc, char **argv ) {
+
+  int i;
+
+  gmres_double_struct *p = &gp;
+  p->restart_length = 10;
+
+  int argcx=7;
+  char **argvx = (char**) malloc( 7*sizeof(char*) );
+  for( i=0;i<7;i++ ) {
+    argvx[i] = (char*) malloc( 50*sizeof(char) );
+  }
+
+  // options in static form
+  char str0[50] = "a.out";
+  char str1[50] = "-fn_scale";
+  char str2[50] = "1.0,1.0";
+  char str3[50] = "-fn_method";
+  char str4[50] = "0";
+  char str5[50] = "-verbose";
+  char str6[50] = "1";
+
+  // options in dynamic form
+  strcpy( argvx[0],str0 );
+  strcpy( argvx[1],str2 );
+  strcpy( argvx[2],str2 );
+  strcpy( argvx[3],str3 );
+  strcpy( argvx[4],str4 );
+  strcpy( argvx[5],str5 );
+  strcpy( argvx[6],str6 );
+
+  small_dense_invsqrt( argcx, argvx, p );
+
   return 0;
 }
 
