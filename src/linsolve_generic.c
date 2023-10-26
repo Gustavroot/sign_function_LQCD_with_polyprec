@@ -76,7 +76,7 @@ void fgmres_PRECISION_struct_alloc( int m, int n, int vl, PRECISION tol, const i
   total += (m+1)*m; // Hessenberg matrix
   MALLOC( p->H, complex_PRECISION*, m );
 
-  total += (7+m)*vl; // x, r, b, w, wy, wx, V
+  total += (8+m)*vl; // x, r, b, w, wy, wx, wz, V
   MALLOC( p->V, complex_PRECISION*, m+1 );
 
   if ( precond != NULL ) {
@@ -132,6 +132,8 @@ void fgmres_PRECISION_struct_alloc( int m, int n, int vl, PRECISION tol, const i
   p->wy = p->H[0] + total; total += vl;
   // wx
   p->wx = p->H[0] + total; total += vl;
+  // wz
+  p->wz = p->H[0] + total; total += vl;
   // V
   for ( i=0; i<m+1; i++ ) {
     p->V[i] = p->H[0] + total; total += vl;

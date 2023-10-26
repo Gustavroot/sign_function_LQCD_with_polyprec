@@ -89,6 +89,20 @@ int wilson_driver( vector_double solution, vector_double source, level_struct *l
   // computing the sign function
   sign_function_double( &(g.p), l, threading );
 
+  // and repeat, to verify that sign^2=1
+
+  // for this, first back up the RHS from the previous "solve"
+  vector_double_copy( g.p.wz, g.p.b, start, end, l );
+  // then, set the RHS to the previous solution
+  vector_double_copy( g.p.b, g.p.x, start, end, l );
+  // then, "solve"
+  sign_function_double( &(g.p), l, threading );
+  // after that sign function application, x should be "similar" to wz
+  double norm_bef = global_norm_double( g.p.wz, g.p.v_start, g.p.v_end, l, threading );
+  vector_double_minus( g.p.wz, g.p.wz, g.p.x, start, end, l );
+  double norm_aft = global_norm_double( g.p.wz, g.p.v_start, g.p.v_end, l, threading );
+  printf0( "relative error in sign^2=1 : %.8e\n",norm_aft/norm_bef );
+
   /*
 
   if ( g.method == -1 ) {
