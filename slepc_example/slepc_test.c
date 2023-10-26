@@ -10,6 +10,7 @@
 
 #include <slepcfn.h>
 #include <complex.h>
+#include <math.h>
 
 typedef double complex complex_double;
 typedef double complex *vector_double;
@@ -31,14 +32,15 @@ static char help[] = "Test matrix inverse square root.\n\n";
    Check result as norm(B*B*A-I)
 */
 
-PetscErrorCode MatInvSqrt(FN fn,Mat A,PetscViewer viewer,PetscBool verbose,PetscBool inplace)
+PetscErrorCode MatInvSqrt(FN fn,Mat A,PetscViewer viewer,PetscBool verbose,PetscBool inplace,complex_double** His)
 {
-  PetscScalar    tau,eta;
+  PetscScalar    tau,eta,*Ss;
   PetscReal      nrm;
   PetscBool      set,flg;
   PetscInt       n;
   Mat            S,R,Acopy;
   Vec            v,f0;
+  int            i,j;
 
   PetscFunctionBeginUser;
   PetscCall(MatGetSize(A,&n,NULL));
@@ -60,6 +62,16 @@ PetscErrorCode MatInvSqrt(FN fn,Mat A,PetscViewer viewer,PetscBool verbose,Petsc
     PetscCall(PetscPrintf(PETSC_COMM_WORLD,"Computed inv(sqrtm(A)) - - - - - - -\n"));
     PetscCall(MatView(S,viewer));
   }
+
+  // finally, set His from S
+  PetscCall(MatDenseGetArray(S,&Ss));
+  // set His from Ss
+  for( j=0;j<n;j++ ) {
+    for( i=0;i<n;i++ ) {
+      His[j][i] = Ss[i+j*n];
+    }
+  }
+  PetscCall(MatDenseRestoreArray(S,&Ss));
 
   // check error ||S*S*A-I||_F
   PetscCall(MatMatMult(S,S,MAT_INITIAL_MATRIX,PETSC_DEFAULT,&R));
@@ -130,17 +142,17 @@ PetscErrorCode small_dense_invsqrt( int argcx,char **argvx, complex_double **His
   PetscCall(MatDenseRestoreArray(A,&As));
 
   PetscCall(MatSetOption(A,MAT_HERMITIAN,PETSC_FALSE));
-  PetscCall(MatInvSqrt(fn,A,viewer,verbose,inplace));
+  PetscCall(MatInvSqrt(fn,A,viewer,verbose,inplace,His));
 
-  // finally, set His from A
-  PetscCall(MatDenseGetArray(A,&As));
-  // set His from As
-  for( j=0;j<n;j++ ) {
-    for( i=0;i<n;i++ ) {
-      H[j][i] = As[i+j*n];
-    }
-  }
-  PetscCall(MatDenseRestoreArray(A,&As));
+  //// finally, set His from A
+  //PetscCall(MatDenseGetArray(A,&As));
+  //// set His from As
+  //for( j=0;j<n;j++ ) {
+  //  for( i=0;i<n;i++ ) {
+  //    H[j][i] = As[i+j*n];
+  //  }
+  //}
+  //PetscCall(MatDenseRestoreArray(A,&As));
 
   PetscCall(MatDestroy(&A));
   PetscCall(FNDestroy(&fn));
@@ -149,7 +161,7 @@ PetscErrorCode small_dense_invsqrt( int argcx,char **argvx, complex_double **His
 
 int main( int argc, char **argv ) {
 
-  int i,j;
+  int i,j,k;
   PetscRandom    myrand;
   double         v;
   complex_double **His;
@@ -216,12 +228,77 @@ int main( int argc, char **argv ) {
 
   small_dense_invsqrt( argcx, argvx, His, p->H, p->restart_length );
 
+  // check that : p->H * His * His = I
+
+  // buffers for the multiplication
+  complex_double **B;
+  complex_double **C;
+  B = (complex_double**) malloc( p->restart_length*sizeof(complex_double*) );
+  C = (complex_double**) malloc( p->restart_length*sizeof(complex_double*) );
+  B[0] = (complex_double*) malloc( p->restart_length*p->restart_length*sizeof(complex_double) );
+  C[0] = (complex_double*) malloc( p->restart_length*p->restart_length*sizeof(complex_double) );
+  for( i=1;i<p->restart_length;i++ ) {
+    B[i] = B[0] + i*p->restart_length;
+  }
+  for( i=1;i<p->restart_length;i++ ) {
+    C[i] = C[0] + i*p->restart_length;
+  }
+
+  // first : B = His*His
+
+  for( i=0;i<p->restart_length;i++ ) {
+    for( j=0;j<p->restart_length;j++ ) {
+      B[j][i] = 0.0;
+      for( k=0;k<p->restart_length;k++ ) {
+        B[j][i] += His[k][i]*His[j][k];
+      }
+    }
+  }
+
+  // second : C = p->H*B
+
+  for( i=0;i<p->restart_length;i++ ) {
+    for( j=0;j<p->restart_length;j++ ) {
+      C[j][i] = 0.0;
+      for( k=0;k<p->restart_length;k++ ) {
+        C[j][i] += p->H[k][i]*B[j][k];
+      }
+    }
+  }
+
+  // compute Frobenius norm of identity
+  double frob_norm_id = sqrt((double)p->restart_length);
+
+  // compute Frobenius norm of C-I
+
+  double frob_norm_CminI = 0.0;
+  complex_double buffx;
+  for( i=0;i<p->restart_length;i++ ) {
+    for( j=0;j<p->restart_length;j++ ) {
+      if( i==j ) {
+        buffx = C[j][i] - 1.0;
+      }
+      else {
+        buffx = C[j][i];
+      }
+      buffx = buffx*conj(buffx);
+      frob_norm_CminI += creal(buffx);
+    }
+  }
+  frob_norm_CminI = sqrt(frob_norm_CminI);
+
+  printf( "relative error from invsqrt : %.8e\n",frob_norm_CminI/frob_norm_id );
+
   free( argvx[0] );
   free( argvx );
   free( p->H[0] );
   free( His[0] );
+  free( B[0] );
+  free( C[0] );
   free( p->H );
   free( His );
+  free( B );
+  free( C );
 
   return 0;
 }
