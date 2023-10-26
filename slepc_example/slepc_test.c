@@ -85,24 +85,20 @@ PetscErrorCode MatInvSqrt(FN fn,Mat A,PetscViewer viewer,PetscBool verbose,Petsc
   PetscCall(VecDestroy(&f0));
 }
 
-PetscErrorCode small_dense_invsqrt( int argcx,char **argvx, gmres_double_struct *p )
+PetscErrorCode small_dense_invsqrt( int argcx,char **argvx, complex_double **His, complex_double **H, int n )
 {
   FN             fn;
   Mat            A=NULL;
-  PetscInt       i,j;
   PetscScalar    x,y,yp,*As;
   PetscViewer    viewer;
-  PetscBool      verbose,inplace,matcuda;
-  PetscRandom    myrand;
-  PetscReal      v;
-  char           strx[50],str[50];
+  PetscInt       i,j;
+  PetscBool      verbose,inplace;
 
   PetscFunctionBeginUser;
   PetscCall(SlepcInitialize(&argcx,&argvx,(char*)0,help));
   PetscCall(PetscOptionsHasName(NULL,NULL,"-verbose",&verbose));
   PetscCall(PetscOptionsHasName(NULL,NULL,"-inplace",&inplace));
-  PetscCall(PetscOptionsHasName(NULL,NULL,"-matcuda",&matcuda));
-  PetscCall(PetscPrintf(PETSC_COMM_WORLD,"Matrix inverse square root, n=%" PetscInt_FMT ".\n",p->restart_length));
+  PetscCall(PetscPrintf(PETSC_COMM_WORLD,"Matrix inverse square root, n=%" PetscInt_FMT ".\n",n));
 
   // Create function object
   PetscCall(FNCreate(PETSC_COMM_WORLD,&fn));
@@ -114,33 +110,37 @@ PetscErrorCode small_dense_invsqrt( int argcx,char **argvx, gmres_double_struct 
   PetscCall(FNView(fn,viewer));
   if (verbose) PetscCall(PetscViewerPushFormat(viewer,PETSC_VIEWER_ASCII_MATLAB));
 
-  PetscCall(MatCreateSeqDense(PETSC_COMM_SELF,p->restart_length,p->restart_length,NULL,&A));
+  PetscCall(MatCreateSeqDense(PETSC_COMM_SELF,n,n,NULL,&A));
   PetscCall(PetscObjectSetName((PetscObject)A,"A"));
 
-  // compute invsqrt for non-symmetic A
-  PetscCall(PetscRandomCreate(PETSC_COMM_WORLD,&myrand));
-  PetscCall(PetscRandomSetFromOptions(myrand));
-  PetscCall(PetscRandomSetInterval(myrand,0.1,1.0));
+  // compute invsqrt for non-symmetic A, in our case will be the Hessenberg matrix
+
   PetscCall(MatDenseGetArray(A,&As));
 
-  for (i=0;i<p->restart_length;i++) As[i+i*p->restart_length]=2.5;
-  for (j=1;j<3;j++) {
-    for (i=0;i<p->restart_length-j;i++) { As[i+(i+j)*p->restart_length]=1.0; As[(i+j)+i*p->restart_length]=1.0; }
-  }
-  for (j=1;j<3;j++) {
-    for (i=0;i<p->restart_length-j;i++) As[(i+j)+i*p->restart_length]=0.0;
-  }
-  for (j=1;j<3;j++) {
-    for (i=0;i<p->restart_length-j;i++) {
-      PetscCall(PetscRandomGetValueReal(myrand,&v));
-      As[(i+j)+i*p->restart_length]=v+2*v*PETSC_i;
+  // IMPORTANT : j is columns, i is rows. As is assumed column major, and
+  //             the same for H
+
+  // set As from H
+  for( j=0;j<n;j++ ) {
+    for( i=0;i<n;i++ ) {
+      As[i+j*n] = H[j][i];
     }
   }
 
   PetscCall(MatDenseRestoreArray(A,&As));
-  PetscCall(PetscRandomDestroy(&myrand));
+
   PetscCall(MatSetOption(A,MAT_HERMITIAN,PETSC_FALSE));
   PetscCall(MatInvSqrt(fn,A,viewer,verbose,inplace));
+
+  // finally, set His from A
+  PetscCall(MatDenseGetArray(A,&As));
+  // set His from As
+  for( j=0;j<n;j++ ) {
+    for( i=0;i<n;i++ ) {
+      H[j][i] = As[i+j*n];
+    }
+  }
+  PetscCall(MatDenseRestoreArray(A,&As));
 
   PetscCall(MatDestroy(&A));
   PetscCall(FNDestroy(&fn));
@@ -149,11 +149,46 @@ PetscErrorCode small_dense_invsqrt( int argcx,char **argvx, gmres_double_struct 
 
 int main( int argc, char **argv ) {
 
-  int i;
+  int i,j;
+  PetscRandom    myrand;
+  double         v;
+  complex_double **His;
 
   gmres_double_struct *p = &gp;
   p->restart_length = 10;
 
+  // allocate p->H and His (the latter will contain the invsqrt solution)
+  p->H = (complex_double**) malloc( p->restart_length*sizeof(complex_double*) );
+  His = (complex_double**) malloc( p->restart_length*sizeof(complex_double*) );
+  p->H[0] = (complex_double*) malloc( p->restart_length*p->restart_length*sizeof(complex_double) );
+  His[0] = (complex_double*) malloc( p->restart_length*p->restart_length*sizeof(complex_double) );
+  for( i=1;i<p->restart_length;i++ ) {
+    p->H[i] = p->H[0] + i*p->restart_length;
+  }
+  for( i=1;i<p->restart_length;i++ ) {
+    His[i] = His[0] + i*p->restart_length;
+  }
+
+  // populate p->H
+  for (i=0;i<p->restart_length;i++) p->H[0][i+i*p->restart_length]=2.5;
+  for (j=1;j<3;j++) {
+    for (i=0;i<p->restart_length-j;i++) {
+      p->H[0][i+(i+j)*p->restart_length]=1.0;
+      p->H[0][(i+j)+i*p->restart_length]=1.0;
+    }
+  }
+  for (j=1;j<3;j++) {
+    for (i=0;i<p->restart_length-j;i++) p->H[0][(i+j)+i*p->restart_length]=0.0;
+  }
+  for (j=1;j<3;j++) {
+    for (i=0;i<p->restart_length-j;i++) {
+      //PetscCall(PetscRandomGetValueReal(myrand,&v));
+      v = (double)rand() / (double)RAND_MAX;
+      p->H[0][(i+j)+i*p->restart_length]=v+2*v*_Complex_I;
+    }
+  }
+
+  // mimic input via command line
   int argcx=7;
   char **argvx = (char**) malloc( 7*sizeof(char*) );
   argvx[0] = (char*) malloc( 7*50*sizeof(char) );
@@ -179,10 +214,14 @@ int main( int argc, char **argv ) {
   strcpy( argvx[5],str5 );
   strcpy( argvx[6],str6 );
 
-  small_dense_invsqrt( argcx, argvx, p );
+  small_dense_invsqrt( argcx, argvx, His, p->H, p->restart_length );
 
   free( argvx[0] );
   free( argvx );
+  free( p->H[0] );
+  free( His[0] );
+  free( p->H );
+  free( His );
 
   return 0;
 }
