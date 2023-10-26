@@ -133,7 +133,7 @@ PetscErrorCode small_dense_invsqrt( int argcx,char **argvx, gmres_double_struct 
   for (j=1;j<3;j++) {
     for (i=0;i<p->restart_length-j;i++) {
       PetscCall(PetscRandomGetValueReal(myrand,&v));
-      As[(i+j)+i*p->restart_length]=v;
+      As[(i+j)+i*p->restart_length]=v+2*v*PETSC_i;
     }
   }
 
@@ -156,8 +156,9 @@ int main( int argc, char **argv ) {
 
   int argcx=7;
   char **argvx = (char**) malloc( 7*sizeof(char*) );
-  for( i=0;i<7;i++ ) {
-    argvx[i] = (char*) malloc( 50*sizeof(char) );
+  argvx[0] = (char*) malloc( 7*50*sizeof(char) );
+  for( i=1;i<7;i++ ) {
+    argvx[i] = argvx[0] + i*50;
   }
 
   // options in static form
@@ -179,6 +180,9 @@ int main( int argc, char **argv ) {
   strcpy( argvx[6],str6 );
 
   small_dense_invsqrt( argcx, argvx, p );
+
+  free( argvx[0] );
+  free( argvx );
 
   return 0;
 }
