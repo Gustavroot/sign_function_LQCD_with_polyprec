@@ -9,6 +9,7 @@
 */
 
 #include <slepcfn.h>
+#include <petscsys.h>
 #include <complex.h>
 #include <math.h>
 
@@ -34,13 +35,17 @@ static char help[] = "Test matrix inverse square root.\n\n";
 
 PetscErrorCode MatInvSqrt(FN fn,Mat A,PetscViewer viewer,PetscBool verbose,PetscBool inplace,complex_double** His)
 {
-  PetscScalar    tau,eta,*Ss;
+  PetscScalar    tau,eta;
+  PetscComplex   *Ss;
   PetscReal      nrm;
   PetscBool      set,flg;
   PetscInt       n;
   Mat            S,R,Acopy;
   Vec            v,f0;
   int            i,j;
+
+  printf( "inside2! \n" );
+  return;
 
   PetscFunctionBeginUser;
   PetscCall(MatGetSize(A,&n,NULL));
@@ -101,16 +106,26 @@ PetscErrorCode small_dense_invsqrt( int argcx,char **argvx, complex_double **His
 {
   FN             fn;
   Mat            A=NULL;
-  PetscScalar    x,y,yp,*As;
+  PetscScalar    x,y,yp;
+  PetscComplex   *As;
   PetscViewer    viewer;
   PetscInt       i,j;
   PetscBool      verbose,inplace;
+
+  printf( "inside1! \n" );
+
+  printf( "size of PetscScalar: %d \n", (int)sizeof(PetscScalar) );
+  printf( "size of PetscComplex: %d \n", (int)sizeof(PetscComplex) );
+  printf( "size of PetscReal: %d \n", (int)sizeof(PetscReal) );
+  return;
 
   PetscFunctionBeginUser;
   PetscCall(SlepcInitialize(&argcx,&argvx,(char*)0,help));
   PetscCall(PetscOptionsHasName(NULL,NULL,"-verbose",&verbose));
   PetscCall(PetscOptionsHasName(NULL,NULL,"-inplace",&inplace));
   PetscCall(PetscPrintf(PETSC_COMM_WORLD,"Matrix inverse square root, n=%" PetscInt_FMT ".\n",n));
+
+  printf( "inside2! \n" );
 
   // Create function object
   PetscCall(FNCreate(PETSC_COMM_WORLD,&fn));
@@ -122,12 +137,19 @@ PetscErrorCode small_dense_invsqrt( int argcx,char **argvx, complex_double **His
   PetscCall(FNView(fn,viewer));
   if (verbose) PetscCall(PetscViewerPushFormat(viewer,PETSC_VIEWER_ASCII_MATLAB));
 
+  printf( "inside3! \n" );
+
   PetscCall(MatCreateSeqDense(PETSC_COMM_SELF,n,n,NULL,&A));
   PetscCall(PetscObjectSetName((PetscObject)A,"A"));
+
+  printf( "inside4! \n" );
 
   // compute invsqrt for non-symmetic A, in our case will be the Hessenberg matrix
 
   PetscCall(MatDenseGetArray(A,&As));
+
+  printf( "inside5! \n" );
+  //return;
 
   // IMPORTANT : j is columns, i is rows. As is assumed column major, and
   //             the same for H
@@ -135,9 +157,22 @@ PetscErrorCode small_dense_invsqrt( int argcx,char **argvx, complex_double **His
   // set As from H
   for( j=0;j<n;j++ ) {
     for( i=0;i<n;i++ ) {
+      //double *Asp = (double*)(As+i+j*n);
+      //double *Hp = (double*)(H[j]+i);
       As[i+j*n] = H[j][i];
+      printf("size of A[i+j*n] = %d\n",(int)sizeof(As[i+j*n]));
+      //Asp[0] = Hp[0];
+      //Asp[1] = Hp[1];
     }
   }
+
+  printf( "printing some elements from As  : As[2][2] \
+          = %f+I%f, As[3][2] = %f+I%f, As[2][3] = %f+I%f\n",\
+          creal(As[2+2*n]), cimag(As[2+2*n]), creal(As[2+3*n]),\
+          cimag(As[2+3*n]), creal(As[3+2*n]), cimag(As[3+2*n]) );
+
+  printf( "inside6! \n" );
+  return;
 
   PetscCall(MatDenseRestoreArray(A,&As));
 
@@ -226,7 +261,17 @@ int main( int argc, char **argv ) {
   strcpy( argvx[5],str5 );
   strcpy( argvx[6],str6 );
 
+  printf( "inside0! \n" );
+
   small_dense_invsqrt( argcx, argvx, His, p->H, p->restart_length );
+
+  return 0;
+
+  printf( "printing some elements from His  : His[2][2] \
+          = %f+I%f, His[3][2] = %f+I%f, His[2][3] = %f+I%f\n",\
+          creal(His[2][2]), cimag(His[2][2]), creal(His[3][2]),\
+          cimag(His[3][2]), creal(His[2][3]), cimag(His[2][3]) );
+  printf( "printing some elements from H    : H[2][2]   = %f+I%f, H[3][2]   = %f+I%f, H[2][3]   = %f+I%f\n", creal(p->H[2][2]), cimag(p->H[2][2]), creal(p->H[3][2]), cimag(p->H[3][2]), creal(p->H[2][3]), cimag(p->H[2][3]) );
 
   // check that : p->H * His * His = I
 
