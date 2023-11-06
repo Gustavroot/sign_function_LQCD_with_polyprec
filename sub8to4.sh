@@ -12,4 +12,4 @@
 
 
 
-. run -i sample.ini
+. run16 -i sample16.ini
