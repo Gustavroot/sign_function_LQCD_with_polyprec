@@ -58,7 +58,65 @@
     OPERATOR_TYPE_PRECISION *clover_vectorized;
     OPERATOR_TYPE_PRECISION *oe_clover_vectorized;
   } operator_PRECISION_struct;
-  
+
+#if defined(POLYPREC)
+  typedef struct
+  {
+    int N, nrhs, lda, ldb, info;
+
+    int *ipiv;
+    vector_PRECISION x, b;
+    complex_PRECISION *Hcc;
+
+    void (*dirctslvr_PRECISION)();
+
+  } dirctslvr_PRECISION_struct;
+#endif
+
+#if defined(POLYPREC)
+  // this is both eigensolver and generalized eigensolver
+  typedef struct {
+    char jobvl, jobvr;
+
+    int N, lda, ldb, ldvl, ldvr, info, qr_m, qr_n, qr_lda, qr_k;
+
+    int *ordr_idxs;
+
+    complex_PRECISION *ordr_keyscpy, *qr_tau;
+    vector_PRECISION vl, vr, w, beta, A, B;
+
+    complex_PRECISION **qr_QR, **qr_Q, **qr_R, **qr_Rinv;
+    complex_PRECISION **Hc;
+
+    void (*eigslvr_PRECISION)();
+    void (*gen_eigslvr_PRECISION)();
+  } eigslvr_PRECISION_struct;
+#endif
+
+#ifdef POLYPREC
+  typedef struct
+  {
+    int update_lejas;
+    int d_poly;
+    int syst_size;
+
+    complex_PRECISION **Hc;
+    complex_PRECISION *Hcc;
+    complex_PRECISION **L;
+    complex_PRECISION *col_prods;
+    vector_PRECISION h_ritz;
+    vector_PRECISION lejas;
+    vector_PRECISION random_rhs;
+    vector_PRECISION accum_prod, product, temp, xtmp;
+
+    void (*preconditioner)();
+    void (*preconditioner_bare)();
+
+    eigslvr_PRECISION_struct eigslvr;
+    dirctslvr_PRECISION_struct dirctslvr;
+  } polyprec_PRECISION_struct;
+#endif
+
   typedef struct {
     vector_PRECISION x, b, r, w, wy, wx, wz, *V, *Z;
     complex_PRECISION **H, *y, *gamma, *c, *s, shift;
@@ -67,10 +125,13 @@
     PRECISION tol;
     int num_restart, restart_length, timing, print, kind,
         initial_guess_zero, layout, v_start, v_end, total_storage;
+#ifdef POLYPREC
+    polyprec_PRECISION_struct polyprec_PRECISION;
+#endif
     void (*preconditioner)();
     void (*eval_operator)();
   } gmres_PRECISION_struct;
-  
+
   typedef struct {
     operator_PRECISION_struct op;
     vector_PRECISION buf1, buf2, buf3, buf4, buf5, bbuf1, bbuf2, bbuf3, oe_bbuf[6];
@@ -83,7 +144,7 @@
         **block_list, *block_list_length;
     block_struct *block;
   } schwarz_PRECISION_struct;
-  
+
   typedef struct {
     int num_agg, *agg_index[4], agg_length[4], *agg_boundary_index[4],
         *agg_boundary_neighbor[4], agg_boundary_length[4], num_bootstrap_vect;
