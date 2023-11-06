@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#SBATCH --account=hwu29
+#SBATCH --account=mul-tra
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=16
 #SBATCH --cpus-per-task=1

@@ -2,7 +2,7 @@
 . ../load_JUWELS_modules.sh
 
 # compile
-mpicc -DPETSC_USE_COMPLEX slepc_test.c -lpetsc -lslepc -lm
+mpicc slepc_test.c -DPETSC_USE_COMPLEX -lpetsc -lslepc -lm
 
 # test
 sbatch subSLEPC_TEST.sh
