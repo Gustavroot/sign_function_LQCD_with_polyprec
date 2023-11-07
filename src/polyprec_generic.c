@@ -26,6 +26,8 @@
 
 void set_up_polynomial_and_test_PRECISION( gmres_PRECISION_struct *p, level_struct *l, struct Thread *threading ) {
 
+  int i;
+
   // setting the degree of the polynomial from the global struct g
   //l->p_PRECISION.polyprec_PRECISION.d_poly = g.polyprec_d;
   p->polyprec_PRECISION->d_poly = g.polyprec_d;
@@ -44,7 +46,20 @@ void set_up_polynomial_and_test_PRECISION( gmres_PRECISION_struct *p, level_stru
   printf0("***************** CHECKING POLYNOMIAL ******************\n");
   printf0("--------------------------------------------------------\n\n"RESET);
 
-  printf0("under construction\n");
+  for (i=0;i<10;i++) {
+    // set p->b to random and apply D to it
+    vector_PRECISION_define_random( p->b, p->v_start, p->v_end, l );
+    apply_operator_PRECISION( p->w, p->b, p, l, threading );
+    // and then p(D), which should approximately restore the original vector
+    apply_polyprec_PRECISION( p->x, NULL, p->w, 0, l, threading );
+
+    // check the relative error
+    vector_PRECISION_minus( p->x, p->x, p->b, p->v_start, p->v_end, l );
+    double normx = global_norm_PRECISION( p->x, p->v_start, p->v_end, l, threading );
+    double normb = global_norm_PRECISION( p->b, p->v_start, p->v_end, l, threading );
+
+    printf0( "check #%d, relative error : %f\n",i,normx/normb );
+  }
 }
 
 
