@@ -38,7 +38,11 @@
 
 #ifndef MAIN_HEADER
   #define MAIN_HEADER
-  
+
+  // color definitions for printf
+  #define RESET "\033[0m"
+  #define GREEN "\033[1m\033[32m"
+
   #define STRINGLENGTH 500
   
   #define _FILE_OFFSET_BITS 64
@@ -362,7 +366,12 @@
     
     // next coarser level
     struct level_struct *next_level;
-    
+
+#if defined(POLYPREC)
+    // 'bool', if ON H will be copied
+    int dup_H;
+#endif
+
   } level_struct;
 
 
@@ -409,7 +418,11 @@
     struct dd_alpha_amg_parameters amg_params;
     struct dd_alpha_amg_setup_status mg_setup_status;
     double mass_for_next_solve;
-    
+
+#ifdef POLYPREC
+    int polyprec_d;
+#endif
+
   } global_struct;
 
   extern global_struct g;
@@ -565,4 +578,9 @@
 #ifdef POLYPREC
   #include "lapackwrap_double.h"
   #include "lapackwrap_float.h"
+#endif
+
+#ifdef POLYPREC
+  #include "polyprec_double.h"
+  #include "polyprec_float.h"
 #endif

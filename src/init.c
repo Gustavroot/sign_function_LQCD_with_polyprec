@@ -539,6 +539,10 @@ void l_init( level_struct *l ) {
   l->x = NULL;
   l->next_level = NULL;
   l->reqs = NULL;
+
+#if defined(POLYPREC)
+  l->dup_H = 0;
+#endif
 }
 
 
@@ -847,6 +851,12 @@ void read_solver_parameters( FILE *in, level_struct *l ) {
   read_parameter( &save_pt, "coarse grid tolerance:", "%le", 1, in, _DEFAULT_SET );
   save_pt = &(g.odd_even); g.odd_even = 1;
   read_parameter( &save_pt, "odd even preconditioning:", "%d", 1, in, _DEFAULT_SET );
+
+#ifdef POLYPREC
+  save_pt = &(g.polyprec_d); g.polyprec_d = 5;
+  read_parameter( &save_pt, "polyprec_d:", "%d", 1, in, _DEFAULT_SET );
+  g.polyprec_d++;
+#endif
 
   save_pt = &(l->real_shift);
   read_parameter( &save_pt, "m0:", "%lf", 1, in, _NO_DEFAULT_SET ); // ensuring downward compatibility

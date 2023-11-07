@@ -148,7 +148,9 @@ int arnoldi_double( gmres_double_struct *p, level_struct *l, struct Thread *thre
 
 void timings_probe_matvec_vs_dotprod( level_struct* l, struct Thread* threading ){
 
-  printf0( "\nCHECK #1\n\n" );
+  printf0(GREEN"\n--------------------------------------------------------\n");
+  printf0("********************* CHECK #1 *************************\n");
+  printf0("--------------------------------------------------------\n\n"RESET);
 
   //printf0( "sign function computation under construction ... timing matmuls and dot products first (average over 100 runs)\n\n" );
 
@@ -180,7 +182,11 @@ void timings_probe_matvec_vs_dotprod( level_struct* l, struct Thread* threading 
 
 void check_arnoldi_double( gmres_double_struct *p, level_struct *l, struct Thread *threading ){
 
-  printf0( "\nCHECK #2\n\n" );
+  printf0(GREEN"\n--------------------------------------------------------\n");
+  printf0("********************* CHECK #2 *************************\n");
+  printf0("--------------------------------------------------------\n\n"RESET);
+
+  //printf0( "\nCHECK #2\n\n" );
   printf0( "running Arnoldi, checking the Arnoldi relation\n\n" );
 
   // call a whole Arnoldi
@@ -234,7 +240,11 @@ void sign_function_double( gmres_double_struct *p, level_struct *l, struct Threa
 
   compute_core_start_end(p->v_start, p->v_end, &start, &end, l, threading);
 
-  printf0( "\nCOMPUTING THE SIGN FUNCTION NOW\n\n" );
+  printf0(GREEN"\n------------------------------------------------- -------\n");
+  printf0("************** COMPUTING SIGN FUNCTION *****************\n");
+  printf0("--------------------------------------------------------\n\n"RESET);
+
+  //printf0( "\nCOMPUTING THE SIGN FUNCTION NOW\n\n" );
 
   // call the Arnoldi relation on the preconditioned system
   t0 = MPI_Wtime();

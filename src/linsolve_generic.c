@@ -42,6 +42,33 @@ void fgmres_PRECISION_struct_init( gmres_PRECISION_struct *p ) {
   p->shift = 0;
   p->preconditioner = NULL;
   p->eval_operator = NULL;
+
+#ifdef POLYPREC
+  p->polyprec_double = NULL;
+  p->polyprec_float =  NULL;
+  MALLOC( p->polyprec_double, polyprec_double_struct, 1);
+  MALLOC( p->polyprec_float, polyprec_float_struct, 1);
+
+  // copy of Hesselnberg matrix
+  p->polyprec_PRECISION->eigslvr.Hc = NULL;
+
+  p->polyprec_PRECISION->Hcc = NULL; 
+  p->polyprec_PRECISION->L = NULL;
+  p->polyprec_PRECISION->col_prods = NULL;
+  p->polyprec_PRECISION->accum_prod = NULL;
+  p->polyprec_PRECISION->product = NULL;
+  p->polyprec_PRECISION->temp = NULL;
+  p->polyprec_PRECISION->h_ritz = NULL;
+  p->polyprec_PRECISION->lejas = NULL;
+  p->polyprec_PRECISION->random_rhs = NULL;
+  p->polyprec_PRECISION->xtmp = NULL;
+
+  p->polyprec_PRECISION->eigslvr.vl = NULL;
+  p->polyprec_PRECISION->eigslvr.vr = NULL;
+  p->polyprec_PRECISION->dirctslvr.ipiv = NULL;
+  p->polyprec_PRECISION->dirctslvr.x = NULL;
+  p->polyprec_PRECISION->dirctslvr.b = NULL;
+#endif
 }
 
 
@@ -185,7 +212,77 @@ void fgmres_PRECISION_struct_alloc( int m, int n, int vl, PRECISION tol, const i
   } else {
     ASSERT( type < 3 );
   }
-  
+
+  // copy of Hesselnberg matrix
+#if defined(POLYPREC)
+  MALLOC(p->polyprec_PRECISION->eigslvr.Hc, complex_PRECISION*, m);
+  p->polyprec_PRECISION->eigslvr.Hc[0] = NULL; // allocate connected memory
+  MALLOC( p->polyprec_PRECISION->eigslvr.Hc[0], complex_PRECISION, m*(m+1) );
+  for ( i=1; i<m; i++ )
+    p->polyprec_PRECISION->eigslvr.Hc[i] = p->polyprec_PRECISION->eigslvr.Hc[0] + i*(m+1);
+#endif
+
+#ifdef POLYPREC
+  //int d_max = (g.polyprec_d_setup>g.polyprec_d_solve)?g.polyprec_d_setup:g.polyprec_d_solve;
+  int d_max = g.polyprec_d;
+  p->polyprec_PRECISION->d_poly = d_max;
+  int d_poly = p->polyprec_PRECISION->d_poly;
+
+  MALLOC( p->polyprec_PRECISION->col_prods, complex_PRECISION, d_poly);
+  MALLOC( p->polyprec_PRECISION->h_ritz, complex_PRECISION, d_poly);
+  MALLOC( p->polyprec_PRECISION->lejas, complex_PRECISION, d_poly);
+  MALLOC( p->polyprec_PRECISION->random_rhs, complex_PRECISION, vl );
+  MALLOC( p->polyprec_PRECISION->accum_prod, complex_PRECISION, vl );
+  MALLOC( p->polyprec_PRECISION->product, complex_PRECISION, vl );
+  MALLOC( p->polyprec_PRECISION->temp, complex_PRECISION, vl );
+
+  MALLOC( p->polyprec_PRECISION->xtmp, complex_PRECISION, vl );
+
+  MALLOC( p->polyprec_PRECISION->Hcc, complex_PRECISION, d_poly*d_poly );
+  MALLOC( p->polyprec_PRECISION->L, complex_PRECISION*, d_poly+ 1);
+
+  p->polyprec_PRECISION->L[0] = NULL;
+
+  MALLOC( p->polyprec_PRECISION->L[0], complex_PRECISION, (d_poly+1)*d_poly );
+
+  for (i=1; i<d_poly+1; i++)
+  {
+    p->polyprec_PRECISION->L[i] = p->polyprec_PRECISION->L[0] + i*d_poly;
+  }
+
+  MALLOC( p->polyprec_PRECISION->dirctslvr.ipiv, int, d_poly);
+  MALLOC( p->polyprec_PRECISION->dirctslvr.x, complex_PRECISION, d_poly);
+  MALLOC( p->polyprec_PRECISION->dirctslvr.b, complex_PRECISION, d_poly);
+
+  p->polyprec_PRECISION->dirctslvr.N = d_poly;
+  p->polyprec_PRECISION->dirctslvr.lda = d_poly;
+  p->polyprec_PRECISION->dirctslvr.ldb = d_poly;
+  p->polyprec_PRECISION->dirctslvr.nrhs = 1;
+  p->polyprec_PRECISION->dirctslvr.Hcc = p->polyprec_PRECISION->Hcc;
+  p->polyprec_PRECISION->dirctslvr.dirctslvr_PRECISION = dirctslvr_PRECISION;
+
+  MALLOC( p->polyprec_PRECISION->eigslvr.vl, complex_PRECISION, d_poly*d_poly );
+  MALLOC( p->polyprec_PRECISION->eigslvr.vr, complex_PRECISION, d_poly*d_poly );
+
+  p->polyprec_PRECISION->eigslvr.jobvl = 'N';
+  p->polyprec_PRECISION->eigslvr.jobvr = 'N';
+
+  p->polyprec_PRECISION->eigslvr.N = d_poly;
+  p->polyprec_PRECISION->eigslvr.lda = p->restart_length + 1;
+  p->polyprec_PRECISION->eigslvr.ldvl = d_poly;
+  p->polyprec_PRECISION->eigslvr.ldvr = d_poly;
+  p->polyprec_PRECISION->eigslvr.w = p->polyprec_PRECISION->h_ritz;
+  p->polyprec_PRECISION->Hc = p->polyprec_PRECISION->eigslvr.Hc;
+  p->polyprec_PRECISION->eigslvr.eigslvr_PRECISION = eigslvr_PRECISION;    
+
+  p->polyprec_PRECISION->update_lejas = 1;
+  p->polyprec_PRECISION->preconditioner = NULL;
+  p->polyprec_PRECISION->preconditioner_bare = p->preconditioner;
+  p->polyprec_PRECISION->syst_size = vl;
+
+  p->polyprec_PRECISION->eigslvr.A = p->polyprec_PRECISION->Hc[0];
+#endif
+
 }
 
 
@@ -224,6 +321,40 @@ void fgmres_PRECISION_struct_free( gmres_PRECISION_struct *p, level_struct *l ) 
   
   p->D = NULL;
   p->clover = NULL;
+
+  // copy of Hesselnberg matrix
+#if defined(POLYPREC)
+  int m = p->restart_length;
+  FREE( p->polyprec_PRECISION->eigslvr.Hc[0], complex_PRECISION, m*(m+1) );
+  FREE(p->polyprec_PRECISION->eigslvr.Hc, complex_PRECISION*, m);
+#endif
+
+#ifdef POLYPREC
+  int d_poly = p->polyprec_PRECISION->d_poly;
+  int vl = p->polyprec_PRECISION->syst_size;
+  FREE( p->polyprec_PRECISION->Hcc, complex_PRECISION, d_poly*d_poly );
+  FREE( p->polyprec_PRECISION->L[0], complex_PRECISION, (d_poly+1)*d_poly );
+  FREE( p->polyprec_PRECISION->L, complex_PRECISION*, d_poly+1 );
+  FREE( p->polyprec_PRECISION->h_ritz,complex_PRECISION, d_poly );
+  FREE( p->polyprec_PRECISION->lejas,complex_PRECISION, d_poly );
+  FREE( p->polyprec_PRECISION->accum_prod, complex_PRECISION, vl );
+  FREE( p->polyprec_PRECISION->product, complex_PRECISION, vl );    
+  FREE( p->polyprec_PRECISION->temp, complex_PRECISION, vl );    
+  FREE( p->polyprec_PRECISION->xtmp, complex_PRECISION, vl );
+  FREE( p->polyprec_PRECISION->random_rhs, complex_PRECISION, vl );
+  FREE( p->polyprec_PRECISION->col_prods, complex_PRECISION, d_poly );
+
+  FREE( p->polyprec_PRECISION->eigslvr.vl,complex_PRECISION, d_poly*d_poly );
+  FREE( p->polyprec_PRECISION->eigslvr.vr,complex_PRECISION, d_poly*d_poly );  
+
+  FREE( p->polyprec_PRECISION->dirctslvr.ipiv, int, d_poly );
+  FREE( p->polyprec_PRECISION->dirctslvr.x, complex_PRECISION, d_poly );
+  FREE( p->polyprec_PRECISION->dirctslvr.b, complex_PRECISION, d_poly );
+
+  FREE( p->polyprec_double, polyprec_double_struct, 1);
+  FREE( p->polyprec_float, polyprec_float_struct, 1);
+#endif
+
 }
 
 
@@ -925,6 +1056,20 @@ int arnoldi_step_PRECISION( vector_PRECISION *V, vector_PRECISION *Z, vector_PRE
   if ( cabs_PRECISION( H[j][j+1] ) > 1e-15 )
     vector_PRECISION_real_scale( V[j+1], w, 1/H[j][j+1], start, end, l );
 #endif
+
+#if defined(POLYPREC)
+  int jx = j;
+#endif
+
+  // copy of Hesselnberg matrix
+#if defined(POLYPREC)
+  if (l->dup_H==1 )
+  {
+    memcpy( p->polyprec_PRECISION->eigslvr.Hc[jx], H[jx], sizeof(complex_PRECISION)*(jx+2) );
+    memset( p->polyprec_PRECISION->eigslvr.Hc[jx]+jx+2, 0.0, sizeof(complex_PRECISION)*(p->restart_length + 1 - (jx+2)) );
+  }
+#endif
+
   return 1;
 }
 

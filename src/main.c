@@ -101,7 +101,11 @@ int main( int argc, char **argv ) {
     struct Thread threading;
     setup_threading(&threading, commonthreaddata, &l);
     setup_no_threading(no_threading, &l);
-    
+
+    printf0(GREEN"\n--------------------------------------------------------\n");
+    printf0("****************** SOME INITIAL DEFS *******************\n");
+    printf0("--------------------------------------------------------\n\n"RESET);
+
     // setup up initial MG hierarchy
     method_setup( NULL, &l, &threading );
     

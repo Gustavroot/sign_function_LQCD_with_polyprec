@@ -21,7 +21,10 @@
 
 #ifndef MAIN_PRE_DEF_PRECISION_HEADER
   #define MAIN_PRE_DEF_PRECISION_HEADER
-  
+
+  struct polyprec_double_struct;
+  struct polyprec_float_struct;
+
   typedef PRECISION complex complex_PRECISION;
   typedef PRECISION complex *config_PRECISION;
   typedef PRECISION complex *vector_PRECISION;
@@ -94,7 +97,7 @@
 #endif
 
 #ifdef POLYPREC
-  typedef struct
+  typedef struct polyprec_PRECISION_struct
   {
     int update_lejas;
     int d_poly;
@@ -126,7 +129,8 @@
     int num_restart, restart_length, timing, print, kind,
         initial_guess_zero, layout, v_start, v_end, total_storage;
 #ifdef POLYPREC
-    polyprec_PRECISION_struct polyprec_PRECISION;
+    struct polyprec_double_struct *polyprec_double;
+    struct polyprec_float_struct  *polyprec_float;
 #endif
     void (*preconditioner)();
     void (*eval_operator)();

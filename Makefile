@@ -23,7 +23,7 @@ DEP = $(patsubst %.c,%.dep,$(GSRC))
 
 # --- FLAGS -------------------------------------------
 # make this empty to disable POLYPREC
-POLYPREC_ENABLER = #-DPOLYPREC
+POLYPREC_ENABLER = -DPOLYPREC
 
 OPT_FLAGS = -fopenmp -msse4.2 -DORTH_MGS $(POLYPREC_ENABLER) #-DSSE -DOPENMP
 CFLAGS = -DPARAMOUTPUT -DTRACK_RES -DFGMRES_RESTEST -DPROFILING
