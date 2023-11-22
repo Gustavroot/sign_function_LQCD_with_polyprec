@@ -54,7 +54,7 @@ LAPACKE_INCLUDE =
 LAPACK_LIBRARIES =
 endif
 
-all: wilson library documentation
+all: wilson library #documentation
 wilson: dd_alpha_amg dd_alpha_amg_db
 library: lib/libdd_alpha_amg.a include/dd_alpha_amg_parameters.h include/dd_alpha_amg.h
 documentation: doc/user_doc.pdf

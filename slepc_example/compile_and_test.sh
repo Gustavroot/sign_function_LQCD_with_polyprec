@@ -1,10 +1,9 @@
 # load modules on JUWELS
-. ../load_JUWELS_modules.sh
-
+#. ../load_JUWELS_modules.sh
 # compile
-mpicc slepc_test.c -DPETSC_USE_COMPLEX -lpetsc -lslepc -lm
-
+#mpicc slepc_test.c -DPETSC_USE_COMPLEX -lpetsc -lslepc -lm
 # test
-sbatch subSLEPC_TEST.sh
+#sbatch subSLEPC_TEST.sh
 
-#./a.out -fn_scale 1.0,1.0 -n 10 -fn_method 0 -verbose 1
+make
+sbatch subSLEPC_TEST.sh

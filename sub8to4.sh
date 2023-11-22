@@ -12,4 +12,4 @@
 
 
 
-. run16 -i sample16.ini
+. run16 -i sample_16_procs.ini

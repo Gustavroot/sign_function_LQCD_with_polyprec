@@ -2,7 +2,7 @@
 
 # This file deals with installing BLAS and LAPACK
 
-make_cores=2
+make_cores=8
 
 lapack_version=3.9.0
 lapack_dir=lapack-${lapack_version}
@@ -20,3 +20,5 @@ cp make.inc.example make.inc
 make -j ${make_cores}
 cd BLAS && make -j ${make_cores} && cd ..
 cd LAPACKE && make -j ${make_cores} && cd ..
+
+cd ../../
