@@ -421,6 +421,7 @@
 
 #ifdef POLYPREC
     int polyprec_d;
+    int use_polyprec;
 #endif
 
   } global_struct;

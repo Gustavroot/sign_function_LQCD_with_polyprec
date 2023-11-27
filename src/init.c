@@ -856,6 +856,9 @@ void read_solver_parameters( FILE *in, level_struct *l ) {
   save_pt = &(g.polyprec_d); g.polyprec_d = 5;
   read_parameter( &save_pt, "polyprec_d:", "%d", 1, in, _DEFAULT_SET );
   g.polyprec_d++;
+
+  save_pt = &(g.use_polyprec); g.use_polyprec = 1;
+  read_parameter( &save_pt, "use_polyprec:", "%d", 1, in, _DEFAULT_SET );
 #endif
 
   save_pt = &(l->real_shift);

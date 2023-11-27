@@ -1,0 +1,266 @@
+
++- subspace correction methods for QCD applications -+
+|                                                    |
+|  Use option >> -? << for help                      |
+|                                                    |
++----------------------------------------------------+
+
+
+Number of Processes: 256
+Program is being started...
+
+
+
++----------------------------------------------------------------------+
+| The DDalphaAMG solver library.                                       |
+| Copyright (C) 2016, Matthias Rottmann, Artur Strebel,                |
+|       Simon Heybrock, Simone Bacchio, Bjoern Leder, Issaku Kanamori. |
+|                                                                      |
+| This program comes with ABSOLUTELY NO WARRANTY.                      |
++----------------------------------------------------------------------+
+
+configuration: ../../../../../../../p/project/chwu29/ramirez1/configs/ciw/qcdsf.632.01000.mg2
+
+Desired average plaquette: 1.6479691428981 in [0,3]
+
+Desired average plaquette: 0.5493230476327 in [0,1]
+BASIS0:OPENQCD/DD-HMC BASIS
+periodic boundary conditions in time
+Configuration stored...
+average plaquette: 1.6479691428981 in [0,3]
+
++----------------------------------------------------------+
+| read in and set up the parallel dirac operator           |
+| elapsed wall clock time: 0.122108     seconds            |
++----------------------------------------------------------+
+[1m[32m
+--------------------------------------------------------
+****************** SOME INITIAL DEFS *******************
+--------------------------------------------------------
+
+[0melapsed time: 0.013847 seconds
+
++----------------------------------------------------------+
+| pure GMRES                                               |
+|          restart length: 150                             |
+|                      m0: -0.337830                       |
+|                     csw: +1.919200                       |
++---------------------- depth  0 --------------------------+
+|          global lattice: 64  32  32  32                  |
+|           local lattice: 4   4   16  32                  |
++---------------------- depth  1 --------------------------+
+|          global lattice: 16  8   8   8                   |
+|           local lattice: 1   1   4   8                   |
++----------------------------------------------------------+
+
+
++----------------------------------------------------------+
+| solver profiling                                         |
++----------------------------------------------------------+
+| depth:   0 / level:   1                time    ( count ) |
++----------------------------------------------------------+
+|                copy operations, float: 2.16e-03(      3) |
++----------------------------------------------------------+
+| flop/lattice site:  0.00e+00                             |
+| flop/s/MPIprocess:  0.00e+00                             |
++----------------------------------------------------------+
+
+rhs = random
+[1m[32m
+--------------------------------------------------------
+********************* CHECK #1 *************************
+--------------------------------------------------------
+
+[0mratio of matvecs/dotprods on your machine : 32.790145
+
+[1m[32m
+--------------------------------------------------------
+***************** BUILDING POLYNOMIAL ******************
+--------------------------------------------------------
+
+[0msome specific timings from Arnoldi :
+
++----------------------------------------------------------+
+| elapsed wall clock time: 0.2489   seconds                |
+|  consumed core minutes*: 1.06e+00 (solve only)           |
+|    max used mem/MPIproc: 5.19e-01 GB                     |
++----------------------------------------------------------+
+*: only correct if #MPIprocs*#threads == #CPUs
+
+
++----------------------------------------------------------+
+| solver profiling                                         |
++----------------------------------------------------------+
+| depth:   0 / level:   1                time    ( count ) |
++----------------------------------------------------------+
+|          global inner product, double: 6.90e-02(    153) |
+|      2 flop vector operations, double: 1.22e-02(     17) |
+|      8 flop vector operations, double: 4.11e-02(    136) |
+|               copy operations, double: 2.49e-04(      1) |
+|                 self coupling, double: 2.34e-02(     16) |
+|             neighbor coupling, double: 1.02e-01(     16) |
+|            operator comm init, double: 3.32e-04(     96) |
+|            operator comm wait, double: 1.05e-02(     96) |
+|                    allreduces, double: 2.52e-02(    153) |
++----------------------------------------------------------+
+| flop/lattice site:  5.89e+04                             |
+| flop/s/MPIprocess:  1.94e+09                             |
++----------------------------------------------------------+
+
+the Lejas have been computed, ordered appropriately and stored
+[1m[32m
+--------------------------------------------------------
+***************** CHECKING POLYNOMIAL ******************
+--------------------------------------------------------
+
+[0mcheck #0, relative error : 0.035610
+check #1, relative error : 0.035579
+check #2, relative error : 0.035596
+check #3, relative error : 0.035707
+check #4, relative error : 0.035646
+check #5, relative error : 0.035594
+check #6, relative error : 0.035671
+check #7, relative error : 0.035669
+check #8, relative error : 0.035667
+check #9, relative error : 0.035577
+[1m[32m
+--------------------------------------------------------
+********************* CHECK #2 *************************
+--------------------------------------------------------
+
+[0mrunning Arnoldi, checking the Arnoldi relation
+
+some specific timings from Arnoldi :
+
++----------------------------------------------------------+
+| elapsed wall clock time: 9.2417   seconds                |
+|  consumed core minutes*: 3.94e+01 (solve only)           |
+|    max used mem/MPIproc: 5.19e-01 GB                     |
++----------------------------------------------------------+
+*: only correct if #MPIprocs*#threads == #CPUs
+
+
++----------------------------------------------------------+
+| solver profiling                                         |
++----------------------------------------------------------+
+| depth:   0 / level:   1                time    ( count ) |
++----------------------------------------------------------+
+|          global inner product, double: 4.96e+00(  11476) |
+|      2 flop vector operations, double: 1.04e-01(    151) |
+|      8 flop vector operations, double: 2.85e+00(  11325) |
+|               copy operations, double: 1.31e-01(    151) |
+|                 self coupling, double: 2.43e-01(    150) |
+|             neighbor coupling, double: 9.50e-01(    150) |
+|            operator comm init, double: 3.26e-03(    900) |
+|            operator comm wait, double: 1.04e-01(    900) |
+|                    allreduces, double: 1.90e+00(  11476) |
++----------------------------------------------------------+
+| flop/lattice site:  2.48e+06                             |
+| flop/s/MPIprocess:  2.20e+09                             |
++----------------------------------------------------------+
+
+relative error in Arnoldi relation :2.56445546074860e-36
+
+relative error in orthonormality : 6.40707046394716e-28
+
+[1m[32m
+--------------------------------------------------------
+************** COMPUTING SIGN FUNCTION *****************
+--------------------------------------------------------
+
+[0msome specific timings from Arnoldi :
+
++----------------------------------------------------------+
+| elapsed wall clock time: 9.0619   seconds                |
+|  consumed core minutes*: 3.87e+01 (solve only)           |
+|    max used mem/MPIproc: 5.19e-01 GB                     |
++----------------------------------------------------------+
+*: only correct if #MPIprocs*#threads == #CPUs
+
+
++----------------------------------------------------------+
+| solver profiling                                         |
++----------------------------------------------------------+
+| depth:   0 / level:   1                time    ( count ) |
++----------------------------------------------------------+
+|          global inner product, double: 4.87e+00(  11476) |
+|      2 flop vector operations, double: 6.52e-02(    151) |
+|      8 flop vector operations, double: 2.83e+00(  11325) |
+|               copy operations, double: 1.04e-01(    151) |
+|                 self coupling, double: 2.15e-01(    150) |
+|             neighbor coupling, double: 9.65e-01(    150) |
+|            operator comm init, double: 3.26e-03(    900) |
+|            operator comm wait, double: 1.08e-01(    900) |
+|                    allreduces, double: 1.82e+00(  11476) |
++----------------------------------------------------------+
+| flop/lattice site:  2.48e+06                             |
+| flop/s/MPIprocess:  2.24e+09                             |
++----------------------------------------------------------+
+
+total time spent on Arnoldi : 9.062239 seconds
+
+Matrix inverse square root, n=150.
+FN Object: 256 MPI processes
+  type: invsqrt
+  parallel operation mode: REDUNDANT
+    inverse square root: x^(-1/2)
+    computing matrix functions with: Schur method for inv(A)*sqrtm(A)
+||S*S*A-I||_F = 3.08977e-09
+relative error from invsqrt : 4.38796813e-13
+
+time spent on invsqrt_of_H : 0.436697
+
+time spent on Zm*b1 : 0.039001
+
+[1m[32m
+--------------------------------------------------------
+************** COMPUTING SIGN FUNCTION *****************
+--------------------------------------------------------
+
+[0msome specific timings from Arnoldi :
+
++----------------------------------------------------------+
+| elapsed wall clock time: 11.6383  seconds                |
+|  consumed core minutes*: 4.97e+01 (solve only)           |
+|    max used mem/MPIproc: 5.20e-01 GB                     |
++----------------------------------------------------------+
+*: only correct if #MPIprocs*#threads == #CPUs
+
+
++----------------------------------------------------------+
+| solver profiling                                         |
++----------------------------------------------------------+
+| depth:   0 / level:   1                time    ( count ) |
++----------------------------------------------------------+
+|          global inner product, double: 7.45e+00(  11476) |
+|      2 flop vector operations, double: 6.53e-02(    151) |
+|      8 flop vector operations, double: 2.83e+00(  11325) |
+|               copy operations, double: 1.04e-01(    151) |
+|                 self coupling, double: 2.16e-01(    150) |
+|             neighbor coupling, double: 9.64e-01(    150) |
+|            operator comm init, double: 3.62e-03(    900) |
+|            operator comm wait, double: 1.06e-01(    900) |
+|                    allreduces, double: 4.40e+00(  11476) |
++----------------------------------------------------------+
+| flop/lattice site:  2.48e+06                             |
+| flop/s/MPIprocess:  1.75e+09                             |
++----------------------------------------------------------+
+
+total time spent on Arnoldi : 11.638486 seconds
+
+Matrix inverse square root, n=150.
+FN Object: 256 MPI processes
+  type: invsqrt
+  parallel operation mode: REDUNDANT
+    inverse square root: x^(-1/2)
+    computing matrix functions with: Schur method for inv(A)*sqrtm(A)
+||S*S*A-I||_F = 5.15118e-09
+relative error from invsqrt : 5.33876751e-13
+
+time spent on invsqrt_of_H : 0.104705
+
+time spent on Zm*b1 : 0.039650
+
+relative error in sign^2=1 : 7.59297702e-02
+[31mwarning: amount of not freed memory/MPIproc: 0.688232 MB
+[0m(handleFWMessage:) KVS process 0x01f1252b[497:9515] finished

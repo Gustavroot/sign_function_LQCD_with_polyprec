@@ -333,13 +333,13 @@ void sign_function_prec_pow1( vector_double out, vector_double in, gmres_double_
 
 void sign_function_prec_pow2( vector_double out, vector_double in, gmres_double_struct* p, level_struct* l, struct Thread* threading ) {
 
-  //printf0( "CALLING POW2 !!\n" );
-
-  //int start,end;
-  //compute_core_start_end(p->v_start, p->v_end, &start, &end, l, threading);
-  //vector_double_copy( out, in, start, end, l );
-
-  apply_polyprec_double( out, NULL, in, 0, l, threading );
+  if ( g.use_polyprec==0 ) {
+    int start,end;
+    compute_core_start_end(p->v_start, p->v_end, &start, &end, l, threading);
+    vector_double_copy( out, in, start, end, l );
+  } else {
+    apply_polyprec_double( out, NULL, in, 0, l, threading );
+  }
 }
 
 
