@@ -55,6 +55,7 @@ LAPACKE_INCLUDE =
 LAPACK_LIBRARIES =
 endif
 
+# IMPORTANT : to obtain these two variables' contents, go to slepc_example/ and run <make>, and get them from there
 ifeq ($(SLEPC_ENABLER),-DUSE_SLEPC)
 #include ${SLEPC_DIR}/lib/slepc/conf/slepc_common
 SLEPC_FLAGS_COMP = -O2 -ftree-vectorize -march=native -fno-math-errno -fPIC -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64  -I/p/home/jusers/ramirez1/juwels/projects/sign_function_LQCD_with_polyprec/dependencies/slepc/dir/include -I/p/home/jusers/ramirez1/juwels/projects/sign_function_LQCD_with_polyprec/dependencies/slepc/dir/include  -I/p/software/juwels/stages/2024/software/PETSc/3.20.0-gpsfbf-2023a-complex/include -I/p/software/juwels/stages/2024/software/ParMETIS/4.0.3-gpsmpi-2023a/include -I/p/software/juwels/stages/2024/software/METIS/5.1.0-GCC-12.3.0/include -I/p/software/juwels/stages/2024/software/HDF5/1.14.2-gpsmpi-2023a/include
