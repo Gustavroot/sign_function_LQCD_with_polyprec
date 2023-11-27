@@ -321,15 +321,15 @@ void sign_function_prec_pow2( vector_double out, vector_double in, gmres_double_
 
 void invsqrt_of_H( complex_double** His, complex_double** H, int n ) {
 
-  // TODO : implement this correctly
+  small_dense_invsqrt( His, H, n );
 
-  int i,j;
-
-  for ( i=0;i<n;i++ ) {
-    for ( j=0;j<n;j++ ) {
-      His[j][i] = (double) (((double)rand()/(double)RAND_MAX));
-    }
-  }
+  //// TODO : implement this correctly
+  //int i,j;
+  //for ( i=0;i<n;i++ ) {
+  //  for ( j=0;j<n;j++ ) {
+  //    His[j][i] = (double) (((double)rand()/(double)RAND_MAX));
+  //  }
+  //}
 }
 
 

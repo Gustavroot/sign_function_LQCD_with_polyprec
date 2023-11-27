@@ -584,3 +584,7 @@
   #include "polyprec_double.h"
   #include "polyprec_float.h"
 #endif
+
+#ifdef USE_SLEPC
+  #include "slepcwrap.h"
+#endif

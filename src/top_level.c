@@ -86,8 +86,10 @@ int wilson_driver( vector_double solution, vector_double source, level_struct *l
   // calling a simple Arnoldi
   check_arnoldi_double( &(g.p), l, threading );
 
+#ifdef POLYPREC
   // construct the polynomial preconditioner and test it
   set_up_polynomial_and_test_double( &(g.p), l, threading );
+#endif
 
   // computing the sign function
   sign_function_double( &(g.p), l, threading );
