@@ -213,7 +213,8 @@ void check_arnoldi_double( gmres_double_struct *p, level_struct *l, struct Threa
 
     // first, compute the vector from the LHS of the Arnoldi relation
 
-    apply_operator_double( p->w, p->V[i], p, l, threading );
+    //apply_operator_double( p->w, p->V[i], p, l, threading );
+    sign_function_prec_pow2( p->w, p->V[i], p, l, threading );
     apply_operator_double( v1, p->w, p, l, threading );
 
     // second, the RHS one
@@ -334,11 +335,11 @@ void sign_function_prec_pow2( vector_double out, vector_double in, gmres_double_
 
   //printf0( "CALLING POW2 !!\n" );
 
-  int start,end;
-  compute_core_start_end(p->v_start, p->v_end, &start, &end, l, threading);
-  vector_double_copy( out, in, start, end, l );
+  //int start,end;
+  //compute_core_start_end(p->v_start, p->v_end, &start, &end, l, threading);
+  //vector_double_copy( out, in, start, end, l );
 
-  //apply_polyprec_double( out, NULL, in, 0, l, threading );
+  apply_polyprec_double( out, NULL, in, 0, l, threading );
 }
 
 
