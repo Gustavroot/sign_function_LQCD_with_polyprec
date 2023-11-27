@@ -212,6 +212,7 @@ void check_arnoldi_double( gmres_double_struct *p, level_struct *l, struct Threa
   for ( i=0;i<p->restart_length;i++ ) {
 
     // first, compute the vector from the LHS of the Arnoldi relation
+
     apply_operator_double( p->w, p->V[i], p, l, threading );
     apply_operator_double( v1, p->w, p, l, threading );
 
@@ -235,12 +236,12 @@ void check_arnoldi_double( gmres_double_struct *p, level_struct *l, struct Threa
 
 void sign_function_double( gmres_double_struct *p, level_struct *l, struct Thread *threading ) {
 
-  int i,start,end;
+  int i,j,k,start,end;
   double t0,t1;
 
   compute_core_start_end(p->v_start, p->v_end, &start, &end, l, threading);
 
-  printf0(GREEN"\n------------------------------------------------- -------\n");
+  printf0(GREEN"\n--------------------------------------------------------\n");
   printf0("************** COMPUTING SIGN FUNCTION *****************\n");
   printf0("--------------------------------------------------------\n\n"RESET);
 
@@ -250,7 +251,7 @@ void sign_function_double( gmres_double_struct *p, level_struct *l, struct Threa
   t0 = MPI_Wtime();
   arnoldi_double( p, l, threading );
   t1 = MPI_Wtime();
-  printf0( "total time spent on Arnoldi : %f seconds\n", t1-t0 );
+  printf0( "total time spent on Arnoldi : %f seconds\n\n", t1-t0 );
 
   // create the first unit vector and buffer vector
   complex_double* e1 = NULL;
@@ -267,15 +268,35 @@ void sign_function_double( gmres_double_struct *p, level_struct *l, struct Threa
     His[i] = His[0] + i*p->restart_length;
   }
 
-  // compute H^{-1/2} -- TODO : internals of this function still under construction
+  // and create another buffer to store H^{2}
+  complex_double** Hsq = NULL;
+  MALLOC( Hsq, complex_double*, p->restart_length );
+  Hsq[0] = NULL;
+  MALLOC( Hsq[0], complex_double, p->restart_length*p->restart_length );
+  for ( i=1;i<p->restart_length;i++ ) {
+    Hsq[i] = Hsq[0] + i*p->restart_length;
+  }
+
+  // before computing (H^{2})^{-1/2}, compute H^{2}
+  for( i=0;i<p->restart_length;i++ ) {
+    for( j=0;j<p->restart_length;j++ ) {
+      Hsq[j][i] = 0.0;
+      for( k=0;k<p->restart_length;k++ ) {
+        Hsq[j][i] += p->H[k][i]*p->H[j][k];
+      }
+    }
+  }
+
+  // compute (H^{2})^{-1/2}
   t0 = MPI_Wtime();
   START_MASTER(threading)
-  invsqrt_of_H( His, p->H, p->restart_length );
+  //invsqrt_of_H( His, p->H, p->restart_length );
+  invsqrt_of_H( His, Hsq, p->restart_length );
   END_MASTER(threading)
   t1 = MPI_Wtime();
   printf0( "\ntime spent on invsqrt_of_H : %f\n", t1-t0 );
 
-  // do H^{-1/2}*e1
+  // do (H^{2})^{-1/2}*e1
   memcpy( b1, His[0], p->restart_length*sizeof(complex_double) );
 
   // do Zm*b1 and store this in p->w
@@ -311,11 +332,13 @@ void sign_function_prec_pow1( vector_double out, vector_double in, gmres_double_
 
 void sign_function_prec_pow2( vector_double out, vector_double in, gmres_double_struct* p, level_struct* l, struct Thread* threading ) {
 
-  // UNDER CONSTRUCTION
+  //printf0( "CALLING POW2 !!\n" );
 
   int start,end;
   compute_core_start_end(p->v_start, p->v_end, &start, &end, l, threading);
   vector_double_copy( out, in, start, end, l );
+
+  //apply_polyprec_double( out, NULL, in, 0, l, threading );
 }
 
 

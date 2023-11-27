@@ -23,7 +23,7 @@ DEP = $(patsubst %.c,%.dep,$(GSRC))
 
 # --- FLAGS -------------------------------------------
 # make this empty to disable POLYPREC and/or SLEPC
-POLYPREC_ENABLER = #-DPOLYPREC
+POLYPREC_ENABLER = -DPOLYPREC
 SLEPC_ENABLER = -DUSE_SLEPC
 
 OPT_FLAGS = -fopenmp -msse4.2 -DORTH_MGS $(POLYPREC_ENABLER) $(SLEPC_ENABLER) #-DSSE -DOPENMP

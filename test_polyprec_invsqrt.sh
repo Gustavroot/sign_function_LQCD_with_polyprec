@@ -5,4 +5,4 @@ cd dependencies/
 cd ../
 
 make -j 8
-sbatch sub8to4.sh
+sbatch sub64x32to3.sh

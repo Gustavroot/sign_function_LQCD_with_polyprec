@@ -281,6 +281,8 @@ void fgmres_PRECISION_struct_alloc( int m, int n, int vl, PRECISION tol, const i
   p->polyprec_PRECISION->syst_size = vl;
 
   p->polyprec_PRECISION->eigslvr.A = p->polyprec_PRECISION->Hc[0];
+
+  p->polyprec_PRECISION->apply = 1;
 #endif
 
 }
@@ -982,13 +984,15 @@ int arnoldi_step_PRECISION( vector_PRECISION *V, vector_PRECISION *Z, vector_PRE
     // IMPORTANT : this scope is being modified to be used with the sign function
     //             with polynomial preconditioning
 
-    sign_function_prec_pow2( Z[j], V[j], p, l, threading ); // Z[j] = q(D)*V[j]
-
-    sign_function_prec_pow2( p->wy, Z[j], p, l, threading ); // wy = q(D)*Z[j]
-
-    apply_operator_PRECISION( p->wx, p->wy, p, l, threading ); // wx = D*wy
-
-    apply_operator_PRECISION( w, p->wx, p, l, threading ); // w = D*wx
+    if ( p->polyprec_PRECISION->apply==1 ) {
+      sign_function_prec_pow2( Z[j], V[j], p, l, threading ); // Z[j] = q(D)*V[j]
+      //sign_function_prec_pow2( p->wy, Z[j], p, l, threading ); // wy = q(D)*Z[j]
+      //apply_operator_PRECISION( p->wx, p->wy, p, l, threading ); // wx = D*wy
+      apply_operator_PRECISION( p->w, Z[j], p, l, threading ); // wx = D*wy
+      //apply_operator_PRECISION( w, p->wx, p, l, threading ); // w = D*wx
+    } else {
+      apply_operator_PRECISION( p->w, V[j], p, l, threading ); // wx = D*wy
+    }
 
     if ( shift ) vector_PRECISION_saxpy( w, w, V[j], shift, start, end, l );
   }

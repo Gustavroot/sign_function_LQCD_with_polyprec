@@ -32,13 +32,13 @@ void set_up_polynomial_and_test_PRECISION( gmres_PRECISION_struct *p, level_stru
   //l->p_PRECISION.polyprec_PRECISION.d_poly = g.polyprec_d;
   p->polyprec_PRECISION->d_poly = g.polyprec_d;
 
-  re_construct_lejas_PRECISION( l, threading );
-
-  //p->preconditioner = p->polyprec_PRECISION.preconditioner;
-
   printf0(GREEN"\n--------------------------------------------------------\n");
   printf0("***************** BUILDING POLYNOMIAL ******************\n");
   printf0("--------------------------------------------------------\n\n"RESET);
+
+  re_construct_lejas_PRECISION( l, threading );
+
+  //p->preconditioner = p->polyprec_PRECISION.preconditioner;
 
   printf0( "the Lejas have been computed, ordered appropriately and stored\n" );
 
@@ -181,29 +181,21 @@ int update_lejas_PRECISION( gmres_PRECISION_struct *p, level_struct *l, struct T
 
   vector_PRECISION random_rhs, buff0;
   random_rhs = p->polyprec_PRECISION->random_rhs;
-  PRECISION buff3, buff5;
   vector_PRECISION buff4;
 
-  int buff1, buff2;
+  int buff1;
   int fgmres_itersx;
 
   buff0 = p->b;
-  buff2 = p->num_restart;
   buff1 = p->restart_length;
-  buff3 = p->tol;
   buff4 = p->x;
-  buff5 = g.coarse_tol;
 
   SYNC_MASTER_TO_ALL(threading)
   SYNC_CORES(threading)
 
   START_MASTER(threading)
   p->b = random_rhs;
-  p->num_restart = 1;
   p->restart_length = p->polyprec_PRECISION->d_poly;
-  p->preconditioner = NULL;
-  p->tol = 1E-20;
-  g.coarse_tol = 1E-20;
   p->x = p->polyprec_PRECISION->xtmp;
   l->dup_H = 1;
   vector_PRECISION_define_random( random_rhs, p->v_start, p->v_end, l );
@@ -212,7 +204,10 @@ int update_lejas_PRECISION( gmres_PRECISION_struct *p, level_struct *l, struct T
   SYNC_MASTER_TO_ALL(threading)
   SYNC_CORES(threading)
 
-  fgmres_itersx = fgmres_PRECISION(p, l, threading);
+  p->polyprec_PRECISION->apply = 0;
+  //fgmres_itersx = fgmres_PRECISION(p, l, threading);
+  arnoldi_double( p,l,threading );
+  p->polyprec_PRECISION->apply = 1;
 
   SYNC_MASTER_TO_ALL(threading)
   SYNC_CORES(threading)
@@ -220,27 +215,26 @@ int update_lejas_PRECISION( gmres_PRECISION_struct *p, level_struct *l, struct T
   START_MASTER(threading)
   l->dup_H = 0;
   p->b = buff0;
-  p->num_restart = buff2;
   p->restart_length = buff1;
-  p->tol = buff3;
-  g.coarse_tol = buff5;
   p->x = buff4;
   END_MASTER(threading)
 
   SYNC_MASTER_TO_ALL(threading);
   SYNC_CORES(threading);
 
-  if ( fgmres_itersx == p->polyprec_PRECISION->d_poly ) {
-    START_MASTER(threading)
-    p->polyprec_PRECISION->preconditioner = p->polyprec_PRECISION->preconditioner_bare;
-    //l->p_PRECISION.polyprec_PRECISION.update_lejas = 0;
-    g.p.polyprec_PRECISION->update_lejas = 0;
-    END_MASTER(threading)
+  g.p.polyprec_PRECISION->update_lejas = 0;
 
-    SYNC_MASTER_TO_ALL(threading);
-    SYNC_CORES(threading);
+  //if ( fgmres_itersx == p->polyprec_PRECISION->d_poly ) {
+  //  START_MASTER(threading)
+  //  p->polyprec_PRECISION->preconditioner = p->polyprec_PRECISION->preconditioner_bare;
+  //  //l->p_PRECISION.polyprec_PRECISION.update_lejas = 0;
+  //  g.p.polyprec_PRECISION->update_lejas = 0;
+  //  END_MASTER(threading)
 
-  } else { return -1; }
+  //  SYNC_MASTER_TO_ALL(threading);
+  //  SYNC_CORES(threading);
+
+  //} else { return -1; }
 
   START_MASTER(threading)
   harmonic_ritz_PRECISION(p);

@@ -117,6 +117,8 @@
 
     eigslvr_PRECISION_struct eigslvr;
     dirctslvr_PRECISION_struct dirctslvr;
+
+    int apply;
   } polyprec_PRECISION_struct;
 #endif
 

@@ -58,10 +58,10 @@ PetscErrorCode MatInvSqrt(FN fn,Mat A,PetscViewer viewer,PetscBool verbose,Petsc
   PetscCall(MatDestroy(&Acopy));
 
   if (verbose) {
-    PetscCall(PetscPrintf(PETSC_COMM_WORLD,"Matrix A - - - - - - - -\n"));
-    PetscCall(MatView(A,viewer));
-    PetscCall(PetscPrintf(PETSC_COMM_WORLD,"Computed inv(sqrtm(A)) - - - - - - -\n"));
-    PetscCall(MatView(S,viewer));
+    //PetscCall(PetscPrintf(PETSC_COMM_WORLD,"Matrix A - - - - - - - -\n"));
+    //PetscCall(MatView(A,viewer));
+    //PetscCall(PetscPrintf(PETSC_COMM_WORLD,"Computed inv(sqrtm(A)) - - - - - - -\n"));
+    //PetscCall(MatView(S,viewer));
   }
 
   // finally, set His from S
@@ -256,7 +256,7 @@ void small_dense_invsqrt( complex_double **His, complex_double **H, int n ) {
   }
   frob_norm_CminI = sqrt(frob_norm_CminI);
 
-  printf( "relative error from invsqrt : %.8e\n",frob_norm_CminI/frob_norm_id );
+  printf0( "relative error from invsqrt : %.8e\n",frob_norm_CminI/frob_norm_id );
 
   free( argvx[0] );
   free( argvx );
