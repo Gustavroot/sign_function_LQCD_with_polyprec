@@ -49,9 +49,11 @@ void set_up_polynomial_and_test_PRECISION( gmres_PRECISION_struct *p, level_stru
   for (i=0;i<10;i++) {
     // set p->b to random and apply D to it
     vector_PRECISION_define_random( p->b, p->v_start, p->v_end, l );
-    apply_operator_PRECISION( p->w, p->b, p, l, threading );
+    apply_operator_PRECISION( p->wy, p->b, p, l, threading );
+    apply_operator_PRECISION( p->w, p->wy, p, l, threading );
     // and then p(D), which should approximately restore the original vector
     apply_polyprec_PRECISION( p->x, NULL, p->w, 0, l, threading );
+    //apply_polyprec_PRECISION( p->x, NULL, p->wy, 0, l, threading );
 
     // check the relative error
     vector_PRECISION_minus( p->x, p->x, p->b, p->v_start, p->v_end, l );
@@ -288,7 +290,8 @@ void apply_polyprec_PRECISION( vector_PRECISION phi, vector_PRECISION Dphi, vect
     SYNC_CORES(threading)
 
     //apply_operator_PRECISION(temp, product, &l->p_PRECISION, l, threading);
-    apply_operator_PRECISION(temp, product, p, l, threading);
+    apply_operator_PRECISION(phi, product, p, l, threading);
+    apply_operator_PRECISION(temp, phi, p, l, threading);
 
     vector_PRECISION_saxpy(product, product, temp, -1./lejas[i-1], start, end, l);
     vector_PRECISION_saxpy(accum_prod, accum_prod, product, 1./lejas[i], start, end, l);
