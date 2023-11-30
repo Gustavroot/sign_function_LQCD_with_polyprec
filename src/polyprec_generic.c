@@ -52,8 +52,8 @@ void set_up_polynomial_and_test_PRECISION( gmres_PRECISION_struct *p, level_stru
     apply_operator_PRECISION( p->wy, p->b, p, l, threading );
     apply_operator_PRECISION( p->w, p->wy, p, l, threading );
     // and then p(D), which should approximately restore the original vector
-    apply_polyprec_PRECISION( p->x, NULL, p->w, 0, l, threading );
-    //apply_polyprec_PRECISION( p->x, NULL, p->wy, 0, l, threading );
+    apply_polyprec_PRECISION( p->wy, NULL, p->w, 0, l, threading );
+    apply_polyprec_PRECISION( p->x, NULL, p->wy, 0, l, threading );
 
     // check the relative error
     vector_PRECISION_minus( p->x, p->x, p->b, p->v_start, p->v_end, l );
@@ -175,6 +175,57 @@ void leja_ordering_PRECISION( gmres_PRECISION_struct *p )
 }
 
 
+void compute_coeffs_PRECISION( gmres_PRECISION_struct *p ){
+
+  vector_PRECISION lejas = p->polyprec_PRECISION->lejas;
+  vector_PRECISION coeffs = p->polyprec_PRECISION->coeffs;
+
+  //int m = p->restart_length;
+  int m = p->polyprec_PRECISION->d_poly;
+  int i,j;
+
+  // allocate aux matrix, think of it as row-wise
+  complex_PRECISION **aux_mat = (complex_PRECISION**) malloc( m*sizeof(complex_PRECISION*) );
+  aux_mat[0] = (complex_PRECISION*) malloc( m*m*sizeof(complex_PRECISION) );
+  for ( i=1;i<m;i++ ) {
+    aux_mat[i] = aux_mat[0] + i*m;
+  }
+  // initialize to zero
+  for ( i=0;i<(m*m);i++ ) {
+    aux_mat[0][i] = 0.0;
+  }
+
+  // allocate aux array to store f(x)
+  complex_PRECISION *aux_arr = (complex_PRECISION*) malloc( m*sizeof(complex_PRECISION) );
+  // and evaluate f(x) on the lejas
+  for ( i=0;i<m;i++ ) {
+    // the function is the inverse here
+    //aux_arr[i] = 1 / lejas[i];
+    // we want to interpolate the inverse square root
+    aux_arr[i] = 1.0/csqrt(lejas[i]);
+  }
+  // and store those values of f(x) in aux_mat[:,0] i.e. the first column of aux_mat
+  for ( i=0;i<m;i++ ) {
+    aux_mat[i][0] = aux_arr[i];
+  }
+
+  // compute the elements in aux_mat
+  for ( i=1;i<m;i++){
+     for ( j=1;j<=i;j++ ){
+        aux_mat[i][j] = (aux_mat[i][j-1] - aux_mat[i-1][j-1]) / (lejas[i] - lejas[i-j]);
+    }
+  }
+
+  // from which we can extract the values that go in coeffs[]
+  for ( i=0;i<m;i++ ) {
+    coeffs[i] = aux_mat[i][i];
+  }
+
+  free(aux_mat[0]);
+  free(aux_mat);
+  free(aux_arr);
+}
+
 
 int update_lejas_PRECISION( gmres_PRECISION_struct *p, level_struct *l, struct Thread *threading )
 {
@@ -241,6 +292,7 @@ int update_lejas_PRECISION( gmres_PRECISION_struct *p, level_struct *l, struct T
   START_MASTER(threading)
   harmonic_ritz_PRECISION(p);
   leja_ordering_PRECISION(p);
+  compute_coeffs_PRECISION(p);
   END_MASTER(threading)
 
   SYNC_MASTER_TO_ALL(threading)
@@ -279,10 +331,11 @@ void apply_polyprec_PRECISION( vector_PRECISION phi, vector_PRECISION Dphi, vect
   vector_PRECISION product = p->polyprec_PRECISION->product;
   vector_PRECISION temp = p->polyprec_PRECISION->temp;
   vector_PRECISION lejas = p->polyprec_PRECISION->lejas;
+  vector_PRECISION coeffs = p->polyprec_PRECISION->coeffs;
 
   vector_PRECISION_copy( product, eta, start, end, l );
-  vector_PRECISION_define(accum_prod, 0.0, start, end, l);
-  vector_PRECISION_saxpy(accum_prod, accum_prod, product, 1./lejas[0], start, end, l);
+  vector_PRECISION_define( accum_prod, 0.0, start, end, l );
+  vector_PRECISION_saxpy( accum_prod, accum_prod, product, coeffs[0], start, end, l );
 
   for (i = 1; i < d_poly; i++)
   {
@@ -293,8 +346,8 @@ void apply_polyprec_PRECISION( vector_PRECISION phi, vector_PRECISION Dphi, vect
     apply_operator_PRECISION(phi, product, p, l, threading);
     apply_operator_PRECISION(temp, phi, p, l, threading);
 
-    vector_PRECISION_saxpy(product, product, temp, -1./lejas[i-1], start, end, l);
-    vector_PRECISION_saxpy(accum_prod, accum_prod, product, 1./lejas[i], start, end, l);
+    vector_PRECISION_saxpy(product, temp, product, -lejas[i-1], start, end, l);
+    vector_PRECISION_saxpy(accum_prod, accum_prod, product, coeffs[i], start, end, l);
   }
 
   vector_PRECISION_copy( phi, accum_prod, start, end, l );

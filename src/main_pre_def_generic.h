@@ -109,6 +109,7 @@
     complex_PRECISION *col_prods;
     vector_PRECISION h_ritz;
     vector_PRECISION lejas;
+    vector_PRECISION coeffs;
     vector_PRECISION random_rhs;
     vector_PRECISION accum_prod, product, temp, xtmp;
 

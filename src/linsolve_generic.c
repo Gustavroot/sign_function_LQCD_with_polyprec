@@ -60,6 +60,7 @@ void fgmres_PRECISION_struct_init( gmres_PRECISION_struct *p ) {
   p->polyprec_PRECISION->temp = NULL;
   p->polyprec_PRECISION->h_ritz = NULL;
   p->polyprec_PRECISION->lejas = NULL;
+  p->polyprec_PRECISION->coeffs = NULL;
   p->polyprec_PRECISION->random_rhs = NULL;
   p->polyprec_PRECISION->xtmp = NULL;
 
@@ -231,6 +232,7 @@ void fgmres_PRECISION_struct_alloc( int m, int n, int vl, PRECISION tol, const i
   MALLOC( p->polyprec_PRECISION->col_prods, complex_PRECISION, d_poly);
   MALLOC( p->polyprec_PRECISION->h_ritz, complex_PRECISION, d_poly);
   MALLOC( p->polyprec_PRECISION->lejas, complex_PRECISION, d_poly);
+  MALLOC( p->polyprec_PRECISION->coeffs, complex_PRECISION, d_poly);
   MALLOC( p->polyprec_PRECISION->random_rhs, complex_PRECISION, vl );
   MALLOC( p->polyprec_PRECISION->accum_prod, complex_PRECISION, vl );
   MALLOC( p->polyprec_PRECISION->product, complex_PRECISION, vl );
@@ -339,6 +341,7 @@ void fgmres_PRECISION_struct_free( gmres_PRECISION_struct *p, level_struct *l ) 
   FREE( p->polyprec_PRECISION->L, complex_PRECISION*, d_poly+1 );
   FREE( p->polyprec_PRECISION->h_ritz,complex_PRECISION, d_poly );
   FREE( p->polyprec_PRECISION->lejas,complex_PRECISION, d_poly );
+  FREE( p->polyprec_PRECISION->coeffs,complex_PRECISION, d_poly );
   FREE( p->polyprec_PRECISION->accum_prod, complex_PRECISION, vl );
   FREE( p->polyprec_PRECISION->product, complex_PRECISION, vl );    
   FREE( p->polyprec_PRECISION->temp, complex_PRECISION, vl );    
