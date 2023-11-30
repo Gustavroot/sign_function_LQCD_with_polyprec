@@ -34,6 +34,10 @@
       compute_core_start_end_custom(p->v_start, p->v_end, &start, &end, l, threading, l->num_lattice_site_var );
       vector_PRECISION_saxpy( output, output, input, -p->shift, start, end, l );
     }
+
+#ifdef USE_OVERLAP
+    gamma5_PRECISION( output, output, l, threading );
+#endif
   }
   
   static inline void apply_operator_dagger_PRECISION( vector_PRECISION output, vector_PRECISION input, gmres_PRECISION_struct *p, level_struct *l, struct Thread *threading ) {

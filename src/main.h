@@ -424,6 +424,10 @@
     int use_polyprec;
 #endif
 
+#ifdef WITH_CHEM_POT
+    double chem_potential,chem_potential_fctr_min,chem_potential_fctr_pls;
+#endif
+
   } global_struct;
 
   extern global_struct g;

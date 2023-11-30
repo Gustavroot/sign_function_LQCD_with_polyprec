@@ -852,6 +852,13 @@ void read_solver_parameters( FILE *in, level_struct *l ) {
   save_pt = &(g.odd_even); g.odd_even = 1;
   read_parameter( &save_pt, "odd even preconditioning:", "%d", 1, in, _DEFAULT_SET );
 
+#ifdef WITH_CHEM_POT
+  save_pt = &(g.chem_potential);
+  read_parameter( &save_pt, "chemical potential:", "%lf", 1, in, _NO_DEFAULT_SET );
+  g.chem_potential_fctr_min = exp(-g.chem_potential);
+  g.chem_potential_fctr_pls = exp(g.chem_potential);
+#endif
+
 #ifdef POLYPREC
   save_pt = &(g.polyprec_d); g.polyprec_d = 5;
   read_parameter( &save_pt, "polyprec_d:", "%d", 1, in, _DEFAULT_SET );

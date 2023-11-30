@@ -199,6 +199,14 @@ void d_plus_clover_PRECISION( vector_PRECISION eta, vector_PRECISION phi, operat
     prn_T_PRECISION( pbuf, phi_pt );
     mvmh_PRECISION( op->prpT+j, D_pt, pbuf );
     mvmh_PRECISION( op->prpT+j+3, D_pt, pbuf+3 ); D_pt += 9;
+#ifdef WITH_CHEM_POT
+    // take the 6-vector starting at op->prpT+j, and multiply it by e^{-g.chem_potential}
+    int ix;
+    complex_PRECISION *prpT_pt = op->prpT+j;
+    for( ix=0;ix<6;ix++ ){
+      prpT_pt[ix] = prpT_pt[ix] * g.chem_potential_fctr_min;
+    }
+#endif
     // Z dir
     j = 6*(*nb_pt); nb_pt++;
     prn_Z_PRECISION( pbuf, phi_pt );
@@ -235,6 +243,13 @@ void d_plus_clover_PRECISION( vector_PRECISION eta, vector_PRECISION phi, operat
     j = 6*(*nb_pt); nb_pt++;
     mvm_PRECISION( pbuf, D_pt, op->prnT+j );
     mvm_PRECISION( pbuf+3, D_pt, op->prnT+j+3 );
+#ifdef WITH_CHEM_POT
+    // take the 6-vector starting at pbuf, and multiply it by e^{g.chem_potential}
+    int ix;
+    for( ix=0;ix<6;ix++ ){
+      pbuf[ix] = pbuf[ix] * g.chem_potential_fctr_pls;
+    }
+#endif
     pbp_su3_T_PRECISION( pbuf, eta_pt ); D_pt += 9;
     // Z dir
     j = 6*(*nb_pt); nb_pt++;
