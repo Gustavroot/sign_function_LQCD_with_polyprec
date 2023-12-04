@@ -22,6 +22,69 @@
 #include "main.h"
 
 
+
+
+
+
+
+
+void export_matrix_double( gmres_double_struct *p, level_struct *l, struct Thread *threading ){
+
+  int i,j,start,end;
+  vector_double out,in;
+
+  PUBLIC_MALLOC( out, complex_double, l->vector_size );
+  PUBLIC_MALLOC( in, complex_double, l->vector_size );
+
+  compute_core_start_end( p->v_start, p->v_end, &start, &end, l, threading );
+
+  FILE *fp;
+  fp = fopen("../../../../../../../p/project/chwu29/ramirez1/matr_data.txt", "w");
+
+  for ( i=0;i<p->v_end;i++ ) {
+
+    START_MASTER(threading);
+    printf0( "column : %d\n",i );
+    END_MASTER(threading);
+    SYNC_MASTER_TO_ALL(threading);
+
+    vector_double_define( in, 0, start, end, l );
+    START_MASTER(threading);
+    in[i] = 1.0;
+    END_MASTER(threading);
+    SYNC_MASTER_TO_ALL(threading);
+
+    apply_operator_double( out, in, p, l, threading );
+
+    START_MASTER(threading);
+    // saving data for the i-th column of D
+    for ( j=0;j<p->v_end;j++ ) {
+      if ( cabs_double(out[j]) > 1.0E-10 ) {
+        fprintf(fp,"%d,%d,%.14f,%.14f\n",j,i,creal_double(out[j]),cimag_double(out[j]));
+      }
+    }
+    END_MASTER(threading);
+    SYNC_MASTER_TO_ALL(threading);
+  }
+
+  fclose(fp);
+
+  PUBLIC_FREE( out, complex_double, l->vector_size );
+  PUBLIC_FREE( in, complex_double, l->vector_size );
+
+  exit(0);
+}
+
+
+
+
+
+
+
+
+
+
+
 int arnoldi_double( gmres_double_struct *p, level_struct *l, struct Thread *threading ) {
 
   int m = p->restart_length;

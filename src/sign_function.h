@@ -42,4 +42,6 @@
 
   void check_orthonormality( vector_double* V, gmres_double_struct* p, level_struct* l, struct Thread* threading );
 
+  void export_matrix_double( gmres_double_struct *p, level_struct *l, struct Thread *threading );
+
 #endif

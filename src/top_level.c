@@ -91,6 +91,9 @@ int wilson_driver( vector_double solution, vector_double source, level_struct *l
   // calling a simple Arnoldi
   check_arnoldi_double( &(g.p), l, threading );
 
+  // print matrix out, to do checks in MATLAB
+  //export_matrix_double( &(g.p), l, threading );
+
   // computing the sign function
   sign_function_double( &(g.p), l, threading );
 
