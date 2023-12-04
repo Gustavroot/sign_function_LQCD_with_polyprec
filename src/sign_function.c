@@ -23,11 +23,6 @@
 
 
 
-
-
-
-
-
 void export_matrix_double( gmres_double_struct *p, level_struct *l, struct Thread *threading ){
 
   int i,j,start,end;
@@ -76,15 +71,6 @@ void export_matrix_double( gmres_double_struct *p, level_struct *l, struct Threa
 }
 
 
-
-
-
-
-
-
-
-
-
 int arnoldi_double( gmres_double_struct *p, level_struct *l, struct Thread *threading ) {
 
   int m = p->restart_length;
@@ -109,8 +95,12 @@ int arnoldi_double( gmres_double_struct *p, level_struct *l, struct Thread *thre
   compute_core_start_end(p->v_start, p->v_end, &start, &end, l, threading);
 
   for( ol=0; ol<p->num_restart && finish==0; ol++ )  {
-  
-    vector_double_copy( p->r, p->b, start, end, l );
+
+    if ( p->polyprec_double->apply==1 ) {
+      sign_function_prec_pow2( p->r, p->b, p, l, threading );
+    } else {
+      vector_double_copy( p->r, p->b, start, end, l );
+    }
 
     gamma0 = (complex_double) global_norm_double( p->r, p->v_start, p->v_end, l, threading ); // gamma_0 = norm(r)
     START_MASTER(threading)
@@ -276,10 +266,15 @@ void check_arnoldi_double( gmres_double_struct *p, level_struct *l, struct Threa
 
     // first, compute the vector from the LHS of the Arnoldi relation
 
-    sign_function_prec_pow2( p->wy, p->V[i], p, l, threading );
-    sign_function_prec_pow2( p->wx, p->wy, p, l, threading );
-    apply_operator_double( p->w, p->wx, p, l, threading );
-    apply_operator_double( v1, p->w, p, l, threading );
+    apply_operator_double( p->wy, p->V[i], p, l, threading );
+    apply_operator_double( p->wx, p->wy, p, l, threading );
+    sign_function_prec_pow2( p->wy, p->wx, p, l, threading );
+    sign_function_prec_pow2( v1, p->wy, p, l, threading );
+
+//    sign_function_prec_pow2( p->wy, p->V[i], p, l, threading );
+//    sign_function_prec_pow2( p->wx, p->wy, p, l, threading );
+//    apply_operator_double( p->w, p->wx, p, l, threading );
+//    apply_operator_double( v1, p->w, p, l, threading );
 
     // second, the RHS one
     vector_double_define( v2, 0, start, end, l );
@@ -364,14 +359,14 @@ void sign_function_double( gmres_double_struct *p, level_struct *l, struct Threa
   // do (H^{2})^{-1/2}*e1
   memcpy( b1, His[0], p->restart_length*sizeof(complex_double) );
 
-  // do Zm*b1 and store this in p->w
+  // do Vm*b1 and store this in p->w
   t0 = MPI_Wtime();
   vector_double_define( p->w, 0, start, end, l );
   for ( i=0;i<p->restart_length;i++ ) {
-    vector_double_saxpy( p->w, p->w, p->Z[i], b1[i], start, end, l );
+    vector_double_saxpy( p->w, p->w, p->V[i], b1[i], start, end, l );
   }
   t1 = MPI_Wtime();
-  printf0( "\ntime spent on Zm*b1 : %f\n\n", t1-t0 );
+  printf0( "\ntime spent on Vm*b1 : %f\n\n", t1-t0 );
 
   apply_operator_double( p->x, p->w, p, l, threading ); // x = D*w
 

@@ -124,11 +124,10 @@ void fgmres_PRECISION_struct_alloc( int m, int n, int vl, PRECISION tol, const i
       MALLOC( p->Z, complex_PRECISION*, k );
     }
 #else
-
-    // IMPORTANT : modifying this for the sign function application
-    total += (m+1)*vl;
-    k = m+1;
-    MALLOC( p->Z, complex_PRECISION*, k );
+    // IMPORTANT : modifying this for the sign function application --> disabling for now
+    //total += (m+1)*vl;
+    //k = m+1;
+    //MALLOC( p->Z, complex_PRECISION*, k );
 #endif
   }
   
@@ -991,11 +990,14 @@ int arnoldi_step_PRECISION( vector_PRECISION *V, vector_PRECISION *Z, vector_PRE
     //             polynomial, otherwise we call sign_function_prec_pow2(...)
 
     if ( p->polyprec_PRECISION->apply==1 ) {
-      sign_function_prec_pow2( Z[j], V[j], p, l, threading ); // Z[j] = q(D)*V[j]
-      sign_function_prec_pow2( p->wy, Z[j], p, l, threading ); // wy = q(D)*Z[j]
-      apply_operator_PRECISION( p->wx, p->wy, p, l, threading ); // wx = D*wy
-      //apply_operator_PRECISION( p->w, Z[j], p, l, threading ); // wx = D*wy
-      apply_operator_PRECISION( w, p->wx, p, l, threading ); // w = D*wx
+      apply_operator_PRECISION( p->wy, V[j], p, l, threading ); // wx = D*wy
+      apply_operator_PRECISION( p->wx, p->wy, p, l, threading ); // w = D*wx
+      sign_function_prec_pow2( p->wy, p->wx, p, l, threading ); // Z[j] = q(D)*V[j]
+      sign_function_prec_pow2( w, p->wy, p, l, threading ); // wy = q(D)*Z[j]
+//      sign_function_prec_pow2( Z[j], V[j], p, l, threading ); // Z[j] = q(D)*V[j]
+//      sign_function_prec_pow2( p->wy, Z[j], p, l, threading ); // wy = q(D)*Z[j]
+//      apply_operator_PRECISION( p->wx, p->wy, p, l, threading ); // wx = D*wy
+//      apply_operator_PRECISION( w, p->wx, p, l, threading ); // w = D*wx
     } else {
       apply_operator_PRECISION( p->wy, V[j], p, l, threading ); // wy = D*V[j]
       apply_operator_PRECISION( p->w, p->wy, p, l, threading ); // w = D*wy
