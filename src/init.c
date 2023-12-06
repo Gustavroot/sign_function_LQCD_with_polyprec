@@ -868,6 +868,9 @@ void read_solver_parameters( FILE *in, level_struct *l ) {
   read_parameter( &save_pt, "use_polyprec:", "%d", 1, in, _DEFAULT_SET );
 #endif
 
+  save_pt = &(g.global_shift); g.global_shift = 0.0;
+  read_parameter( &save_pt, "global shift:", "%lf", 1, in, _NO_DEFAULT_SET );
+
   save_pt = &(l->real_shift);
   read_parameter( &save_pt, "m0:", "%lf", 1, in, _NO_DEFAULT_SET ); // ensuring downward compatibility
   read_parameter( &save_pt, "solver m0:", "%lf", 1, in, _DEFAULT_SET );

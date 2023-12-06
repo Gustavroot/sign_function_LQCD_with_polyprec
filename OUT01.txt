@@ -1,0 +1,216 @@
+
++- subspace correction methods for QCD applications -+
+|                                                    |
+|  Use option >> -? << for help                      |
+|                                                    |
++----------------------------------------------------+
+
+
+Number of Processes: 1024
+Program is being started...
+
+
+
++----------------------------------------------------------------------+
+| The DDalphaAMG solver library.                                       |
+| Copyright (C) 2016, Matthias Rottmann, Artur Strebel,                |
+|       Simon Heybrock, Simone Bacchio, Bjoern Leder, Issaku Kanamori. |
+|                                                                      |
+| This program comes with ABSOLUTELY NO WARRANTY.                      |
++----------------------------------------------------------------------+
+
+configuration: ../../../../../../../p/project/chwu29/ramirez1/configs/ciw/qcdsf.632.01000.mg2
+
+Desired average plaquette: 1.6479691428981 in [0,3]
+
+Desired average plaquette: 0.5493230476327 in [0,1]
+BASIS0:OPENQCD/DD-HMC BASIS
+periodic boundary conditions in time
+Configuration stored...
+average plaquette: 1.6479691428981 in [0,3]
+
++----------------------------------------------------------+
+| read in and set up the parallel dirac operator           |
+| elapsed wall clock time: 0.0139957    seconds            |
++----------------------------------------------------------+
+[1m[32m
+--------------------------------------------------------
+****************** SOME INITIAL DEFS *******************
+--------------------------------------------------------
+
+[0melapsed time: 0.007253 seconds
+
++----------------------------------------------------------+
+| pure GMRES                                               |
+|          restart length: 1500                             |
+|                      m0: -1.400000                       |
+|                     csw: +0.000000                       |
++---------------------- depth  0 --------------------------+
+|          global lattice: 64  32  32  32                  |
+|           local lattice: 2   4   16  16                  |
++---------------------- depth  1 --------------------------+
+|          global lattice: 32  8   8   8                   |
+|           local lattice: 1   1   4   4                   |
++----------------------------------------------------------+
+
+
++----------------------------------------------------------+
+| solver profiling                                         |
++----------------------------------------------------------+
+| depth:   0 / level:   1                time    ( count ) |
++----------------------------------------------------------+
+|                copy operations, float: 9.39e-04(      6) |
++----------------------------------------------------------+
+| flop/lattice site:  0.00e+00                             |
+| flop/s/MPIprocess:  0.00e+00                             |
++----------------------------------------------------------+
+
+rhs = random
+[1m[32m
+--------------------------------------------------------
+********************* CHECK #1 *************************
+--------------------------------------------------------
+
+[0mratio of matvecs/dotprods on your machine : 10.451704
+
+[1m[32m
+--------------------------------------------------------
+***************** BUILDING POLYNOMIAL ******************
+--------------------------------------------------------
+
+[0m
+some specific timings from Arnoldi :
+
++----------------------------------------------------------+
+| elapsed wall clock time: 0.0633   seconds                |
+|  consumed core minutes*: 1.08e+00 (solve only)           |
+|    max used mem/MPIproc: 7.05e-01 GB                     |
++----------------------------------------------------------+
+*: only correct if #MPIprocs*#threads == #CPUs
+
+
++----------------------------------------------------------+
+| solver profiling                                         |
++----------------------------------------------------------+
+| depth:   0 / level:   1                time    ( count ) |
++----------------------------------------------------------+
+|          global inner product, double: 2.02e-02(     78) |
+|      2 flop vector operations, double: 1.75e-03(     12) |
+|      6 flop vector operations, double: 1.67e-03(     22) |
+|      8 flop vector operations, double: 2.58e-03(     66) |
+|               copy operations, double: 2.66e-04(      1) |
+|             neighbor coupling, double: 3.62e-02(     22) |
+|            operator comm init, double: 2.10e-04(    176) |
+|            operator comm wait, double: 1.16e-02(    176) |
+|                    allreduces, double: 1.61e-02(     78) |
++----------------------------------------------------------+
+| flop/lattice site:  4.58e+04                             |
+| flop/s/MPIprocess:  1.48e+09                             |
++----------------------------------------------------------+
+
+the Lejas have been computed, ordered appropriately and stored
+[1m[32m
+--------------------------------------------------------
+***************** CHECKING POLYNOMIAL ******************
+--------------------------------------------------------
+
+[0mcheck #0, relative error : 0.073663
+check #1, relative error : 0.073768
+check #2, relative error : 0.073625
+check #3, relative error : 0.073657
+check #4, relative error : 0.073698
+check #5, relative error : 0.073598
+check #6, relative error : 0.073651
+check #7, relative error : 0.073705
+check #8, relative error : 0.073727
+check #9, relative error : 0.073695
+[1m[32m
+--------------------------------------------------------
+************** COMPUTING SIGN FUNCTION *****************
+--------------------------------------------------------
+
+[0mrelative error from invsqrt : 2.22004372e-14
+relative error from invsqrt : 3.09361158e-14
+indirect measure of relative error (m=51) : 1.07183903e-03
+relative error from invsqrt : 9.57040279e-14
+relative error from invsqrt : 9.95381845e-14
+indirect measure of relative error (m=101) : 5.43441308e-04
+relative error from invsqrt : 3.95234286e-13
+relative error from invsqrt : 2.22639184e-12
+indirect measure of relative error (m=151) : 3.65206191e-04
+relative error from invsqrt : 4.72123558e-13
+relative error from invsqrt : 2.63698421e-12
+indirect measure of relative error (m=201) : 2.89082168e-04
+relative error from invsqrt : 1.01919959e-12
+relative error from invsqrt : 1.93385505e-12
+indirect measure of relative error (m=251) : 3.12616986e-04
+relative error from invsqrt : 2.50710557e-12
+relative error from invsqrt : 4.11298530e-12
+indirect measure of relative error (m=301) : 4.01114881e-04
+relative error from invsqrt : 1.61069407e-11
+relative error from invsqrt : 3.73326977e-12
+indirect measure of relative error (m=351) : 3.87364455e-04
+relative error from invsqrt : 9.64037785e-12
+relative error from invsqrt : 4.04585558e-12
+indirect measure of relative error (m=401) : 3.11516664e-04
+relative error from invsqrt : 1.01470054e-11
+relative error from invsqrt : 6.97656062e-11
+indirect measure of relative error (m=451) : 2.73369749e-04
+relative error from invsqrt : 2.90487649e-11
+relative error from invsqrt : 6.53212689e-12
+indirect measure of relative error (m=501) : 2.26254155e-04
+relative error from invsqrt : 1.17572950e-11
+relative error from invsqrt : 1.31049505e-11
+indirect measure of relative error (m=551) : 2.13296042e-04
+relative error from invsqrt : 1.32305582e-11
+relative error from invsqrt : 2.08541876e-11
+indirect measure of relative error (m=601) : 2.05095659e-04
+relative error from invsqrt : 1.16655229e-11
+relative error from invsqrt : 1.06974574e-11
+indirect measure of relative error (m=651) : 1.72305962e-04
+relative error from invsqrt : 1.23038686e-11
+relative error from invsqrt : 1.31567622e-11
+indirect measure of relative error (m=701) : 1.22906920e-04
+relative error from invsqrt : 1.41307998e-11
+relative error from invsqrt : 1.24040813e-11
+indirect measure of relative error (m=751) : 7.65376645e-05
+relative error from invsqrt : 4.34122091e-11
+relative error from invsqrt : 1.44863409e-11
+indirect measure of relative error (m=801) : 8.41078768e-05
+relative error from invsqrt : 3.85392914e-11
+relative error from invsqrt : 1.64282857e-11
+indirect measure of relative error (m=851) : 7.08507997e-05
+relative error from invsqrt : 2.93162340e-11
+relative error from invsqrt : 1.64216997e-11
+indirect measure of relative error (m=901) : 4.91936547e-05
+relative error from invsqrt : 2.73467306e-11
+relative error from invsqrt : 3.33668176e-11
+indirect measure of relative error (m=951) : 3.01919662e-05
+relative error from invsqrt : 1.74845592e-11
+relative error from invsqrt : 2.94267160e-11
+indirect measure of relative error (m=1001) : 4.06856432e-05
+relative error from invsqrt : 5.31212454e-11
+relative error from invsqrt : 2.51094759e-11
+indirect measure of relative error (m=1051) : 2.96033646e-05
+relative error from invsqrt : 1.94173428e-11
+relative error from invsqrt : 2.39666406e-11
+indirect measure of relative error (m=1101) : 3.35780041e-05
+relative error from invsqrt : 3.82994478e-11
+relative error from invsqrt : 1.66471349e-11
+indirect measure of relative error (m=1151) : 3.44249919e-05
+relative error from invsqrt : 7.17261745e-11
+relative error from invsqrt : 1.76804425e-11
+indirect measure of relative error (m=1201) : 3.65795597e-05
+relative error from invsqrt : 2.73122964e-11
+relative error from invsqrt : 1.93970186e-11
+indirect measure of relative error (m=1251) : 3.09356912e-05
+relative error from invsqrt : 2.77267067e-11
+relative error from invsqrt : 3.14132576e-11
+indirect measure of relative error (m=1301) : 2.88031072e-05
+relative error from invsqrt : 1.81300782e-11
+relative error from invsqrt : 4.94703072e-11
+indirect measure of relative error (m=1351) : 2.71050285e-05
+relative error from invsqrt : 3.00730843e-11
+relative error from invsqrt : 2.34872239e-11
+indirect measure of relative error (m=1401) : 2.30464079e-05
+relative error from invsqrt : 9.58631118e-11

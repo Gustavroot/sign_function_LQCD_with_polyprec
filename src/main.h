@@ -422,6 +422,7 @@
 #ifdef POLYPREC
     int polyprec_d;
     int use_polyprec;
+    double global_shift;
 #endif
 
 #ifdef WITH_CHEM_POT

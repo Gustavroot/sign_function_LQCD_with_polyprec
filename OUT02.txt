@@ -1,0 +1,749 @@
+
++- subspace correction methods for QCD applications -+
+|                                                    |
+|  Use option >> -? << for help                      |
+|                                                    |
++----------------------------------------------------+
+
+
+Number of Processes: 1024
+Program is being started...
+
+
+
++----------------------------------------------------------------------+
+| The DDalphaAMG solver library.                                       |
+| Copyright (C) 2016, Matthias Rottmann, Artur Strebel,                |
+|       Simon Heybrock, Simone Bacchio, Bjoern Leder, Issaku Kanamori. |
+|                                                                      |
+| This program comes with ABSOLUTELY NO WARRANTY.                      |
++----------------------------------------------------------------------+
+
+configuration: ../../../../../../../p/project/chwu29/ramirez1/configs/ciw/qcdsf.632.01000.mg2
+
+Desired average plaquette: 1.6479691428981 in [0,3]
+
+Desired average plaquette: 0.5493230476327 in [0,1]
+BASIS0:OPENQCD/DD-HMC BASIS
+periodic boundary conditions in time
+Configuration stored...
+average plaquette: 1.6479691428981 in [0,3]
+
++----------------------------------------------------------+
+| read in and set up the parallel dirac operator           |
+| elapsed wall clock time: 0.0138235    seconds            |
++----------------------------------------------------------+
+[1m[32m
+--------------------------------------------------------
+****************** SOME INITIAL DEFS *******************
+--------------------------------------------------------
+
+[0melapsed time: 0.006047 seconds
+
++----------------------------------------------------------+
+| pure GMRES                                               |
+|          restart length: 200                             |
+|                      m0: -1.400000                       |
+|                     csw: +0.000000                       |
++---------------------- depth  0 --------------------------+
+|          global lattice: 64  32  32  32                  |
+|           local lattice: 2   4   16  16                  |
++---------------------- depth  1 --------------------------+
+|          global lattice: 32  8   8   8                   |
+|           local lattice: 1   1   4   4                   |
++----------------------------------------------------------+
+
+
++----------------------------------------------------------+
+| solver profiling                                         |
++----------------------------------------------------------+
+| depth:   0 / level:   1                time    ( count ) |
++----------------------------------------------------------+
+|                copy operations, float: 9.59e-04(      6) |
++----------------------------------------------------------+
+| flop/lattice site:  0.00e+00                             |
+| flop/s/MPIprocess:  0.00e+00                             |
++----------------------------------------------------------+
+
+rhs = random
+[1m[32m
+--------------------------------------------------------
+********************* CHECK #1 *************************
+--------------------------------------------------------
+
+[0mratio of matvecs/dotprods on your machine : 8.929318
+
+[1m[32m
+--------------------------------------------------------
+***************** BUILDING POLYNOMIAL ******************
+--------------------------------------------------------
+
+[0mrelative error from invsqrt : 1.18539381e-15
+relative error from invsqrt : 1.89222450e-15
+indirect measure of relative error (m=3) : 1.78730422e-01
+relative error from invsqrt : 1.89222450e-15
+relative error from invsqrt : 3.99310427e-15
+indirect measure of relative error (m=4) : 1.22458091e-01
+relative error from invsqrt : 3.99310427e-15
+relative error from invsqrt : 3.58593518e-15
+indirect measure of relative error (m=5) : 8.99720210e-02
+relative error from invsqrt : 3.58593518e-15
+relative error from invsqrt : 3.20013550e-15
+indirect measure of relative error (m=6) : 6.95866915e-02
+relative error from invsqrt : 3.20013550e-15
+relative error from invsqrt : 6.63490386e-15
+indirect measure of relative error (m=7) : 5.55246133e-02
+relative error from invsqrt : 6.63490386e-15
+relative error from invsqrt : 6.20773887e-15
+indirect measure of relative error (m=8) : 4.54351897e-02
+relative error from invsqrt : 6.20773887e-15
+relative error from invsqrt : 5.08250400e-15
+indirect measure of relative error (m=9) : 3.78402863e-02
+relative error from invsqrt : 5.08250400e-15
+relative error from invsqrt : 5.00803597e-15
+indirect measure of relative error (m=10) : 3.19813994e-02
+relative error from invsqrt : 5.00803597e-15
+relative error from invsqrt : 7.14792331e-15
+indirect measure of relative error (m=11) : 2.73448374e-02
+relative error from invsqrt : 7.14792331e-15
+relative error from invsqrt : 7.31863596e-15
+indirect measure of relative error (m=12) : 2.36104279e-02
+relative error from invsqrt : 7.31863596e-15
+relative error from invsqrt : 6.32471401e-15
+indirect measure of relative error (m=13) : 2.05610597e-02
+relative error from invsqrt : 6.32471401e-15
+relative error from invsqrt : 1.04305950e-14
+indirect measure of relative error (m=14) : 1.80275959e-02
+relative error from invsqrt : 1.04305950e-14
+relative error from invsqrt : 1.10552019e-14
+indirect measure of relative error (m=15) : 1.59037131e-02
+relative error from invsqrt : 1.10552019e-14
+relative error from invsqrt : 7.07611468e-15
+indirect measure of relative error (m=16) : 1.41026901e-02
+relative error from invsqrt : 7.07611468e-15
+relative error from invsqrt : 8.88335140e-15
+indirect measure of relative error (m=17) : 1.25588872e-02
+relative error from invsqrt : 8.88335140e-15
+relative error from invsqrt : 9.04558215e-15
+indirect measure of relative error (m=18) : 1.12313112e-02
+relative error from invsqrt : 9.04558215e-15
+relative error from invsqrt : 8.28323306e-15
+indirect measure of relative error (m=19) : 1.00829510e-02
+relative error from invsqrt : 8.28323306e-15
+relative error from invsqrt : 8.41447356e-15
+indirect measure of relative error (m=20) : 9.08297546e-03
+relative error from invsqrt : 8.41447356e-15
+relative error from invsqrt : 1.05347423e-14
+indirect measure of relative error (m=21) : 8.20609179e-03
+relative error from invsqrt : 1.05347423e-14
+relative error from invsqrt : 1.23090714e-14
+indirect measure of relative error (m=22) : 7.43449648e-03
+relative error from invsqrt : 1.23090714e-14
+relative error from invsqrt : 9.89460249e-15
+indirect measure of relative error (m=23) : 6.75152669e-03
+relative error from invsqrt : 9.89460249e-15
+relative error from invsqrt : 9.17480979e-15
+indirect measure of relative error (m=24) : 6.14976443e-03
+relative error from invsqrt : 9.17480979e-15
+relative error from invsqrt : 1.98911648e-14
+indirect measure of relative error (m=25) : 5.61652256e-03
+relative error from invsqrt : 1.98911648e-14
+relative error from invsqrt : 1.29837383e-14
+indirect measure of relative error (m=26) : 5.13920955e-03
+relative error from invsqrt : 1.29837383e-14
+relative error from invsqrt : 1.48055151e-14
+indirect measure of relative error (m=27) : 4.71583972e-03
+relative error from invsqrt : 1.48055151e-14
+relative error from invsqrt : 1.95704247e-14
+indirect measure of relative error (m=28) : 4.33602266e-03
+relative error from invsqrt : 1.95704247e-14
+relative error from invsqrt : 1.23443009e-14
+indirect measure of relative error (m=29) : 3.99462769e-03
+relative error from invsqrt : 1.23443009e-14
+relative error from invsqrt : 1.54809780e-14
+indirect measure of relative error (m=30) : 3.68611670e-03
+relative error from invsqrt : 1.54809780e-14
+relative error from invsqrt : 1.50931679e-14
+indirect measure of relative error (m=31) : 3.40998780e-03
+relative error from invsqrt : 1.50931679e-14
+relative error from invsqrt : 1.45306809e-14
+indirect measure of relative error (m=32) : 3.16042346e-03
+relative error from invsqrt : 1.45306809e-14
+relative error from invsqrt : 1.60984573e-14
+indirect measure of relative error (m=33) : 2.93487719e-03
+relative error from invsqrt : 1.60984573e-14
+relative error from invsqrt : 2.30812326e-14
+indirect measure of relative error (m=34) : 2.73199705e-03
+relative error from invsqrt : 2.30812326e-14
+relative error from invsqrt : 1.85824961e-14
+indirect measure of relative error (m=35) : 2.54758833e-03
+relative error from invsqrt : 1.85824961e-14
+relative error from invsqrt : 1.72699558e-14
+indirect measure of relative error (m=36) : 2.38083923e-03
+relative error from invsqrt : 1.72699558e-14
+relative error from invsqrt : 1.58681359e-14
+indirect measure of relative error (m=37) : 2.22933841e-03
+relative error from invsqrt : 1.58681359e-14
+relative error from invsqrt : 1.60487217e-14
+indirect measure of relative error (m=38) : 2.09180503e-03
+relative error from invsqrt : 1.60487217e-14
+relative error from invsqrt : 2.89247980e-14
+indirect measure of relative error (m=39) : 1.96689687e-03
+relative error from invsqrt : 2.89247980e-14
+relative error from invsqrt : 1.77029302e-14
+indirect measure of relative error (m=40) : 1.85195261e-03
+relative error from invsqrt : 1.77029302e-14
+relative error from invsqrt : 2.42268007e-14
+indirect measure of relative error (m=41) : 1.74795630e-03
+relative error from invsqrt : 2.42268007e-14
+relative error from invsqrt : 2.50139243e-14
+indirect measure of relative error (m=42) : 1.65315001e-03
+relative error from invsqrt : 2.50139243e-14
+relative error from invsqrt : 1.64581078e-14
+indirect measure of relative error (m=43) : 1.56726289e-03
+relative error from invsqrt : 1.64581078e-14
+relative error from invsqrt : 2.32927746e-14
+indirect measure of relative error (m=44) : 1.48980376e-03
+relative error from invsqrt : 2.32927746e-14
+relative error from invsqrt : 1.79706237e-14
+indirect measure of relative error (m=45) : 1.41887295e-03
+relative error from invsqrt : 1.79706237e-14
+relative error from invsqrt : 1.92081946e-14
+indirect measure of relative error (m=46) : 1.35417217e-03
+relative error from invsqrt : 1.92081946e-14
+relative error from invsqrt : 2.17546477e-14
+indirect measure of relative error (m=47) : 1.29534598e-03
+relative error from invsqrt : 2.17546477e-14
+relative error from invsqrt : 2.39049437e-14
+indirect measure of relative error (m=48) : 1.24147320e-03
+relative error from invsqrt : 2.39049437e-14
+relative error from invsqrt : 2.04602471e-14
+indirect measure of relative error (m=49) : 1.19218416e-03
+relative error from invsqrt : 2.04602471e-14
+relative error from invsqrt : 3.50829652e-14
+indirect measure of relative error (m=50) : 1.14730554e-03
+relative error from invsqrt : 3.50829652e-14
+relative error from invsqrt : 2.29315890e-14
+indirect measure of relative error (m=51) : 1.10583978e-03
+
+some specific timings from Arnoldi :
+
++----------------------------------------------------------+
+| elapsed wall clock time: 1.5830   seconds                |
+|  consumed core minutes*: 2.70e+01 (solve only)           |
+|    max used mem/MPIproc: 9.75e-02 GB                     |
++----------------------------------------------------------+
+*: only correct if #MPIprocs*#threads == #CPUs
+
+
++----------------------------------------------------------+
+| solver profiling                                         |
++----------------------------------------------------------+
+| depth:   0 / level:   1                time    ( count ) |
++----------------------------------------------------------+
+|          global inner product, double: 4.95e-01(   1378) |
+|      2 flop vector operations, double: 7.85e-03(     52) |
+|      6 flop vector operations, double: 1.13e-02(    102) |
+|      8 flop vector operations, double: 5.18e-02(   1326) |
+|               copy operations, double: 2.68e-04(      1) |
+|             neighbor coupling, double: 1.76e-01(    102) |
+|            operator comm init, double: 1.44e-03(    816) |
+|            operator comm wait, double: 4.86e-02(    816) |
+|                    allreduces, double: 4.19e-01(   1378) |
++----------------------------------------------------------+
+| flop/lattice site:  4.08e+05                             |
+| flop/s/MPIprocess:  5.27e+08                             |
++----------------------------------------------------------+
+
+the Lejas have been computed, ordered appropriately and stored
+[1m[32m
+--------------------------------------------------------
+***************** CHECKING POLYNOMIAL ******************
+--------------------------------------------------------
+
+[0mcheck #0, relative error : 0.003844
+check #1, relative error : 0.003746
+check #2, relative error : 0.003726
+check #3, relative error : 0.003819
+check #4, relative error : 0.003776
+check #5, relative error : 0.003784
+check #6, relative error : 0.003734
+check #7, relative error : 0.003812
+check #8, relative error : 0.003649
+check #9, relative error : 0.003800
+[1m[32m
+--------------------------------------------------------
+************** COMPUTING SIGN FUNCTION *****************
+--------------------------------------------------------
+
+[0mrelative error from invsqrt : 7.03262986e-16
+relative error from invsqrt : 1.08769398e-15
+indirect measure of relative error (m=3) : 2.02396684e-02
+relative error from invsqrt : 1.08769398e-15
+relative error from invsqrt : 1.89953414e-15
+indirect measure of relative error (m=4) : 1.80757309e-02
+relative error from invsqrt : 1.89953414e-15
+relative error from invsqrt : 6.95437326e-15
+indirect measure of relative error (m=5) : 1.39111580e-02
+relative error from invsqrt : 6.95437326e-15
+relative error from invsqrt : 4.00651183e-15
+indirect measure of relative error (m=6) : 1.20899810e-02
+relative error from invsqrt : 4.00651183e-15
+relative error from invsqrt : 5.89797516e-15
+indirect measure of relative error (m=7) : 1.29194552e-02
+relative error from invsqrt : 5.89797516e-15
+relative error from invsqrt : 5.21253981e-15
+indirect measure of relative error (m=8) : 1.16683946e-02
+relative error from invsqrt : 5.21253981e-15
+relative error from invsqrt : 6.54777767e-15
+indirect measure of relative error (m=9) : 9.52140327e-03
+relative error from invsqrt : 6.54777767e-15
+relative error from invsqrt : 7.63457688e-15
+indirect measure of relative error (m=10) : 9.34577681e-03
+relative error from invsqrt : 7.63457688e-15
+relative error from invsqrt : 8.22080063e-15
+indirect measure of relative error (m=11) : 9.01156634e-03
+relative error from invsqrt : 8.22080063e-15
+relative error from invsqrt : 1.04470255e-14
+indirect measure of relative error (m=12) : 8.34675175e-03
+relative error from invsqrt : 1.04470255e-14
+relative error from invsqrt : 1.24343090e-14
+indirect measure of relative error (m=13) : 7.97208943e-03
+relative error from invsqrt : 1.24343090e-14
+relative error from invsqrt : 1.38880962e-14
+indirect measure of relative error (m=14) : 7.79333049e-03
+relative error from invsqrt : 1.38880962e-14
+relative error from invsqrt : 1.90563347e-14
+indirect measure of relative error (m=15) : 8.36189504e-03
+relative error from invsqrt : 1.90563347e-14
+relative error from invsqrt : 1.26308575e-14
+indirect measure of relative error (m=16) : 9.44313876e-03
+relative error from invsqrt : 1.26308575e-14
+relative error from invsqrt : 1.34619230e-14
+indirect measure of relative error (m=17) : 8.20183616e-03
+relative error from invsqrt : 1.34619230e-14
+relative error from invsqrt : 1.59783221e-14
+indirect measure of relative error (m=18) : 6.87882009e-03
+relative error from invsqrt : 1.59783221e-14
+relative error from invsqrt : 1.68112021e-14
+indirect measure of relative error (m=19) : 6.12161874e-03
+relative error from invsqrt : 1.68112021e-14
+relative error from invsqrt : 2.74889262e-14
+indirect measure of relative error (m=20) : 5.46697634e-03
+relative error from invsqrt : 2.74889262e-14
+relative error from invsqrt : 1.82553399e-14
+indirect measure of relative error (m=21) : 5.55855937e-03
+relative error from invsqrt : 1.82553399e-14
+relative error from invsqrt : 4.04396284e-14
+indirect measure of relative error (m=22) : 5.45296359e-03
+relative error from invsqrt : 4.04396284e-14
+relative error from invsqrt : 2.30111380e-14
+indirect measure of relative error (m=23) : 6.40474274e-03
+relative error from invsqrt : 2.30111380e-14
+relative error from invsqrt : 2.21430390e-14
+indirect measure of relative error (m=24) : 6.40873871e-03
+relative error from invsqrt : 2.21430390e-14
+relative error from invsqrt : 5.02870603e-14
+indirect measure of relative error (m=25) : 4.46273888e-03
+relative error from invsqrt : 5.02870603e-14
+relative error from invsqrt : 4.23266734e-14
+indirect measure of relative error (m=26) : 2.89409990e-03
+relative error from invsqrt : 4.23266734e-14
+relative error from invsqrt : 2.55245326e-14
+indirect measure of relative error (m=27) : 1.78450611e-03
+relative error from invsqrt : 2.55245326e-14
+relative error from invsqrt : 3.03619619e-14
+indirect measure of relative error (m=28) : 1.20681405e-03
+relative error from invsqrt : 3.03619619e-14
+relative error from invsqrt : 2.41955428e-14
+indirect measure of relative error (m=29) : 9.00599601e-04
+relative error from invsqrt : 2.41955428e-14
+relative error from invsqrt : 7.67854310e-14
+indirect measure of relative error (m=30) : 8.87530218e-04
+relative error from invsqrt : 7.67854310e-14
+relative error from invsqrt : 3.29073957e-14
+indirect measure of relative error (m=31) : 8.62347894e-04
+relative error from invsqrt : 3.29073957e-14
+relative error from invsqrt : 4.70356756e-14
+indirect measure of relative error (m=32) : 6.20149687e-04
+relative error from invsqrt : 4.70356756e-14
+relative error from invsqrt : 3.07793645e-14
+indirect measure of relative error (m=33) : 5.98081001e-04
+relative error from invsqrt : 3.07793645e-14
+relative error from invsqrt : 5.42006846e-14
+indirect measure of relative error (m=34) : 5.11387502e-04
+relative error from invsqrt : 5.42006846e-14
+relative error from invsqrt : 7.69613333e-14
+indirect measure of relative error (m=35) : 5.17570142e-04
+relative error from invsqrt : 7.69613333e-14
+relative error from invsqrt : 3.41911546e-14
+indirect measure of relative error (m=36) : 5.51092095e-04
+relative error from invsqrt : 3.41911546e-14
+relative error from invsqrt : 3.41473725e-14
+indirect measure of relative error (m=37) : 4.29945975e-04
+relative error from invsqrt : 3.41473725e-14
+relative error from invsqrt : 5.73358362e-14
+indirect measure of relative error (m=38) : 4.22656791e-04
+relative error from invsqrt : 5.73358362e-14
+relative error from invsqrt : 2.94304670e-14
+indirect measure of relative error (m=39) : 4.54279582e-04
+relative error from invsqrt : 2.94304670e-14
+relative error from invsqrt : 5.31209995e-14
+indirect measure of relative error (m=40) : 5.38832212e-04
+relative error from invsqrt : 5.31209995e-14
+relative error from invsqrt : 2.88108551e-14
+indirect measure of relative error (m=41) : 7.15780175e-04
+relative error from invsqrt : 2.88108551e-14
+relative error from invsqrt : 2.75748662e-14
+indirect measure of relative error (m=42) : 7.87885769e-04
+relative error from invsqrt : 2.75748662e-14
+relative error from invsqrt : 4.60619979e-14
+indirect measure of relative error (m=43) : 7.87947420e-04
+relative error from invsqrt : 4.60619979e-14
+relative error from invsqrt : 6.94384425e-14
+indirect measure of relative error (m=44) : 7.88809703e-04
+relative error from invsqrt : 6.94384425e-14
+relative error from invsqrt : 3.09326324e-14
+indirect measure of relative error (m=45) : 8.84472113e-04
+relative error from invsqrt : 3.09326324e-14
+relative error from invsqrt : 3.66014745e-14
+indirect measure of relative error (m=46) : 8.67321907e-04
+relative error from invsqrt : 3.66014745e-14
+relative error from invsqrt : 3.65929431e-14
+indirect measure of relative error (m=47) : 7.10180064e-04
+relative error from invsqrt : 3.65929431e-14
+relative error from invsqrt : 3.41252709e-14
+indirect measure of relative error (m=48) : 5.13978016e-04
+relative error from invsqrt : 3.41252709e-14
+relative error from invsqrt : 4.83801934e-14
+indirect measure of relative error (m=49) : 4.27138976e-04
+relative error from invsqrt : 4.83801934e-14
+relative error from invsqrt : 3.50227826e-14
+indirect measure of relative error (m=50) : 4.09340267e-04
+relative error from invsqrt : 3.50227826e-14
+relative error from invsqrt : 6.12181728e-14
+indirect measure of relative error (m=51) : 3.72492910e-04
+relative error from invsqrt : 6.12181728e-14
+relative error from invsqrt : 3.01754160e-14
+indirect measure of relative error (m=52) : 3.12419873e-04
+relative error from invsqrt : 3.01754160e-14
+relative error from invsqrt : 6.17109139e-14
+indirect measure of relative error (m=53) : 2.78537978e-04
+relative error from invsqrt : 6.17109139e-14
+relative error from invsqrt : 4.86964109e-14
+indirect measure of relative error (m=54) : 2.20424365e-04
+relative error from invsqrt : 4.86964109e-14
+relative error from invsqrt : 4.45323617e-14
+indirect measure of relative error (m=55) : 1.78922269e-04
+relative error from invsqrt : 4.45323617e-14
+relative error from invsqrt : 3.16446137e-14
+indirect measure of relative error (m=56) : 2.02391095e-04
+relative error from invsqrt : 3.16446137e-14
+relative error from invsqrt : 2.98582221e-14
+indirect measure of relative error (m=57) : 1.90742404e-04
+relative error from invsqrt : 2.98582221e-14
+relative error from invsqrt : 5.83181000e-14
+indirect measure of relative error (m=58) : 1.57490007e-04
+relative error from invsqrt : 5.83181000e-14
+relative error from invsqrt : 4.74864867e-14
+indirect measure of relative error (m=59) : 1.55050426e-04
+relative error from invsqrt : 4.74864867e-14
+relative error from invsqrt : 8.68135476e-14
+indirect measure of relative error (m=60) : 1.43018684e-04
+relative error from invsqrt : 8.68135476e-14
+relative error from invsqrt : 3.21680562e-14
+indirect measure of relative error (m=61) : 1.40502876e-04
+relative error from invsqrt : 3.21680562e-14
+relative error from invsqrt : 1.21983284e-13
+indirect measure of relative error (m=62) : 1.69152931e-04
+relative error from invsqrt : 1.21983284e-13
+relative error from invsqrt : 3.60568179e-14
+indirect measure of relative error (m=63) : 1.75592964e-04
+relative error from invsqrt : 3.60568179e-14
+relative error from invsqrt : 3.71638601e-14
+indirect measure of relative error (m=64) : 2.04623123e-04
+relative error from invsqrt : 3.71638601e-14
+relative error from invsqrt : 3.11208279e-14
+indirect measure of relative error (m=65) : 2.03816281e-04
+relative error from invsqrt : 3.11208279e-14
+relative error from invsqrt : 5.65515732e-14
+indirect measure of relative error (m=66) : 1.69897612e-04
+relative error from invsqrt : 5.65515732e-14
+relative error from invsqrt : 6.77187435e-14
+indirect measure of relative error (m=67) : 1.66584638e-04
+relative error from invsqrt : 6.77187435e-14
+relative error from invsqrt : 3.66219751e-14
+indirect measure of relative error (m=68) : 1.76314071e-04
+relative error from invsqrt : 3.66219751e-14
+relative error from invsqrt : 4.53522397e-14
+indirect measure of relative error (m=69) : 1.23216212e-04
+relative error from invsqrt : 4.53522397e-14
+relative error from invsqrt : 4.41509984e-14
+indirect measure of relative error (m=70) : 8.93645881e-05
+relative error from invsqrt : 4.41509984e-14
+relative error from invsqrt : 4.12094531e-14
+indirect measure of relative error (m=71) : 1.08979609e-04
+relative error from invsqrt : 4.12094531e-14
+relative error from invsqrt : 3.72938900e-14
+indirect measure of relative error (m=72) : 1.27209678e-04
+relative error from invsqrt : 3.72938900e-14
+relative error from invsqrt : 7.02407750e-14
+indirect measure of relative error (m=73) : 1.10147868e-04
+relative error from invsqrt : 7.02407750e-14
+relative error from invsqrt : 7.53348295e-14
+indirect measure of relative error (m=74) : 1.07249146e-04
+relative error from invsqrt : 7.53348295e-14
+relative error from invsqrt : 4.47830135e-14
+indirect measure of relative error (m=75) : 8.51284621e-05
+relative error from invsqrt : 4.47830135e-14
+relative error from invsqrt : 5.06054367e-14
+indirect measure of relative error (m=76) : 7.90069818e-05
+relative error from invsqrt : 5.06054367e-14
+relative error from invsqrt : 7.64956666e-14
+indirect measure of relative error (m=77) : 6.10137679e-05
+relative error from invsqrt : 7.64956666e-14
+relative error from invsqrt : 7.55451943e-14
+indirect measure of relative error (m=78) : 4.77696653e-05
+relative error from invsqrt : 7.55451943e-14
+relative error from invsqrt : 1.22611549e-13
+indirect measure of relative error (m=79) : 4.29935271e-05
+relative error from invsqrt : 1.22611549e-13
+relative error from invsqrt : 4.59856526e-14
+indirect measure of relative error (m=80) : 3.99014017e-05
+relative error from invsqrt : 4.59856526e-14
+relative error from invsqrt : 7.66620414e-14
+indirect measure of relative error (m=81) : 4.53256237e-05
+relative error from invsqrt : 7.66620414e-14
+relative error from invsqrt : 9.33938132e-14
+indirect measure of relative error (m=82) : 3.90483221e-05
+relative error from invsqrt : 9.33938132e-14
+relative error from invsqrt : 4.61114295e-14
+indirect measure of relative error (m=83) : 3.11125682e-05
+relative error from invsqrt : 4.61114295e-14
+relative error from invsqrt : 1.05346022e-13
+indirect measure of relative error (m=84) : 1.80575201e-05
+relative error from invsqrt : 1.05346022e-13
+relative error from invsqrt : 1.04553423e-13
+indirect measure of relative error (m=85) : 1.14448414e-05
+relative error from invsqrt : 1.04553423e-13
+relative error from invsqrt : 1.17174904e-13
+indirect measure of relative error (m=86) : 8.85203721e-06
+relative error from invsqrt : 1.17174904e-13
+relative error from invsqrt : 1.18675393e-13
+indirect measure of relative error (m=87) : 9.10768895e-06
+relative error from invsqrt : 1.18675393e-13
+relative error from invsqrt : 6.83086126e-14
+indirect measure of relative error (m=88) : 7.68217635e-06
+relative error from invsqrt : 6.83086126e-14
+relative error from invsqrt : 4.76815017e-14
+indirect measure of relative error (m=89) : 5.62224668e-06
+relative error from invsqrt : 4.76815017e-14
+relative error from invsqrt : 6.41604844e-14
+indirect measure of relative error (m=90) : 6.25343238e-06
+relative error from invsqrt : 6.41604844e-14
+relative error from invsqrt : 4.91764386e-14
+indirect measure of relative error (m=91) : 6.88517935e-06
+relative error from invsqrt : 4.91764386e-14
+relative error from invsqrt : 5.38259613e-14
+indirect measure of relative error (m=92) : 6.35255168e-06
+relative error from invsqrt : 5.38259613e-14
+relative error from invsqrt : 5.00725317e-14
+indirect measure of relative error (m=93) : 6.37043052e-06
+relative error from invsqrt : 5.00725317e-14
+relative error from invsqrt : 8.12818165e-14
+indirect measure of relative error (m=94) : 5.03678263e-06
+relative error from invsqrt : 8.12818165e-14
+relative error from invsqrt : 7.58849716e-14
+indirect measure of relative error (m=95) : 4.08446831e-06
+relative error from invsqrt : 7.58849716e-14
+relative error from invsqrt : 1.41967683e-13
+indirect measure of relative error (m=96) : 4.52148017e-06
+relative error from invsqrt : 1.41967683e-13
+relative error from invsqrt : 4.75726640e-14
+indirect measure of relative error (m=97) : 5.96737215e-06
+relative error from invsqrt : 4.75726640e-14
+relative error from invsqrt : 1.05388166e-13
+indirect measure of relative error (m=98) : 7.87874162e-06
+relative error from invsqrt : 1.05388166e-13
+relative error from invsqrt : 1.27516084e-13
+indirect measure of relative error (m=99) : 1.07277421e-05
+relative error from invsqrt : 1.27516084e-13
+relative error from invsqrt : 1.03835337e-13
+indirect measure of relative error (m=100) : 1.40791618e-05
+relative error from invsqrt : 1.03835337e-13
+relative error from invsqrt : 1.27367958e-13
+indirect measure of relative error (m=101) : 1.40077370e-05
+relative error from invsqrt : 1.27367958e-13
+relative error from invsqrt : 8.21414957e-14
+indirect measure of relative error (m=102) : 1.35449674e-05
+relative error from invsqrt : 8.21414957e-14
+relative error from invsqrt : 8.17557182e-14
+indirect measure of relative error (m=103) : 1.18620362e-05
+relative error from invsqrt : 8.17557182e-14
+relative error from invsqrt : 9.19989268e-14
+indirect measure of relative error (m=104) : 8.88797209e-06
+relative error from invsqrt : 9.19989268e-14
+relative error from invsqrt : 6.70662836e-14
+indirect measure of relative error (m=105) : 6.83688403e-06
+relative error from invsqrt : 6.70662836e-14
+relative error from invsqrt : 7.89234074e-14
+indirect measure of relative error (m=106) : 3.68052260e-06
+relative error from invsqrt : 7.89234074e-14
+relative error from invsqrt : 1.25696053e-13
+indirect measure of relative error (m=107) : 1.73859559e-06
+relative error from invsqrt : 1.25696053e-13
+relative error from invsqrt : 9.43173401e-14
+indirect measure of relative error (m=108) : 1.27710398e-06
+relative error from invsqrt : 9.43173401e-14
+relative error from invsqrt : 5.04210076e-14
+indirect measure of relative error (m=109) : 1.04022809e-06
+relative error from invsqrt : 5.04210076e-14
+relative error from invsqrt : 8.76564719e-14
+indirect measure of relative error (m=110) : 7.29880716e-07
+relative error from invsqrt : 8.76564719e-14
+relative error from invsqrt : 7.02324649e-14
+indirect measure of relative error (m=111) : 6.63073162e-07
+relative error from invsqrt : 7.02324649e-14
+relative error from invsqrt : 1.20484632e-13
+indirect measure of relative error (m=112) : 5.25109484e-07
+relative error from invsqrt : 1.20484632e-13
+relative error from invsqrt : 2.26926893e-13
+indirect measure of relative error (m=113) : 3.84755962e-07
+relative error from invsqrt : 2.26926893e-13
+relative error from invsqrt : 7.69651058e-14
+indirect measure of relative error (m=114) : 2.16892693e-07
+relative error from invsqrt : 7.69651058e-14
+relative error from invsqrt : 9.23140347e-14
+indirect measure of relative error (m=115) : 1.69281832e-07
+relative error from invsqrt : 9.23140347e-14
+relative error from invsqrt : 1.44067750e-13
+indirect measure of relative error (m=116) : 1.17688844e-07
+relative error from invsqrt : 1.44067750e-13
+relative error from invsqrt : 7.51065861e-14
+indirect measure of relative error (m=117) : 7.49300804e-08
+relative error from invsqrt : 7.51065861e-14
+relative error from invsqrt : 1.09663520e-13
+indirect measure of relative error (m=118) : 5.75792780e-08
+relative error from invsqrt : 1.09663520e-13
+relative error from invsqrt : 1.35334514e-13
+indirect measure of relative error (m=119) : 3.71028763e-08
+relative error from invsqrt : 1.35334514e-13
+relative error from invsqrt : 5.90975018e-14
+indirect measure of relative error (m=120) : 2.40803293e-08
+relative error from invsqrt : 5.90975018e-14
+relative error from invsqrt : 4.66395398e-14
+indirect measure of relative error (m=121) : 1.84511119e-08
+relative error from invsqrt : 4.66395398e-14
+relative error from invsqrt : 5.85335327e-14
+indirect measure of relative error (m=122) : 9.48434962e-09
+relative error from invsqrt : 5.85335327e-14
+relative error from invsqrt : 8.84246728e-14
+indirect measure of relative error (m=123) : 6.11713860e-09
+relative error from invsqrt : 8.84246728e-14
+relative error from invsqrt : 8.63422530e-14
+indirect measure of relative error (m=124) : 3.94021992e-09
+relative error from invsqrt : 8.63422530e-14
+relative error from invsqrt : 1.66178945e-13
+indirect measure of relative error (m=125) : 3.23912382e-09
+relative error from invsqrt : 1.66178945e-13
+relative error from invsqrt : 1.55144666e-13
+indirect measure of relative error (m=126) : 3.30120338e-09
+relative error from invsqrt : 1.55144666e-13
+relative error from invsqrt : 1.19445080e-13
+indirect measure of relative error (m=127) : 2.82106750e-09
+relative error from invsqrt : 1.19445080e-13
+relative error from invsqrt : 8.77553044e-14
+indirect measure of relative error (m=128) : 1.94998752e-09
+relative error from invsqrt : 8.77553044e-14
+relative error from invsqrt : 8.98915491e-14
+indirect measure of relative error (m=129) : 1.61054599e-09
+relative error from invsqrt : 8.98915491e-14
+relative error from invsqrt : 9.46149959e-14
+indirect measure of relative error (m=130) : 1.46008560e-09
+relative error from invsqrt : 9.46149959e-14
+relative error from invsqrt : 8.54806772e-14
+indirect measure of relative error (m=131) : 1.09737701e-09
+relative error from invsqrt : 8.54806772e-14
+relative error from invsqrt : 1.09490170e-13
+indirect measure of relative error (m=132) : 7.74068655e-10
+relative error from invsqrt : 1.09490170e-13
+relative error from invsqrt : 1.00642102e-13
+indirect measure of relative error (m=133) : 5.00044722e-10
+relative error from invsqrt : 1.00642102e-13
+relative error from invsqrt : 7.72768248e-14
+indirect measure of relative error (m=134) : 2.75616667e-10
+relative error from invsqrt : 7.72768248e-14
+relative error from invsqrt : 1.66280331e-13
+indirect measure of relative error (m=135) : 1.89650564e-10
+relative error from invsqrt : 1.66280331e-13
+relative error from invsqrt : 1.00084520e-13
+indirect measure of relative error (m=136) : 1.33512128e-10
+relative error from invsqrt : 1.00084520e-13
+relative error from invsqrt : 1.16237478e-13
+indirect measure of relative error (m=137) : 7.54232655e-11
+relative error from invsqrt : 1.16237478e-13
+relative error from invsqrt : 6.51497869e-14
+indirect measure of relative error (m=138) : 3.72470036e-11
+relative error from invsqrt : 6.51497869e-14
+relative error from invsqrt : 2.06299591e-13
+indirect measure of relative error (m=139) : 2.95378528e-11
+relative error from invsqrt : 2.06299591e-13
+relative error from invsqrt : 8.26599452e-14
+indirect measure of relative error (m=140) : 1.54044353e-11
+relative error from invsqrt : 8.26599452e-14
+relative error from invsqrt : 1.03611608e-13
+indirect measure of relative error (m=141) : 8.32159060e-12
+relative error from invsqrt : 1.03611608e-13
+relative error from invsqrt : 1.16255038e-13
+indirect measure of relative error (m=142) : 6.81224784e-12
+relative error from invsqrt : 1.16255038e-13
+relative error from invsqrt : 4.92398663e-14
+indirect measure of relative error (m=143) : 4.99067868e-12
+relative error from invsqrt : 4.92398663e-14
+relative error from invsqrt : 7.30040905e-14
+indirect measure of relative error (m=144) : 3.94697206e-12
+relative error from invsqrt : 7.30040905e-14
+relative error from invsqrt : 1.10986331e-13
+indirect measure of relative error (m=145) : 2.25056767e-12
+relative error from invsqrt : 1.10986331e-13
+relative error from invsqrt : 6.98406931e-14
+indirect measure of relative error (m=146) : 1.77458400e-12
+relative error from invsqrt : 6.98406931e-14
+relative error from invsqrt : 1.91360707e-13
+indirect measure of relative error (m=147) : 1.38004632e-12
+relative error from invsqrt : 1.91360707e-13
+relative error from invsqrt : 8.04155604e-14
+indirect measure of relative error (m=148) : 8.10170243e-13
+relative error from invsqrt : 8.04155604e-14
+relative error from invsqrt : 8.41725004e-14
+indirect measure of relative error (m=149) : 3.22112534e-13
+relative error from invsqrt : 8.41725004e-14
+relative error from invsqrt : 1.11904075e-13
+indirect measure of relative error (m=150) : 4.71632020e-13
+relative error from invsqrt : 1.11904075e-13
+relative error from invsqrt : 1.61624088e-13
+indirect measure of relative error (m=151) : 7.53117078e-13
+relative error from invsqrt : 1.61624088e-13
+relative error from invsqrt : 1.12426612e-13
+indirect measure of relative error (m=152) : 1.32771614e-12
+relative error from invsqrt : 1.12426612e-13
+relative error from invsqrt : 1.03436887e-13
+indirect measure of relative error (m=153) : 1.09807755e-12
+relative error from invsqrt : 1.03436887e-13
+relative error from invsqrt : 1.06539957e-13
+indirect measure of relative error (m=154) : 1.29335821e-12
+relative error from invsqrt : 1.06539957e-13
+relative error from invsqrt : 5.23668942e-14
+indirect measure of relative error (m=155) : 1.63333537e-12
+relative error from invsqrt : 5.23668942e-14
+relative error from invsqrt : 1.43318164e-13
+indirect measure of relative error (m=156) : 4.37054853e-13
+relative error from invsqrt : 1.43318164e-13
+relative error from invsqrt : 7.95504780e-14
+indirect measure of relative error (m=157) : 1.26091961e-12
+relative error from invsqrt : 7.95504780e-14
+relative error from invsqrt : 1.14799645e-13
+indirect measure of relative error (m=158) : 7.65364287e-13
+relative error from invsqrt : 1.14799645e-13
+relative error from invsqrt : 1.08603227e-13
+indirect measure of relative error (m=159) : 1.12682454e-12

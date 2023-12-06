@@ -86,8 +86,8 @@ PetscErrorCode MatInvSqrt(FN fn,Mat A,PetscViewer viewer,PetscBool verbose,Petsc
   PetscCall(MatShift(R,-1.0));
   PetscCall(MatNorm(R,NORM_FROBENIUS,&nrm));
   PetscCall(MatDestroy(&R));
-  if (nrm<100*PETSC_MACHINE_EPSILON) PetscCall(PetscPrintf(PETSC_COMM_WORLD,"||S*S*A-I||_F < 100*eps\n"));
-  else PetscCall(PetscPrintf(PETSC_COMM_WORLD,"||S*S*A-I||_F = %g\n",(double)nrm));
+  //if (nrm<100*PETSC_MACHINE_EPSILON) PetscCall(PetscPrintf(PETSC_COMM_WORLD,"||S*S*A-I||_F < 100*eps\n"));
+  //else PetscCall(PetscPrintf(PETSC_COMM_WORLD,"||S*S*A-I||_F = %g\n",(double)nrm));
   // check FNEvaluateFunctionMatVec()
   PetscCall(FNEvaluateFunctionMatVec(fn,A,v));
   PetscCall(VecAXPY(v,-1.0,f0));
@@ -112,7 +112,7 @@ PetscErrorCode _small_dense_invsqrt( int argcx,char **argvx, complex_double **Hi
   PetscCall(SlepcInitialize(&argcx,&argvx,(char*)0,help));
   PetscCall(PetscOptionsHasName(NULL,NULL,"-verbose",&verbose));
   PetscCall(PetscOptionsHasName(NULL,NULL,"-inplace",&inplace));
-  PetscCall(PetscPrintf(PETSC_COMM_WORLD,"Matrix inverse square root, n=%" PetscInt_FMT ".\n",n));
+  //PetscCall(PetscPrintf(PETSC_COMM_WORLD,"Matrix inverse square root, n=%" PetscInt_FMT ".\n",n));
 
   // Create function object
   PetscCall(FNCreate(PETSC_COMM_WORLD,&fn));
@@ -121,8 +121,8 @@ PetscErrorCode _small_dense_invsqrt( int argcx,char **argvx, complex_double **Hi
 
   // Set up viewer
   PetscCall(PetscViewerASCIIGetStdout(PETSC_COMM_WORLD,&viewer));
-  PetscCall(FNView(fn,viewer));
-  if (verbose) PetscCall(PetscViewerPushFormat(viewer,PETSC_VIEWER_ASCII_MATLAB));
+  //PetscCall(FNView(fn,viewer));
+  //if (verbose) PetscCall(PetscViewerPushFormat(viewer,PETSC_VIEWER_ASCII_MATLAB));
 
   PetscCall(MatCreateSeqDense(PETSC_COMM_SELF,n,n,NULL,&A));
   PetscCall(PetscObjectSetName((PetscObject)A,"A"));
@@ -184,7 +184,7 @@ void small_dense_invsqrt( complex_double **His, complex_double **H, int n ) {
   char str3[50] = "-fn_method";
   char str4[50] = "0";
   char str5[50] = "-verbose";
-  char str6[50] = "1";
+  char str6[50] = "0";
 
   // 'input' options in dynamic form
   strcpy( argvx[0],str0 );

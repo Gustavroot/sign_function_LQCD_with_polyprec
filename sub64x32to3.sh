@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #SBATCH --account=mul-tra
-#SBATCH --nodes=8
+#SBATCH --nodes=32
 #SBATCH --ntasks-per-node=32
 #SBATCH --cpus-per-task=1
 #SBATCH --threads-per-core=1

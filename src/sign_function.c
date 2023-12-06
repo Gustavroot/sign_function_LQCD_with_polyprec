@@ -71,6 +71,67 @@ void export_matrix_double( gmres_double_struct *p, level_struct *l, struct Threa
 }
 
 
+void check_rel_err( int j, gmres_double_struct *p ){
+
+  //if ( j==10 ) {
+  //  invsqrt_of_H( p->Hb1, p->H, j+1 );
+  //}
+
+  int check_fctr = 50;
+  if ( g.use_polyprec==0 ) {
+    //check_fctr = 20;
+  } else {
+    check_fctr /= p->polyprec_double->d_poly;
+    check_fctr++;
+  }
+
+  if ( j>1 && j%check_fctr==0 ) {
+    invsqrt_of_H( p->Hb1, p->H, j );
+    invsqrt_of_H( p->Hb2, p->H, j+1 );
+
+    // compute the indirect measure of the relative error from p->Hb1 and p->Hb2
+    int ix;
+    double normx1,normx2;
+    complex_double diff_buff;
+    normx1 = 0.0;
+    for ( ix=0;ix<((j+1)-1);ix++ ) {
+      diff_buff = p->Hb1[0][ix] - p->Hb2[0][ix];
+      normx1 += diff_buff * conj_double(diff_buff);
+    }
+    diff_buff = 0.0 - p->Hb2[0][j];
+    normx1 += diff_buff * conj_double(diff_buff);
+    normx2 = 0.0;
+    for ( ix=0;ix<(j+1);ix++ ) {
+      diff_buff = p->Hb2[0][ix];
+      normx2 += diff_buff * conj_double(diff_buff);
+    }
+
+    printf0( "indirect measure of relative error (m=%d) : %.8e\n",j+1,sqrt(normx1/normx2) );
+
+    // save data for next iter
+    // FIXME : should we just swap pointers here ?
+    //memcpy( p->Hb1[0], p->Hb2[0], p->restart_length * p->restart_length );
+
+    //if ( g.my_rank==0 && j==150 ) {
+    //  FILE *fp1;
+    //  FILE *fp2;
+    //  fp1 = fopen("./matr_data1.txt", "w");
+    //  fp2 = fopen("./matr_data2.txt", "w");
+    //  int iy,jy;
+    //  for ( iy=0;iy<(j+1);iy++ ) {
+    //    for ( jy=0;jy<(j+1);jy++ ) {
+    //      fprintf( fp1,"%d,%d,%.12f,%.12f\n",iy,jy,creal_double(p->H[jy][iy]),cimag_double(p->H[jy][iy]) );
+    //      fprintf( fp2,"%d,%d,%.12f,%.12f\n",iy,jy,creal_double(p->Hb2[jy][iy]),cimag_double(p->Hb2[jy][iy]) );
+    //    }
+    //  }
+    //  fclose(fp1);
+    //  fclose(fp2);
+    //  exit(0);
+    //}
+  }
+}
+
+
 int arnoldi_double( gmres_double_struct *p, level_struct *l, struct Thread *threading ) {
 
   int m = p->restart_length;
@@ -139,6 +200,9 @@ int arnoldi_double( gmres_double_struct *p, level_struct *l, struct Thread *thre
       //  break;
       //}
 
+      // after a certain number of Arnoldi steps, compute an indirect measure of the error
+      check_rel_err( j, p );
+
     } // end of a single restart
 
     //compute_solution_double( p->x, (p->preconditioner&&p->kind==_RIGHT)?p->Z:p->V,
@@ -151,7 +215,7 @@ int arnoldi_double( gmres_double_struct *p, level_struct *l, struct Thread *thre
   END_LOCKED_MASTER(threading)
   
   if ( p->print ) {
-    printf0( "some specific timings from Arnoldi :\n\n" );
+    printf0( "\nsome specific timings from Arnoldi :\n\n" );
   //  beta = gamma_jp1;
     START_MASTER(threading)
   //  g.norm_res = creal(beta)/norm_r0;
@@ -268,6 +332,11 @@ void check_arnoldi_double( gmres_double_struct *p, level_struct *l, struct Threa
 
     apply_operator_double( p->wy, p->V[i], p, l, threading );
     apply_operator_double( p->wx, p->wy, p, l, threading );
+    if ( g.global_shift != 0.0 ) {
+      int startx, endx;
+      compute_core_start_end_custom( p->v_start, p->v_end, &startx, &endx, l, threading, l->num_lattice_site_var );
+      vector_double_saxpy( p->wx, p->wx, p->V[i], g.global_shift, startx, endx, l );
+    }
     sign_function_prec_pow2( p->wy, p->wx, p, l, threading );
     sign_function_prec_pow2( v1, p->wy, p, l, threading );
 

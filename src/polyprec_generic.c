@@ -51,6 +51,11 @@ void set_up_polynomial_and_test_PRECISION( gmres_PRECISION_struct *p, level_stru
     vector_PRECISION_define_random( p->b, p->v_start, p->v_end, l );
     apply_operator_PRECISION( p->wy, p->b, p, l, threading );
     apply_operator_PRECISION( p->w, p->wy, p, l, threading );
+    if ( g.global_shift != 0.0 ) {
+      int startx, endx;
+      compute_core_start_end_custom( p->v_start, p->v_end, &startx, &endx, l, threading, l->num_lattice_site_var );
+      vector_PRECISION_saxpy( p->w, p->w, p->b, g.global_shift, startx, endx, l );
+    }
     // and then p(D), which should approximately restore the original vector
     apply_polyprec_PRECISION( p->wy, NULL, p->w, 0, l, threading );
     apply_polyprec_PRECISION( p->x, NULL, p->wy, 0, l, threading );
@@ -345,6 +350,11 @@ void apply_polyprec_PRECISION( vector_PRECISION phi, vector_PRECISION Dphi, vect
     //apply_operator_PRECISION(temp, product, &l->p_PRECISION, l, threading);
     apply_operator_PRECISION(phi, product, p, l, threading);
     apply_operator_PRECISION(temp, phi, p, l, threading);
+    if ( g.global_shift != 0.0 ) {
+      int startx, endx;
+      compute_core_start_end_custom( p->v_start, p->v_end, &startx, &endx, l, threading, l->num_lattice_site_var );
+      vector_PRECISION_saxpy( temp, temp, product, g.global_shift, startx, endx, l );
+    }
 
     vector_PRECISION_saxpy(product, temp, product, -lejas[i-1], start, end, l);
     vector_PRECISION_saxpy(accum_prod, accum_prod, product, coeffs[i], start, end, l);

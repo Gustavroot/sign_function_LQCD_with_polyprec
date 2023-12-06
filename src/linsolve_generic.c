@@ -31,6 +31,8 @@ void fgmres_PRECISION_struct_init( gmres_PRECISION_struct *p ) {
   p->Z = NULL;
   p->V = NULL;
   p->H = NULL;
+  p->Hb1 = NULL;
+  p->Hb2 = NULL;
   p->x = NULL;
   p->b = NULL;
   p->r = NULL;
@@ -213,6 +215,18 @@ void fgmres_PRECISION_struct_alloc( int m, int n, int vl, PRECISION tol, const i
     ASSERT( type < 3 );
   }
 
+  // buffers to store H^{-1/2}
+  MALLOC( p->Hb1, complex_PRECISION*, m );
+  MALLOC( p->Hb2, complex_PRECISION*, m );
+  p->Hb1[0] = NULL;
+  p->Hb2[0] = NULL;
+  MALLOC( p->Hb1[0], complex_PRECISION, m*m );
+  MALLOC( p->Hb2[0], complex_PRECISION, m*m );
+  for ( i=1; i<m; i++ ) {
+    p->Hb1[i] = p->Hb1[0] + i*m;
+    p->Hb2[i] = p->Hb2[0] + i*m;
+  }
+
   // copy of Hesselnberg matrix
 #if defined(POLYPREC)
   MALLOC(p->polyprec_PRECISION->eigslvr.Hc, complex_PRECISION*, m);
@@ -324,6 +338,14 @@ void fgmres_PRECISION_struct_free( gmres_PRECISION_struct *p, level_struct *l ) 
   
   p->D = NULL;
   p->clover = NULL;
+
+  {
+    int m = p->restart_length;
+    FREE( p->Hb1[0], complex_PRECISION, m*m );
+    FREE( p->Hb2[0], complex_PRECISION, m*m );
+    FREE( p->Hb1, complex_PRECISION*, m );
+    FREE( p->Hb2, complex_PRECISION*, m );
+  }
 
   // copy of Hesselnberg matrix
 #if defined(POLYPREC)
@@ -992,6 +1014,11 @@ int arnoldi_step_PRECISION( vector_PRECISION *V, vector_PRECISION *Z, vector_PRE
     if ( p->polyprec_PRECISION->apply==1 ) {
       apply_operator_PRECISION( p->wy, V[j], p, l, threading ); // wx = D*wy
       apply_operator_PRECISION( p->wx, p->wy, p, l, threading ); // w = D*wx
+      if ( g.global_shift != 0.0 ) {
+        int startx, endx;
+        compute_core_start_end_custom( p->v_start, p->v_end, &startx, &endx, l, threading, l->num_lattice_site_var );
+        vector_PRECISION_saxpy( p->wx, p->wx, V[j], g.global_shift, startx, endx, l );
+      }
       sign_function_prec_pow2( p->wy, p->wx, p, l, threading ); // Z[j] = q(D)*V[j]
       sign_function_prec_pow2( w, p->wy, p, l, threading ); // wy = q(D)*Z[j]
 //      sign_function_prec_pow2( Z[j], V[j], p, l, threading ); // Z[j] = q(D)*V[j]
@@ -1001,6 +1028,11 @@ int arnoldi_step_PRECISION( vector_PRECISION *V, vector_PRECISION *Z, vector_PRE
     } else {
       apply_operator_PRECISION( p->wy, V[j], p, l, threading ); // wy = D*V[j]
       apply_operator_PRECISION( p->w, p->wy, p, l, threading ); // w = D*wy
+      if ( g.global_shift != 0.0 ) {
+        int startx, endx;
+        compute_core_start_end_custom( p->v_start, p->v_end, &startx, &endx, l, threading, l->num_lattice_site_var );
+        vector_PRECISION_saxpy( p->w, p->w, V[j], g.global_shift, startx, endx, l );
+      }
     }
 
     if ( shift ) vector_PRECISION_saxpy( w, w, V[j], shift, start, end, l );
