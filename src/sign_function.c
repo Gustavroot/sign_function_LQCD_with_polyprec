@@ -73,6 +73,8 @@ void export_matrix_double( gmres_double_struct *p, level_struct *l, struct Threa
 
 void check_rel_err( int j, gmres_double_struct *p ){
 
+  double t1;
+
   //if ( j==10 ) {
   //  invsqrt_of_H( p->Hb1, p->H, j+1 );
   //}
@@ -86,8 +88,12 @@ void check_rel_err( int j, gmres_double_struct *p ){
   }
 
   if ( j>1 && j%check_fctr==0 ) {
+    t1 = 0.0;
+    t1 -= MPI_Wtime();
     invsqrt_of_H( p->Hb1, p->H, j );
     invsqrt_of_H( p->Hb2, p->H, j+1 );
+    t1 += MPI_Wtime();
+    printf0( "time spent on two calls to invsqrt from SLEPc : %.12f\n",t1 );
 
     // compute the indirect measure of the relative error from p->Hb1 and p->Hb2
     int ix;

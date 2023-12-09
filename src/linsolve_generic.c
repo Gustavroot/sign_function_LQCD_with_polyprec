@@ -1012,6 +1012,9 @@ int arnoldi_step_PRECISION( vector_PRECISION *V, vector_PRECISION *Z, vector_PRE
     //             polynomial, otherwise we call sign_function_prec_pow2(...)
 
     if ( p->polyprec_PRECISION->apply==1 ) {
+
+      double t1x = 0.0;
+      t1x -= MPI_Wtime();
       apply_operator_PRECISION( p->wy, V[j], p, l, threading ); // wx = D*wy
       apply_operator_PRECISION( p->wx, p->wy, p, l, threading ); // w = D*wx
       if ( g.global_shift != 0.0 ) {
@@ -1021,6 +1024,9 @@ int arnoldi_step_PRECISION( vector_PRECISION *V, vector_PRECISION *Z, vector_PRE
       }
       sign_function_prec_pow2( p->wy, p->wx, p, l, threading ); // Z[j] = q(D)*V[j]
       sign_function_prec_pow2( w, p->wy, p, l, threading ); // wy = q(D)*Z[j]
+      t1x += MPI_Wtime();
+      printf0( "time spent on application of operators in Arnoldi : %.12f\n",t1x );
+
 //      sign_function_prec_pow2( Z[j], V[j], p, l, threading ); // Z[j] = q(D)*V[j]
 //      sign_function_prec_pow2( p->wy, Z[j], p, l, threading ); // wy = q(D)*Z[j]
 //      apply_operator_PRECISION( p->wx, p->wy, p, l, threading ); // wx = D*wy
@@ -1062,10 +1068,14 @@ int arnoldi_step_PRECISION( vector_PRECISION *V, vector_PRECISION *Z, vector_PRE
 // this second option is ORTH_MGS
 #else
 
+  double t2x = 0.0;
+  t2x -= MPI_Wtime();
   for ( i=0;i<j+1;i++ ) {
     H[j][i] = global_inner_product_PRECISION( V[i], w, start, end, l, threading );
     vector_PRECISION_saxpy( w, w, V[i], -H[j][i], start, end, l );
   }
+  t2x += MPI_Wtime();
+  printf0( "time spent on orthogonalizations in Arnoldi : %.12f\n",t2x );
 
 #endif
 

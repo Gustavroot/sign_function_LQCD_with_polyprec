@@ -32,8 +32,8 @@ static char help[] = "Test matrix inverse square root.\n\n";
 
 PetscErrorCode MatInvSqrt(FN fn,Mat A,PetscViewer viewer,PetscBool verbose,PetscBool inplace,complex_double** His)
 {
-  PetscScalar    tau,eta,*Ss;
-  //PetscComplex   *Ss;
+  PetscScalar    tau,eta,*Sx;
+  //PetscComplex   *Sx;
   PetscReal      nrm;
   PetscBool      set,flg;
   PetscInt       n;
@@ -65,14 +65,14 @@ PetscErrorCode MatInvSqrt(FN fn,Mat A,PetscViewer viewer,PetscBool verbose,Petsc
   }
 
   // finally, set His from S
-  PetscCall(MatDenseGetArray(S,&Ss));
-  // set His from Ss
+  PetscCall(MatDenseGetArray(S,&Sx));
+  // set His from Sx
   for( j=0;j<n;j++ ) {
     for( i=0;i<n;i++ ) {
-      His[j][i] = Ss[i+j*n];
+      His[j][i] = Sx[i+j*n];
     }
   }
-  PetscCall(MatDenseRestoreArray(S,&Ss));
+  PetscCall(MatDenseRestoreArray(S,&Sx));
 
   // check error ||S*S*A-I||_F
   PetscCall(MatMatMult(S,S,MAT_INITIAL_MATRIX,PETSC_DEFAULT,&R));
@@ -147,7 +147,7 @@ PetscErrorCode _small_dense_invsqrt( int argcx,char **argvx, complex_double **Hi
   PetscCall(MatInvSqrt(fn,A,viewer,verbose,inplace,His));
 
   PetscCall(MatDestroy(&A));
-  //PetscCall(FNDestroy(&fn));
+  PetscCall(FNDestroy(&fn));
   PetscCall(SlepcFinalize());
 }
 
