@@ -1,0 +1,1246 @@
+
++- subspace correction methods for QCD applications -+
+|                                                    |
+|  Use option >> -? << for help                      |
+|                                                    |
++----------------------------------------------------+
+
+
+Number of Processes: 512
+Program is being started...
+
+
+
++----------------------------------------------------------------------+
+| The DDalphaAMG solver library.                                       |
+| Copyright (C) 2016, Matthias Rottmann, Artur Strebel,                |
+|       Simon Heybrock, Simone Bacchio, Bjoern Leder, Issaku Kanamori. |
+|                                                                      |
+| This program comes with ABSOLUTELY NO WARRANTY.                      |
++----------------------------------------------------------------------+
+
+configuration: ../../../../../../../p/project/chwu29/ramirez1/configs/ciw/qcdsf.632.01000.mg2
+
+Desired average plaquette: 1.6479691428981 in [0,3]
+
+Desired average plaquette: 0.5493230476327 in [0,1]
+BASIS0:OPENQCD/DD-HMC BASIS
+periodic boundary conditions in time
+Configuration stored...
+average plaquette: 1.6479691428981 in [0,3]
+
++----------------------------------------------------------+
+| read in and set up the parallel dirac operator           |
+| elapsed wall clock time: 0.0207891    seconds            |
++----------------------------------------------------------+
+[1m[32m
+--------------------------------------------------------
+****************** SOME INITIAL DEFS *******************
+--------------------------------------------------------
+
+[0melapsed time: 0.005848 seconds
+
++----------------------------------------------------------+
+| pure GMRES                                               |
+|          restart length: 300                             |
+|                      m0: -1.400000                       |
+|                     csw: +0.000000                       |
++---------------------- depth  0 --------------------------+
+|          global lattice: 64  32  32  32                  |
+|           local lattice: 2   4   16  32                  |
++---------------------- depth  1 --------------------------+
+|          global lattice: 32  8   8   8                   |
+|           local lattice: 1   1   4   8                   |
++----------------------------------------------------------+
+
+
++----------------------------------------------------------+
+| solver profiling                                         |
++----------------------------------------------------------+
+| depth:   0 / level:   1                time    ( count ) |
++----------------------------------------------------------+
+|                copy operations, float: 1.92e-03(      5) |
++----------------------------------------------------------+
+| flop/lattice site:  0.00e+00                             |
+| flop/s/MPIprocess:  0.00e+00                             |
++----------------------------------------------------------+
+
+rhs = random
+[1m[32m
+--------------------------------------------------------
+********************* CHECK #1 *************************
+--------------------------------------------------------
+
+[0mratio of matvecs/dotprods on your machine : 17.962468
+
+[1m[32m
+--------------------------------------------------------
+***************** BUILDING POLYNOMIAL ******************
+--------------------------------------------------------
+
+[0mtime spent on orthogonalizations in Arnoldi : 0.000764041000
+time spent on orthogonalizations in Arnoldi : 0.001051193000
+time spent on orthogonalizations in Arnoldi : 0.001771906000
+relative error from invsqrt : 5.92696907e-16
+relative error from invsqrt : 2.89021878e-15
+time spent on two calls to invsqrt from SLEPc : 0.638866799000
+indirect measure of relative error (m=3) : 1.83112989e-01
+time spent on orthogonalizations in Arnoldi : 0.001849524000
+time spent on orthogonalizations in Arnoldi : 0.002746318000
+relative error from invsqrt : 2.03819806e-15
+relative error from invsqrt : 3.24558369e-15
+time spent on two calls to invsqrt from SLEPc : 0.004841860000
+indirect measure of relative error (m=5) : 9.41785028e-02
+time spent on orthogonalizations in Arnoldi : 0.004410604000
+time spent on orthogonalizations in Arnoldi : 0.005498042000
+relative error from invsqrt : 4.03091898e-15
+relative error from invsqrt : 3.77260162e-15
+time spent on two calls to invsqrt from SLEPc : 0.004608614000
+indirect measure of relative error (m=7) : 5.93619302e-02
+time spent on orthogonalizations in Arnoldi : 0.003584244000
+time spent on orthogonalizations in Arnoldi : 0.003485166000
+relative error from invsqrt : 5.00618443e-15
+relative error from invsqrt : 5.15645544e-15
+time spent on two calls to invsqrt from SLEPc : 0.002819839000
+indirect measure of relative error (m=9) : 4.12863533e-02
+time spent on orthogonalizations in Arnoldi : 0.003696545000
+time spent on orthogonalizations in Arnoldi : 0.003726784000
+relative error from invsqrt : 5.28550675e-15
+relative error from invsqrt : 5.96372038e-15
+time spent on two calls to invsqrt from SLEPc : 0.003088087000
+indirect measure of relative error (m=11) : 3.04334499e-02
+time spent on orthogonalizations in Arnoldi : 0.005054012000
+time spent on orthogonalizations in Arnoldi : 0.005331060000
+relative error from invsqrt : 6.44180530e-15
+relative error from invsqrt : 6.51414272e-15
+time spent on two calls to invsqrt from SLEPc : 0.004231935000
+indirect measure of relative error (m=13) : 2.33183263e-02
+time spent on orthogonalizations in Arnoldi : 0.005522073000
+time spent on orthogonalizations in Arnoldi : 0.005863179000
+relative error from invsqrt : 7.21055893e-15
+relative error from invsqrt : 7.38248597e-15
+time spent on two calls to invsqrt from SLEPc : 0.003674364000
+indirect measure of relative error (m=15) : 1.83789219e-02
+time spent on orthogonalizations in Arnoldi : 0.005281983000
+time spent on orthogonalizations in Arnoldi : 0.005369396000
+relative error from invsqrt : 9.74068983e-15
+relative error from invsqrt : 9.44843132e-15
+time spent on two calls to invsqrt from SLEPc : 0.003951000000
+indirect measure of relative error (m=17) : 1.47850479e-02
+time spent on orthogonalizations in Arnoldi : 0.005596638000
+time spent on orthogonalizations in Arnoldi : 0.007730093000
+relative error from invsqrt : 1.00826948e-14
+relative error from invsqrt : 1.03852116e-14
+time spent on two calls to invsqrt from SLEPc : 0.004082574000
+indirect measure of relative error (m=19) : 1.20836923e-02
+time spent on orthogonalizations in Arnoldi : 0.007596710000
+time spent on orthogonalizations in Arnoldi : 0.008200662000
+relative error from invsqrt : 9.02610948e-15
+relative error from invsqrt : 8.80937090e-15
+time spent on two calls to invsqrt from SLEPc : 0.005287799000
+indirect measure of relative error (m=21) : 1.00083680e-02
+time spent on orthogonalizations in Arnoldi : 0.007648031000
+time spent on orthogonalizations in Arnoldi : 0.007606943000
+relative error from invsqrt : 8.67687082e-15
+relative error from invsqrt : 1.31905450e-14
+time spent on two calls to invsqrt from SLEPc : 0.006154855000
+indirect measure of relative error (m=23) : 8.36107994e-03
+time spent on orthogonalizations in Arnoldi : 0.008554646000
+time spent on orthogonalizations in Arnoldi : 0.009710642000
+relative error from invsqrt : 9.93709520e-15
+relative error from invsqrt : 1.18313898e-14
+time spent on two calls to invsqrt from SLEPc : 0.005531385000
+indirect measure of relative error (m=25) : 7.05625438e-03
+time spent on orthogonalizations in Arnoldi : 0.010078655000
+time spent on orthogonalizations in Arnoldi : 0.009277209000
+relative error from invsqrt : 1.14566976e-14
+relative error from invsqrt : 1.51391659e-14
+time spent on two calls to invsqrt from SLEPc : 0.006902963000
+indirect measure of relative error (m=27) : 5.99739371e-03
+time spent on orthogonalizations in Arnoldi : 0.009389592000
+time spent on orthogonalizations in Arnoldi : 0.011039514000
+relative error from invsqrt : 1.34813223e-14
+relative error from invsqrt : 1.45567960e-14
+time spent on two calls to invsqrt from SLEPc : 0.006992140000
+indirect measure of relative error (m=29) : 5.13886366e-03
+time spent on orthogonalizations in Arnoldi : 0.011782512000
+time spent on orthogonalizations in Arnoldi : 0.011810027000
+relative error from invsqrt : 1.34163256e-14
+relative error from invsqrt : 1.43794417e-14
+time spent on two calls to invsqrt from SLEPc : 0.007400972000
+indirect measure of relative error (m=31) : 4.43236799e-03
+time spent on orthogonalizations in Arnoldi : 0.010314138000
+time spent on orthogonalizations in Arnoldi : 0.010166084000
+relative error from invsqrt : 1.31164860e-14
+relative error from invsqrt : 1.28131714e-14
+time spent on two calls to invsqrt from SLEPc : 0.007625149000
+indirect measure of relative error (m=33) : 3.85057542e-03
+
+some specific timings from Arnoldi (including invsqrt_time=0.716060335000) :
+
++----------------------------------------------------------+
+| elapsed wall clock time: 1.1944   seconds                |
+|  consumed core minutes*: 1.02e+01 (solve only)           |
+|    max used mem/MPIproc: 2.68e-01 GB                     |
++----------------------------------------------------------+
+*: only correct if #MPIprocs*#threads == #CPUs
+
+
++----------------------------------------------------------+
+| solver profiling                                         |
++----------------------------------------------------------+
+| depth:   0 / level:   1                time    ( count ) |
++----------------------------------------------------------+
+|          global inner product, double: 1.62e-01(    595) |
+|      2 flop vector operations, double: 1.09e-02(     34) |
+|      6 flop vector operations, double: 1.75e-02(     66) |
+|      8 flop vector operations, double: 5.53e-02(    561) |
+|               copy operations, double: 5.76e-04(      1) |
+|             neighbor coupling, double: 2.26e-01(     66) |
+|            operator comm init, double: 1.12e-03(    396) |
+|            operator comm wait, double: 3.61e-02(    396) |
+|                    allreduces, double: 9.19e-02(    595) |
++----------------------------------------------------------+
+| flop/lattice site:  2.07e+05                             |
+| flop/s/MPIprocess:  7.09e+08                             |
++----------------------------------------------------------+
+
+the Lejas have been computed, ordered appropriately and stored
+[1m[32m
+--------------------------------------------------------
+***************** CHECKING POLYNOMIAL ******************
+--------------------------------------------------------
+
+[0mcheck #0, relative error : 0.012496
+check #1, relative error : 0.012517
+check #2, relative error : 0.012522
+check #3, relative error : 0.012547
+check #4, relative error : 0.012565
+check #5, relative error : 0.012477
+check #6, relative error : 0.012577
+check #7, relative error : 0.012555
+check #8, relative error : 0.012481
+check #9, relative error : 0.012564
+[1m[32m
+--------------------------------------------------------
+************** COMPUTING SIGN FUNCTION *****************
+--------------------------------------------------------
+
+[0mtime spent on application of operators in Arnoldi : 0.522996754000
+time spent on orthogonalizations in Arnoldi : 0.003818607000
+time spent on application of operators in Arnoldi : 0.522172600000
+time spent on orthogonalizations in Arnoldi : 0.002809494000
+time spent on application of operators in Arnoldi : 0.521916073000
+time spent on orthogonalizations in Arnoldi : 0.002172937000
+relative error from invsqrt : 9.94225213e-16
+relative error from invsqrt : 1.19690016e-15
+time spent on two calls to invsqrt from SLEPc : 0.003837946000
+indirect measure of relative error (m=3) : 2.00592132e-02
+time spent on application of operators in Arnoldi : 0.523672025000
+time spent on orthogonalizations in Arnoldi : 0.002386659000
+time spent on application of operators in Arnoldi : 0.521291120000
+time spent on orthogonalizations in Arnoldi : 0.004327786000
+relative error from invsqrt : 2.26435655e-15
+relative error from invsqrt : 4.16483018e-15
+time spent on two calls to invsqrt from SLEPc : 0.002775683000
+indirect measure of relative error (m=5) : 1.54657430e-02
+time spent on application of operators in Arnoldi : 0.525064996000
+time spent on orthogonalizations in Arnoldi : 0.005063932000
+time spent on application of operators in Arnoldi : 0.524116701000
+time spent on orthogonalizations in Arnoldi : 0.004680079000
+relative error from invsqrt : 3.96961220e-15
+relative error from invsqrt : 4.76556661e-15
+time spent on two calls to invsqrt from SLEPc : 0.003141040000
+indirect measure of relative error (m=7) : 7.82360910e-03
+time spent on application of operators in Arnoldi : 0.525108806000
+time spent on orthogonalizations in Arnoldi : 0.005092524000
+time spent on application of operators in Arnoldi : 0.525681682000
+time spent on orthogonalizations in Arnoldi : 0.003536945000
+relative error from invsqrt : 5.18785753e-15
+relative error from invsqrt : 6.56646775e-15
+time spent on two calls to invsqrt from SLEPc : 0.002766194000
+indirect measure of relative error (m=9) : 6.14527892e-03
+time spent on application of operators in Arnoldi : 0.527664973000
+time spent on orthogonalizations in Arnoldi : 0.005048558000
+time spent on application of operators in Arnoldi : 0.525535959000
+time spent on orthogonalizations in Arnoldi : 0.006256578000
+relative error from invsqrt : 7.31477389e-15
+relative error from invsqrt : 7.12541488e-15
+time spent on two calls to invsqrt from SLEPc : 0.003113226000
+indirect measure of relative error (m=11) : 5.85118476e-03
+time spent on application of operators in Arnoldi : 0.529068920000
+time spent on orthogonalizations in Arnoldi : 0.007762504000
+time spent on application of operators in Arnoldi : 0.522356644000
+time spent on orthogonalizations in Arnoldi : 0.008103546000
+relative error from invsqrt : 6.54825005e-15
+relative error from invsqrt : 7.97429815e-15
+time spent on two calls to invsqrt from SLEPc : 0.003469709000
+indirect measure of relative error (m=13) : 5.38560457e-03
+time spent on application of operators in Arnoldi : 0.527763414000
+time spent on orthogonalizations in Arnoldi : 0.010479132000
+time spent on application of operators in Arnoldi : 0.526769621000
+time spent on orthogonalizations in Arnoldi : 0.007132015000
+relative error from invsqrt : 1.04120617e-14
+relative error from invsqrt : 1.00842664e-14
+time spent on two calls to invsqrt from SLEPc : 0.003391335000
+indirect measure of relative error (m=15) : 3.35331120e-03
+time spent on application of operators in Arnoldi : 0.524090738000
+time spent on orthogonalizations in Arnoldi : 0.008880453000
+time spent on application of operators in Arnoldi : 0.528431317000
+time spent on orthogonalizations in Arnoldi : 0.007454406000
+relative error from invsqrt : 1.31979230e-14
+relative error from invsqrt : 8.86658591e-15
+time spent on two calls to invsqrt from SLEPc : 0.003542770000
+indirect measure of relative error (m=17) : 2.66163996e-03
+time spent on application of operators in Arnoldi : 0.525195731000
+time spent on orthogonalizations in Arnoldi : 0.007857897000
+time spent on application of operators in Arnoldi : 0.526115206000
+time spent on orthogonalizations in Arnoldi : 0.009070315000
+relative error from invsqrt : 9.21605287e-15
+relative error from invsqrt : 1.05911681e-14
+time spent on two calls to invsqrt from SLEPc : 0.004197416000
+indirect measure of relative error (m=19) : 2.54148969e-03
+time spent on application of operators in Arnoldi : 0.518747808000
+time spent on orthogonalizations in Arnoldi : 0.009001447000
+time spent on application of operators in Arnoldi : 0.525796536000
+time spent on orthogonalizations in Arnoldi : 0.010907309000
+relative error from invsqrt : 1.15228109e-14
+relative error from invsqrt : 1.41021764e-14
+time spent on two calls to invsqrt from SLEPc : 0.004882241000
+indirect measure of relative error (m=21) : 2.32230240e-03
+time spent on application of operators in Arnoldi : 0.519432312000
+time spent on orthogonalizations in Arnoldi : 0.012600092000
+time spent on application of operators in Arnoldi : 0.526699062000
+time spent on orthogonalizations in Arnoldi : 0.009199662000
+relative error from invsqrt : 1.24965513e-14
+relative error from invsqrt : 1.54773029e-14
+time spent on two calls to invsqrt from SLEPc : 0.004892444000
+indirect measure of relative error (m=23) : 2.49259749e-03
+time spent on application of operators in Arnoldi : 0.518099126000
+time spent on orthogonalizations in Arnoldi : 0.010355974000
+time spent on application of operators in Arnoldi : 0.524139675000
+time spent on orthogonalizations in Arnoldi : 0.012047894000
+relative error from invsqrt : 2.37432147e-14
+relative error from invsqrt : 1.87582984e-14
+time spent on two calls to invsqrt from SLEPc : 0.005102483000
+indirect measure of relative error (m=25) : 2.14331822e-03
+time spent on application of operators in Arnoldi : 0.521180251000
+time spent on orthogonalizations in Arnoldi : 0.011294037000
+time spent on application of operators in Arnoldi : 0.525624386000
+time spent on orthogonalizations in Arnoldi : 0.011813622000
+relative error from invsqrt : 1.43445281e-14
+relative error from invsqrt : 1.81545794e-14
+time spent on two calls to invsqrt from SLEPc : 0.006105816000
+indirect measure of relative error (m=27) : 2.03443077e-03
+time spent on application of operators in Arnoldi : 0.521234173000
+time spent on orthogonalizations in Arnoldi : 0.011070433000
+time spent on application of operators in Arnoldi : 0.522760716000
+time spent on orthogonalizations in Arnoldi : 0.011356950000
+relative error from invsqrt : 1.63892063e-14
+relative error from invsqrt : 3.75314362e-14
+time spent on two calls to invsqrt from SLEPc : 0.006309601000
+indirect measure of relative error (m=29) : 1.65904461e-03
+time spent on application of operators in Arnoldi : 0.531364554000
+time spent on orthogonalizations in Arnoldi : 0.018581357000
+time spent on application of operators in Arnoldi : 0.521464170000
+time spent on orthogonalizations in Arnoldi : 0.011620190000
+relative error from invsqrt : 2.16623955e-14
+relative error from invsqrt : 1.73466338e-14
+time spent on two calls to invsqrt from SLEPc : 0.007073610000
+indirect measure of relative error (m=31) : 1.85059060e-03
+time spent on application of operators in Arnoldi : 0.518200604000
+time spent on orthogonalizations in Arnoldi : 0.012738974000
+time spent on application of operators in Arnoldi : 0.518219717000
+time spent on orthogonalizations in Arnoldi : 0.013082115000
+relative error from invsqrt : 1.93956123e-14
+relative error from invsqrt : 2.83886229e-14
+time spent on two calls to invsqrt from SLEPc : 0.007849800000
+indirect measure of relative error (m=33) : 2.22100034e-03
+time spent on application of operators in Arnoldi : 0.524601944000
+time spent on orthogonalizations in Arnoldi : 0.011259315000
+time spent on application of operators in Arnoldi : 0.523208333000
+time spent on orthogonalizations in Arnoldi : 0.015305528000
+relative error from invsqrt : 2.10934858e-14
+relative error from invsqrt : 4.69136234e-14
+time spent on two calls to invsqrt from SLEPc : 0.008675461000
+indirect measure of relative error (m=35) : 1.68971630e-03
+time spent on application of operators in Arnoldi : 0.524157190000
+time spent on orthogonalizations in Arnoldi : 0.014124464000
+time spent on application of operators in Arnoldi : 0.518177490000
+time spent on orthogonalizations in Arnoldi : 0.015715084000
+relative error from invsqrt : 2.78012323e-14
+relative error from invsqrt : 3.07459600e-14
+time spent on two calls to invsqrt from SLEPc : 0.010641948000
+indirect measure of relative error (m=37) : 1.14986653e-03
+time spent on application of operators in Arnoldi : 0.522596033000
+time spent on orthogonalizations in Arnoldi : 0.017195185000
+time spent on application of operators in Arnoldi : 0.520880777000
+time spent on orthogonalizations in Arnoldi : 0.015044372000
+relative error from invsqrt : 2.56406486e-14
+relative error from invsqrt : 3.01750538e-14
+time spent on two calls to invsqrt from SLEPc : 0.011542698000
+indirect measure of relative error (m=39) : 1.03168501e-03
+time spent on application of operators in Arnoldi : 0.522770159000
+time spent on orthogonalizations in Arnoldi : 0.016204081000
+time spent on application of operators in Arnoldi : 0.520790993000
+time spent on orthogonalizations in Arnoldi : 0.015325701000
+relative error from invsqrt : 2.61544009e-14
+relative error from invsqrt : 2.89617467e-14
+time spent on two calls to invsqrt from SLEPc : 0.010529376000
+indirect measure of relative error (m=41) : 5.53349109e-04
+time spent on application of operators in Arnoldi : 0.527576209000
+time spent on orthogonalizations in Arnoldi : 0.016475852000
+time spent on application of operators in Arnoldi : 0.524416943000
+time spent on orthogonalizations in Arnoldi : 0.018417667000
+relative error from invsqrt : 3.98884731e-14
+relative error from invsqrt : 5.06961105e-14
+time spent on two calls to invsqrt from SLEPc : 0.012335416000
+indirect measure of relative error (m=43) : 3.94427223e-04
+time spent on application of operators in Arnoldi : 0.525329355000
+time spent on orthogonalizations in Arnoldi : 0.017933472000
+time spent on application of operators in Arnoldi : 0.522921633000
+time spent on orthogonalizations in Arnoldi : 0.020528311000
+relative error from invsqrt : 4.90977553e-14
+relative error from invsqrt : 2.62177780e-14
+time spent on two calls to invsqrt from SLEPc : 0.013102268000
+indirect measure of relative error (m=45) : 4.80513100e-04
+time spent on application of operators in Arnoldi : 0.523383896000
+time spent on orthogonalizations in Arnoldi : 0.021838647000
+time spent on application of operators in Arnoldi : 0.520464547000
+time spent on orthogonalizations in Arnoldi : 0.020081615000
+relative error from invsqrt : 4.70421836e-14
+relative error from invsqrt : 4.58116711e-14
+time spent on two calls to invsqrt from SLEPc : 0.015448484000
+indirect measure of relative error (m=47) : 5.54632004e-04
+time spent on application of operators in Arnoldi : 0.523944850000
+time spent on orthogonalizations in Arnoldi : 0.019704895000
+time spent on application of operators in Arnoldi : 0.518012960000
+time spent on orthogonalizations in Arnoldi : 0.019206984000
+relative error from invsqrt : 2.78337166e-14
+relative error from invsqrt : 3.06093341e-14
+time spent on two calls to invsqrt from SLEPc : 0.335987968000
+indirect measure of relative error (m=49) : 4.29951772e-04
+time spent on application of operators in Arnoldi : 0.527967101000
+time spent on orthogonalizations in Arnoldi : 0.020879840000
+time spent on application of operators in Arnoldi : 0.527024675000
+time spent on orthogonalizations in Arnoldi : 0.019648241000
+relative error from invsqrt : 3.51711116e-14
+relative error from invsqrt : 3.04567654e-14
+time spent on two calls to invsqrt from SLEPc : 0.019916058000
+indirect measure of relative error (m=51) : 4.36073844e-04
+time spent on application of operators in Arnoldi : 0.522020675000
+time spent on orthogonalizations in Arnoldi : 0.022509029000
+time spent on application of operators in Arnoldi : 0.524665564000
+time spent on orthogonalizations in Arnoldi : 0.018478283000
+relative error from invsqrt : 4.05428201e-14
+relative error from invsqrt : 4.66688341e-14
+time spent on two calls to invsqrt from SLEPc : 0.020553846000
+indirect measure of relative error (m=53) : 2.76583539e-04
+time spent on application of operators in Arnoldi : 0.519881829000
+time spent on orthogonalizations in Arnoldi : 0.022562369000
+time spent on application of operators in Arnoldi : 0.524059139000
+time spent on orthogonalizations in Arnoldi : 0.018430145000
+relative error from invsqrt : 3.61220603e-14
+relative error from invsqrt : 8.35997340e-14
+time spent on two calls to invsqrt from SLEPc : 0.022279760000
+indirect measure of relative error (m=55) : 2.54665557e-04
+time spent on application of operators in Arnoldi : 0.517397417000
+time spent on orthogonalizations in Arnoldi : 0.022992026000
+time spent on application of operators in Arnoldi : 0.524423940000
+time spent on orthogonalizations in Arnoldi : 0.019623040000
+relative error from invsqrt : 3.09073144e-14
+relative error from invsqrt : 2.90584481e-14
+time spent on two calls to invsqrt from SLEPc : 0.024475501000
+indirect measure of relative error (m=57) : 3.21446075e-04
+time spent on application of operators in Arnoldi : 0.521610055000
+time spent on orthogonalizations in Arnoldi : 0.021848015000
+time spent on application of operators in Arnoldi : 0.528287977000
+time spent on orthogonalizations in Arnoldi : 0.024018254000
+relative error from invsqrt : 5.59920383e-14
+relative error from invsqrt : 3.50509647e-14
+time spent on two calls to invsqrt from SLEPc : 0.029650340000
+indirect measure of relative error (m=59) : 3.07713460e-04
+time spent on application of operators in Arnoldi : 0.521114452000
+time spent on orthogonalizations in Arnoldi : 0.021505791000
+time spent on application of operators in Arnoldi : 0.520782718000
+time spent on orthogonalizations in Arnoldi : 0.024035506000
+relative error from invsqrt : 6.16131335e-14
+relative error from invsqrt : 4.91225001e-14
+time spent on two calls to invsqrt from SLEPc : 0.026722344000
+indirect measure of relative error (m=61) : 3.68167426e-04
+time spent on application of operators in Arnoldi : 0.520351572000
+time spent on orthogonalizations in Arnoldi : 0.022064006000
+time spent on application of operators in Arnoldi : 0.525468897000
+time spent on orthogonalizations in Arnoldi : 0.025148287000
+relative error from invsqrt : 3.40905301e-14
+relative error from invsqrt : 6.73878878e-14
+time spent on two calls to invsqrt from SLEPc : 0.032731750000
+indirect measure of relative error (m=63) : 5.23479267e-04
+time spent on application of operators in Arnoldi : 0.521235533000
+time spent on orthogonalizations in Arnoldi : 0.024660187000
+time spent on application of operators in Arnoldi : 0.523487436000
+time spent on orthogonalizations in Arnoldi : 0.024264993000
+relative error from invsqrt : 3.60475698e-14
+relative error from invsqrt : 4.33376289e-14
+time spent on two calls to invsqrt from SLEPc : 0.033763499000
+indirect measure of relative error (m=65) : 3.93703856e-04
+time spent on application of operators in Arnoldi : 0.520682405000
+time spent on orthogonalizations in Arnoldi : 0.026715996000
+time spent on application of operators in Arnoldi : 0.524073936000
+time spent on orthogonalizations in Arnoldi : 0.024299617000
+relative error from invsqrt : 7.39951490e-14
+relative error from invsqrt : 4.12876634e-14
+time spent on two calls to invsqrt from SLEPc : 0.043016024000
+indirect measure of relative error (m=67) : 3.11938741e-04
+time spent on application of operators in Arnoldi : 0.518546319000
+time spent on orthogonalizations in Arnoldi : 0.024466357000
+time spent on application of operators in Arnoldi : 0.518658149000
+time spent on orthogonalizations in Arnoldi : 0.027321627000
+relative error from invsqrt : 5.05241519e-14
+relative error from invsqrt : 4.08745881e-14
+time spent on two calls to invsqrt from SLEPc : 0.035898767000
+indirect measure of relative error (m=69) : 3.37175774e-04
+time spent on application of operators in Arnoldi : 0.517656900000
+time spent on orthogonalizations in Arnoldi : 0.026491882000
+time spent on application of operators in Arnoldi : 0.519964674000
+time spent on orthogonalizations in Arnoldi : 0.029088646000
+relative error from invsqrt : 6.38981131e-14
+relative error from invsqrt : 4.42194027e-14
+time spent on two calls to invsqrt from SLEPc : 0.040220118000
+indirect measure of relative error (m=71) : 2.36308357e-04
+time spent on application of operators in Arnoldi : 0.517682152000
+time spent on orthogonalizations in Arnoldi : 0.028889679000
+time spent on application of operators in Arnoldi : 0.526152475000
+time spent on orthogonalizations in Arnoldi : 0.025237181000
+relative error from invsqrt : 5.51845201e-14
+relative error from invsqrt : 5.44709007e-14
+time spent on two calls to invsqrt from SLEPc : 0.042944534000
+indirect measure of relative error (m=73) : 1.68156072e-04
+time spent on application of operators in Arnoldi : 0.520463245000
+time spent on orthogonalizations in Arnoldi : 0.025008761000
+time spent on application of operators in Arnoldi : 0.522476925000
+time spent on orthogonalizations in Arnoldi : 0.029376371000
+relative error from invsqrt : 6.13996302e-14
+relative error from invsqrt : 1.04683669e-13
+time spent on two calls to invsqrt from SLEPc : 0.046705792000
+indirect measure of relative error (m=75) : 1.33756034e-04
+time spent on application of operators in Arnoldi : 0.521402291000
+time spent on orthogonalizations in Arnoldi : 0.030756038000
+time spent on application of operators in Arnoldi : 0.523016094000
+time spent on orthogonalizations in Arnoldi : 0.027136887000
+relative error from invsqrt : 6.02748907e-14
+relative error from invsqrt : 5.76312254e-14
+time spent on two calls to invsqrt from SLEPc : 0.062530042000
+indirect measure of relative error (m=77) : 1.26868485e-04
+time spent on application of operators in Arnoldi : 0.526078413000
+time spent on orthogonalizations in Arnoldi : 0.028835808000
+time spent on application of operators in Arnoldi : 0.523731916000
+time spent on orthogonalizations in Arnoldi : 0.031486228000
+relative error from invsqrt : 1.31981207e-13
+relative error from invsqrt : 9.53721063e-14
+time spent on two calls to invsqrt from SLEPc : 0.068392661000
+indirect measure of relative error (m=79) : 1.17193988e-04
+time spent on application of operators in Arnoldi : 0.525413668000
+time spent on orthogonalizations in Arnoldi : 0.030676205000
+time spent on application of operators in Arnoldi : 0.524611146000
+time spent on orthogonalizations in Arnoldi : 0.031534602000
+relative error from invsqrt : 7.13579440e-14
+relative error from invsqrt : 9.74190380e-14
+time spent on two calls to invsqrt from SLEPc : 0.082048047000
+indirect measure of relative error (m=81) : 9.76098859e-05
+time spent on application of operators in Arnoldi : 0.531408393000
+time spent on orthogonalizations in Arnoldi : 0.032364199000
+time spent on application of operators in Arnoldi : 0.520893430000
+time spent on orthogonalizations in Arnoldi : 0.032942626000
+relative error from invsqrt : 7.82676811e-14
+relative error from invsqrt : 8.40229138e-14
+time spent on two calls to invsqrt from SLEPc : 0.079896874000
+indirect measure of relative error (m=83) : 9.24661986e-05
+time spent on application of operators in Arnoldi : 0.523632303000
+time spent on orthogonalizations in Arnoldi : 0.034054411000
+time spent on application of operators in Arnoldi : 0.517975766000
+time spent on orthogonalizations in Arnoldi : 0.031274968000
+relative error from invsqrt : 1.03980197e-13
+relative error from invsqrt : 1.00029579e-13
+time spent on two calls to invsqrt from SLEPc : 0.081832187000
+indirect measure of relative error (m=85) : 7.71115254e-05
+time spent on application of operators in Arnoldi : 0.524381336000
+time spent on orthogonalizations in Arnoldi : 0.034971024000
+time spent on application of operators in Arnoldi : 0.522000735000
+time spent on orthogonalizations in Arnoldi : 0.028777788000
+relative error from invsqrt : 1.31283605e-13
+relative error from invsqrt : 7.49659963e-14
+time spent on two calls to invsqrt from SLEPc : 0.086194921000
+indirect measure of relative error (m=87) : 6.57076663e-05
+time spent on application of operators in Arnoldi : 0.523347437000
+time spent on orthogonalizations in Arnoldi : 0.035832086000
+time spent on application of operators in Arnoldi : 0.525174732000
+time spent on orthogonalizations in Arnoldi : 0.034346242000
+relative error from invsqrt : 9.82765479e-14
+relative error from invsqrt : 8.78447398e-14
+time spent on two calls to invsqrt from SLEPc : 0.091895055000
+indirect measure of relative error (m=89) : 6.96479021e-05
+time spent on application of operators in Arnoldi : 0.527645407000
+time spent on orthogonalizations in Arnoldi : 0.035806715000
+time spent on application of operators in Arnoldi : 0.524358994000
+time spent on orthogonalizations in Arnoldi : 0.032401847000
+relative error from invsqrt : 1.17002069e-13
+relative error from invsqrt : 1.38405163e-13
+time spent on two calls to invsqrt from SLEPc : 0.095549987000
+indirect measure of relative error (m=91) : 5.53968661e-05
+time spent on application of operators in Arnoldi : 0.523341880000
+time spent on orthogonalizations in Arnoldi : 0.034823967000
+time spent on application of operators in Arnoldi : 0.522352187000
+time spent on orthogonalizations in Arnoldi : 0.036110631000
+relative error from invsqrt : 1.03228060e-13
+relative error from invsqrt : 1.56210358e-13
+time spent on two calls to invsqrt from SLEPc : 0.111870401000
+indirect measure of relative error (m=93) : 5.67687362e-05
+time spent on application of operators in Arnoldi : 0.532316029000
+time spent on orthogonalizations in Arnoldi : 0.032713491000
+time spent on application of operators in Arnoldi : 0.521304775000
+time spent on orthogonalizations in Arnoldi : 0.037328152000
+relative error from invsqrt : 2.16196092e-13
+relative error from invsqrt : 8.90899324e-14
+time spent on two calls to invsqrt from SLEPc : 0.115321222000
+indirect measure of relative error (m=95) : 4.88109361e-05
+time spent on application of operators in Arnoldi : 0.530017727000
+time spent on orthogonalizations in Arnoldi : 0.036923291000
+time spent on application of operators in Arnoldi : 0.525322595000
+time spent on orthogonalizations in Arnoldi : 0.033613618000
+relative error from invsqrt : 1.73715449e-13
+relative error from invsqrt : 1.91183426e-13
+time spent on two calls to invsqrt from SLEPc : 0.127854817000
+indirect measure of relative error (m=97) : 5.27109464e-05
+time spent on application of operators in Arnoldi : 0.543318115000
+time spent on orthogonalizations in Arnoldi : 0.032930588000
+time spent on application of operators in Arnoldi : 0.523340815000
+time spent on orthogonalizations in Arnoldi : 0.037659070000
+relative error from invsqrt : 1.11069213e-13
+relative error from invsqrt : 1.20142271e-13
+time spent on two calls to invsqrt from SLEPc : 0.129684008000
+indirect measure of relative error (m=99) : 5.98390790e-05
+time spent on application of operators in Arnoldi : 0.526165651000
+time spent on orthogonalizations in Arnoldi : 0.043102730000
+time spent on application of operators in Arnoldi : 0.524970239000
+time spent on orthogonalizations in Arnoldi : 0.035527216000
+relative error from invsqrt : 7.54702523e-14
+relative error from invsqrt : 5.61390706e-14
+time spent on two calls to invsqrt from SLEPc : 0.124049436000
+indirect measure of relative error (m=101) : 6.36646568e-05
+time spent on application of operators in Arnoldi : 0.520875049000
+time spent on orthogonalizations in Arnoldi : 0.035194812000
+time spent on application of operators in Arnoldi : 0.524877218000
+time spent on orthogonalizations in Arnoldi : 0.038803202000
+relative error from invsqrt : 1.02287000e-13
+relative error from invsqrt : 1.85857087e-13
+time spent on two calls to invsqrt from SLEPc : 0.131056788000
+indirect measure of relative error (m=103) : 8.25012433e-05
+time spent on application of operators in Arnoldi : 0.525668917000
+time spent on orthogonalizations in Arnoldi : 0.039665334000
+time spent on application of operators in Arnoldi : 0.525862029000
+time spent on orthogonalizations in Arnoldi : 0.035436021000
+relative error from invsqrt : 8.85455555e-14
+relative error from invsqrt : 8.94669007e-14
+time spent on two calls to invsqrt from SLEPc : 0.142349929000
+indirect measure of relative error (m=105) : 7.30563009e-05
+time spent on application of operators in Arnoldi : 0.524162622000
+time spent on orthogonalizations in Arnoldi : 0.038180597000
+time spent on application of operators in Arnoldi : 0.520651313000
+time spent on orthogonalizations in Arnoldi : 0.041246358000
+relative error from invsqrt : 7.58419084e-14
+relative error from invsqrt : 1.01859104e-13
+time spent on two calls to invsqrt from SLEPc : 0.137572772000
+indirect measure of relative error (m=107) : 5.52530570e-05
+time spent on application of operators in Arnoldi : 0.524462111000
+time spent on orthogonalizations in Arnoldi : 0.041980600000
+time spent on application of operators in Arnoldi : 0.525355569000
+time spent on orthogonalizations in Arnoldi : 0.040513849000
+relative error from invsqrt : 5.42065221e-14
+relative error from invsqrt : 1.94630417e-13
+time spent on two calls to invsqrt from SLEPc : 0.154014470000
+indirect measure of relative error (m=109) : 5.76804894e-05
+time spent on application of operators in Arnoldi : 0.527748373000
+time spent on orthogonalizations in Arnoldi : 0.041142924000
+time spent on application of operators in Arnoldi : 0.525567149000
+time spent on orthogonalizations in Arnoldi : 0.044261004000
+relative error from invsqrt : 1.47117178e-13
+relative error from invsqrt : 1.19910817e-13
+time spent on two calls to invsqrt from SLEPc : 0.153960552000
+indirect measure of relative error (m=111) : 4.62866252e-05
+time spent on application of operators in Arnoldi : 0.529422856000
+time spent on orthogonalizations in Arnoldi : 0.041538316000
+time spent on application of operators in Arnoldi : 0.523986745000
+time spent on orthogonalizations in Arnoldi : 0.046980019000
+relative error from invsqrt : 1.38677308e-13
+relative error from invsqrt : 1.37030385e-13
+time spent on two calls to invsqrt from SLEPc : 0.150684246000
+indirect measure of relative error (m=113) : 4.04078795e-05
+time spent on application of operators in Arnoldi : 0.523464930000
+time spent on orthogonalizations in Arnoldi : 0.044604469000
+time spent on application of operators in Arnoldi : 0.523956406000
+time spent on orthogonalizations in Arnoldi : 0.040329946000
+relative error from invsqrt : 1.38838993e-13
+relative error from invsqrt : 1.79212269e-13
+time spent on two calls to invsqrt from SLEPc : 0.170316523000
+indirect measure of relative error (m=115) : 3.43116951e-05
+time spent on application of operators in Arnoldi : 0.524055731000
+time spent on orthogonalizations in Arnoldi : 0.044302700000
+time spent on application of operators in Arnoldi : 0.524637305000
+time spent on orthogonalizations in Arnoldi : 0.038935971000
+relative error from invsqrt : 8.43837637e-14
+relative error from invsqrt : 1.95519010e-13
+time spent on two calls to invsqrt from SLEPc : 0.182075937000
+indirect measure of relative error (m=117) : 1.07081749e-05
+
+some specific timings from Arnoldi (including invsqrt_time=3.388744141000) :
+
++----------------------------------------------------------+
+| elapsed wall clock time: 67.6807  seconds                |
+|  consumed core minutes*: 5.78e+02 (solve only)           |
+|    max used mem/MPIproc: 2.68e-01 GB                     |
++----------------------------------------------------------+
+*: only correct if #MPIprocs*#threads == #CPUs
+
+
++----------------------------------------------------------+
+| solver profiling                                         |
++----------------------------------------------------------+
+| depth:   0 / level:   1                time    ( count ) |
++----------------------------------------------------------+
+|          global inner product, double: 2.04e+00(   7021) |
+|      2 flop vector operations, double: 3.07e-02(    118) |
+|      6 flop vector operations, double: 4.14e+00(  15274) |
+|      8 flop vector operations, double: 4.42e+00(  22178) |
+|               copy operations, double: 8.38e-02(    470) |
+|          set value operations, double: 3.06e-02(    235) |
+|             neighbor coupling, double: 5.20e+01(  15274) |
+|            operator comm init, double: 2.50e-01(  91644) |
+|            operator comm wait, double: 1.18e+01(  91644) |
+|                    allreduces, double: 1.21e+00(   7021) |
++----------------------------------------------------------+
+| flop/lattice site:  2.48e+07                             |
+| flop/s/MPIprocess:  1.50e+09                             |
++----------------------------------------------------------+
+
+total time spent on Arnoldi : 67.681587 seconds
+
+relative error from invsqrt : 1.95519010e-13
+
+time spent on invsqrt_of_H : 0.099568
+
+time spent on Vm*b1 : 0.015100
+
+[1m[32m
+--------------------------------------------------------
+************** COMPUTING SIGN FUNCTION *****************
+--------------------------------------------------------
+
+[0mtime spent on application of operators in Arnoldi : 0.519563204000
+time spent on orthogonalizations in Arnoldi : 0.002511222000
+time spent on application of operators in Arnoldi : 0.517944363000
+time spent on orthogonalizations in Arnoldi : 0.004430412000
+time spent on application of operators in Arnoldi : 0.520438994000
+time spent on orthogonalizations in Arnoldi : 0.004737551000
+relative error from invsqrt : 3.97308577e-16
+relative error from invsqrt : 2.52458267e-15
+time spent on two calls to invsqrt from SLEPc : 0.002593956000
+indirect measure of relative error (m=3) : 1.95396449e-02
+time spent on application of operators in Arnoldi : 0.520363428000
+time spent on orthogonalizations in Arnoldi : 0.003643557000
+time spent on application of operators in Arnoldi : 0.521067701000
+time spent on orthogonalizations in Arnoldi : 0.003541388000
+relative error from invsqrt : 2.54333663e-15
+relative error from invsqrt : 2.76353591e-15
+time spent on two calls to invsqrt from SLEPc : 0.002753563000
+indirect measure of relative error (m=5) : 1.47717831e-02
+time spent on application of operators in Arnoldi : 0.520264304000
+time spent on orthogonalizations in Arnoldi : 0.004495691000
+time spent on application of operators in Arnoldi : 0.521964349000
+time spent on orthogonalizations in Arnoldi : 0.004759988000
+relative error from invsqrt : 5.64138538e-15
+relative error from invsqrt : 5.07189697e-15
+time spent on two calls to invsqrt from SLEPc : 0.003398051000
+indirect measure of relative error (m=7) : 7.66089607e-03
+time spent on application of operators in Arnoldi : 0.525779641000
+time spent on orthogonalizations in Arnoldi : 0.005907108000
+time spent on application of operators in Arnoldi : 0.519893777000
+time spent on orthogonalizations in Arnoldi : 0.004476882000
+relative error from invsqrt : 4.42904192e-15
+relative error from invsqrt : 6.36579224e-15
+time spent on two calls to invsqrt from SLEPc : 0.002754960000
+indirect measure of relative error (m=9) : 6.08227292e-03
+time spent on application of operators in Arnoldi : 0.526485068000
+time spent on orthogonalizations in Arnoldi : 0.004407981000
+time spent on application of operators in Arnoldi : 0.522002428000
+time spent on orthogonalizations in Arnoldi : 0.006755231000
+relative error from invsqrt : 5.11801356e-15
+relative error from invsqrt : 8.15332963e-15
+time spent on two calls to invsqrt from SLEPc : 0.003019872000
+indirect measure of relative error (m=11) : 5.49701344e-03
+time spent on application of operators in Arnoldi : 0.525637432000
+time spent on orthogonalizations in Arnoldi : 0.008998062000
+time spent on application of operators in Arnoldi : 0.527509473000
+time spent on orthogonalizations in Arnoldi : 0.005614901000
+relative error from invsqrt : 7.73656354e-15
+relative error from invsqrt : 1.03032139e-14
+time spent on two calls to invsqrt from SLEPc : 0.003519070000
+indirect measure of relative error (m=13) : 4.78621988e-03
+time spent on application of operators in Arnoldi : 0.539252031000
+time spent on orthogonalizations in Arnoldi : 0.005707060000
+time spent on application of operators in Arnoldi : 0.523645041000
+time spent on orthogonalizations in Arnoldi : 0.007236500000
+relative error from invsqrt : 1.74921310e-14
+relative error from invsqrt : 7.93654826e-15
+time spent on two calls to invsqrt from SLEPc : 0.003636822000
+indirect measure of relative error (m=15) : 3.90330834e-03
+time spent on application of operators in Arnoldi : 0.524106446000
+time spent on orthogonalizations in Arnoldi : 0.009790289000
+time spent on application of operators in Arnoldi : 0.527060827000
+time spent on orthogonalizations in Arnoldi : 0.007331302000
+relative error from invsqrt : 1.21210617e-14
+relative error from invsqrt : 1.27422078e-14
+time spent on two calls to invsqrt from SLEPc : 0.003884292000
+indirect measure of relative error (m=17) : 2.54218101e-03
+time spent on application of operators in Arnoldi : 0.528345366000
+time spent on orthogonalizations in Arnoldi : 0.008905902000
+time spent on application of operators in Arnoldi : 0.524619647000
+time spent on orthogonalizations in Arnoldi : 0.009475332000
+relative error from invsqrt : 9.90904100e-15
+relative error from invsqrt : 1.67048841e-14
+time spent on two calls to invsqrt from SLEPc : 0.003915282000
+indirect measure of relative error (m=19) : 2.07704982e-03
+time spent on application of operators in Arnoldi : 0.517305707000
+time spent on orthogonalizations in Arnoldi : 0.010425520000
+time spent on application of operators in Arnoldi : 0.526368760000
+time spent on orthogonalizations in Arnoldi : 0.010726401000
+relative error from invsqrt : 1.18159682e-14
+relative error from invsqrt : 1.14687451e-14
+time spent on two calls to invsqrt from SLEPc : 0.004343762000
+indirect measure of relative error (m=21) : 2.21071141e-03
+time spent on application of operators in Arnoldi : 0.519642301000
+time spent on orthogonalizations in Arnoldi : 0.010078393000
+time spent on application of operators in Arnoldi : 0.524820044000
+time spent on orthogonalizations in Arnoldi : 0.009162153000
+relative error from invsqrt : 1.24064862e-14
+relative error from invsqrt : 1.35059382e-14
+time spent on two calls to invsqrt from SLEPc : 0.004678874000
+indirect measure of relative error (m=23) : 2.73817669e-03
+time spent on application of operators in Arnoldi : 0.522637096000
+time spent on orthogonalizations in Arnoldi : 0.009771110000
+time spent on application of operators in Arnoldi : 0.525048315000
+time spent on orthogonalizations in Arnoldi : 0.013172011000
+relative error from invsqrt : 2.24748180e-14
+relative error from invsqrt : 1.58244465e-14
+time spent on two calls to invsqrt from SLEPc : 0.005033920000
+indirect measure of relative error (m=25) : 1.98166893e-03
+time spent on application of operators in Arnoldi : 0.520206485000
+time spent on orthogonalizations in Arnoldi : 0.010902657000
+time spent on application of operators in Arnoldi : 0.525039220000
+time spent on orthogonalizations in Arnoldi : 0.010711619000
+relative error from invsqrt : 1.65672789e-14
+relative error from invsqrt : 2.81196632e-14
+time spent on two calls to invsqrt from SLEPc : 0.005953200000
+indirect measure of relative error (m=27) : 1.79997840e-03
+time spent on application of operators in Arnoldi : 0.517400807000
+time spent on orthogonalizations in Arnoldi : 0.012561732000
+time spent on application of operators in Arnoldi : 0.525088867000
+time spent on orthogonalizations in Arnoldi : 0.013983705000
+relative error from invsqrt : 1.94470151e-14
+relative error from invsqrt : 2.02356502e-14
+time spent on two calls to invsqrt from SLEPc : 0.008531242000
+indirect measure of relative error (m=29) : 1.61230640e-03
+time spent on application of operators in Arnoldi : 0.523489137000
+time spent on orthogonalizations in Arnoldi : 0.011838530000
+time spent on application of operators in Arnoldi : 0.517901490000
+time spent on orthogonalizations in Arnoldi : 0.015084706000
+relative error from invsqrt : 3.13880001e-14
+relative error from invsqrt : 2.18492018e-14
+time spent on two calls to invsqrt from SLEPc : 0.007036139000
+indirect measure of relative error (m=31) : 1.87684280e-03
+time spent on application of operators in Arnoldi : 0.525989077000
+time spent on orthogonalizations in Arnoldi : 0.012450707000
+time spent on application of operators in Arnoldi : 0.520196960000
+time spent on orthogonalizations in Arnoldi : 0.014722072000
+relative error from invsqrt : 1.95218125e-14
+relative error from invsqrt : 3.39552285e-14
+time spent on two calls to invsqrt from SLEPc : 0.007724414000
+indirect measure of relative error (m=33) : 1.80451803e-03
+time spent on application of operators in Arnoldi : 0.522332606000
+time spent on orthogonalizations in Arnoldi : 0.013875875000
+time spent on application of operators in Arnoldi : 0.519696561000
+time spent on orthogonalizations in Arnoldi : 0.015734247000
+relative error from invsqrt : 2.50176916e-14
+relative error from invsqrt : 2.51537030e-14
+time spent on two calls to invsqrt from SLEPc : 0.009087585000
+indirect measure of relative error (m=35) : 1.74656866e-03
+time spent on application of operators in Arnoldi : 0.522828303000
+time spent on orthogonalizations in Arnoldi : 0.015731327000
+time spent on application of operators in Arnoldi : 0.517785951000
+time spent on orthogonalizations in Arnoldi : 0.015753907000
+relative error from invsqrt : 3.37019992e-14
+relative error from invsqrt : 2.29957843e-14
+time spent on two calls to invsqrt from SLEPc : 0.008951219000
+indirect measure of relative error (m=37) : 1.18398396e-03
+time spent on application of operators in Arnoldi : 0.525871843000
+time spent on orthogonalizations in Arnoldi : 0.015317925000
+time spent on application of operators in Arnoldi : 0.518260672000
+time spent on orthogonalizations in Arnoldi : 0.016419218000
+relative error from invsqrt : 4.60528548e-14
+relative error from invsqrt : 5.50872787e-14
+time spent on two calls to invsqrt from SLEPc : 0.011387870000
+indirect measure of relative error (m=39) : 6.30536412e-04
+time spent on application of operators in Arnoldi : 0.528082400000
+time spent on orthogonalizations in Arnoldi : 0.016564869000
+time spent on application of operators in Arnoldi : 0.522989316000
+time spent on orthogonalizations in Arnoldi : 0.016991130000
+relative error from invsqrt : 2.84841331e-14
+relative error from invsqrt : 2.53282559e-14
+time spent on two calls to invsqrt from SLEPc : 0.011530005000
+indirect measure of relative error (m=41) : 8.09812067e-04
+time spent on application of operators in Arnoldi : 0.525628808000
+time spent on orthogonalizations in Arnoldi : 0.017930647000
+time spent on application of operators in Arnoldi : 0.523230577000
+time spent on orthogonalizations in Arnoldi : 0.016048919000
+relative error from invsqrt : 4.19172737e-14
+relative error from invsqrt : 3.29746016e-14
+time spent on two calls to invsqrt from SLEPc : 0.012913525000
+indirect measure of relative error (m=43) : 4.17190813e-04
+time spent on application of operators in Arnoldi : 0.522311209000
+time spent on orthogonalizations in Arnoldi : 0.018644950000
+time spent on application of operators in Arnoldi : 0.519292673000
+time spent on orthogonalizations in Arnoldi : 0.016690990000
+relative error from invsqrt : 2.82843565e-14
+relative error from invsqrt : 3.25844459e-14
+time spent on two calls to invsqrt from SLEPc : 0.013823401000
+indirect measure of relative error (m=45) : 4.45374899e-04
+time spent on application of operators in Arnoldi : 0.524445439000
+time spent on orthogonalizations in Arnoldi : 0.019443814000
+time spent on application of operators in Arnoldi : 0.520648661000
+time spent on orthogonalizations in Arnoldi : 0.018630297000
+relative error from invsqrt : 5.49033472e-14
+relative error from invsqrt : 4.60531868e-14
+time spent on two calls to invsqrt from SLEPc : 0.014999348000
+indirect measure of relative error (m=47) : 4.85042332e-04
+time spent on application of operators in Arnoldi : 0.525158179000
+time spent on orthogonalizations in Arnoldi : 0.020125065000
+time spent on application of operators in Arnoldi : 0.520807456000
+time spent on orthogonalizations in Arnoldi : 0.020723847000
+relative error from invsqrt : 3.03643908e-14
+relative error from invsqrt : 2.73950298e-14
+time spent on two calls to invsqrt from SLEPc : 0.015511280000
+indirect measure of relative error (m=49) : 5.10315608e-04
+time spent on application of operators in Arnoldi : 0.523640333000
+time spent on orthogonalizations in Arnoldi : 0.020289360000
+time spent on application of operators in Arnoldi : 0.524066332000
+time spent on orthogonalizations in Arnoldi : 0.020080779000
+relative error from invsqrt : 4.10175252e-14
+relative error from invsqrt : 4.25479783e-14
+time spent on two calls to invsqrt from SLEPc : 0.018328499000
+indirect measure of relative error (m=51) : 3.62033179e-04
+time spent on application of operators in Arnoldi : 0.520287257000
+time spent on orthogonalizations in Arnoldi : 0.021275367000
+time spent on application of operators in Arnoldi : 0.523526079000
+time spent on orthogonalizations in Arnoldi : 0.021477618000
+relative error from invsqrt : 4.22188097e-14
+relative error from invsqrt : 3.81950461e-14
+time spent on two calls to invsqrt from SLEPc : 0.018472086000
+indirect measure of relative error (m=53) : 2.78403570e-04
+time spent on application of operators in Arnoldi : 0.519821701000
+time spent on orthogonalizations in Arnoldi : 0.022729120000
+time spent on application of operators in Arnoldi : 0.521543584000
+time spent on orthogonalizations in Arnoldi : 0.021135371000
+relative error from invsqrt : 3.57687002e-14
+relative error from invsqrt : 9.67337961e-14
+time spent on two calls to invsqrt from SLEPc : 0.025859788000
+indirect measure of relative error (m=55) : 3.21944544e-04
+time spent on application of operators in Arnoldi : 0.520474095000
+time spent on orthogonalizations in Arnoldi : 0.024464007000
+time spent on application of operators in Arnoldi : 0.520829170000
+time spent on orthogonalizations in Arnoldi : 0.025679451000
+relative error from invsqrt : 3.85396694e-14
+relative error from invsqrt : 2.95305994e-14
+time spent on two calls to invsqrt from SLEPc : 0.022075291000
+indirect measure of relative error (m=57) : 2.56788004e-04
+time spent on application of operators in Arnoldi : 0.520710920000
+time spent on orthogonalizations in Arnoldi : 0.024056188000
+time spent on application of operators in Arnoldi : 0.525617960000
+time spent on orthogonalizations in Arnoldi : 0.021974405000
+relative error from invsqrt : 5.50261209e-14
+relative error from invsqrt : 3.98696580e-14
+time spent on two calls to invsqrt from SLEPc : 0.026351492000
+indirect measure of relative error (m=59) : 2.96204986e-04
+time spent on application of operators in Arnoldi : 0.539960602000
+time spent on orthogonalizations in Arnoldi : 0.022735888000
+time spent on application of operators in Arnoldi : 0.522135878000
+time spent on orthogonalizations in Arnoldi : 0.023026220000
+relative error from invsqrt : 6.58165089e-14
+relative error from invsqrt : 4.19851845e-14
+time spent on two calls to invsqrt from SLEPc : 0.025734688000
+indirect measure of relative error (m=61) : 3.75732261e-04
+time spent on application of operators in Arnoldi : 0.522995913000
+time spent on orthogonalizations in Arnoldi : 0.023093611000
+time spent on application of operators in Arnoldi : 0.522713860000
+time spent on orthogonalizations in Arnoldi : 0.025188370000
+relative error from invsqrt : 3.34076974e-14
+relative error from invsqrt : 5.45333629e-14
+time spent on two calls to invsqrt from SLEPc : 0.029978863000
+indirect measure of relative error (m=63) : 5.03752394e-04
+time spent on application of operators in Arnoldi : 0.522705127000
+time spent on orthogonalizations in Arnoldi : 0.024805006000
+time spent on application of operators in Arnoldi : 0.520418881000
+time spent on orthogonalizations in Arnoldi : 0.025671011000
+relative error from invsqrt : 3.59065685e-14
+relative error from invsqrt : 3.38699747e-14
+time spent on two calls to invsqrt from SLEPc : 0.030898149000
+indirect measure of relative error (m=65) : 3.95936547e-04
+time spent on application of operators in Arnoldi : 0.518830230000
+time spent on orthogonalizations in Arnoldi : 0.027059377000
+time spent on application of operators in Arnoldi : 0.520886910000
+time spent on orthogonalizations in Arnoldi : 0.024917586000
+relative error from invsqrt : 7.57057757e-14
+relative error from invsqrt : 4.53360208e-14
+time spent on two calls to invsqrt from SLEPc : 0.034842210000
+indirect measure of relative error (m=67) : 3.05074204e-04
+time spent on application of operators in Arnoldi : 0.517620066000
+time spent on orthogonalizations in Arnoldi : 0.025086332000
+time spent on application of operators in Arnoldi : 0.523591178000
+time spent on orthogonalizations in Arnoldi : 0.025587521000
+relative error from invsqrt : 3.98249623e-14
+relative error from invsqrt : 3.87527000e-14
+time spent on two calls to invsqrt from SLEPc : 0.035244709000
+indirect measure of relative error (m=69) : 2.96115722e-04
+time spent on application of operators in Arnoldi : 0.520301908000
+time spent on orthogonalizations in Arnoldi : 0.025709815000
+time spent on application of operators in Arnoldi : 0.520799922000
+time spent on orthogonalizations in Arnoldi : 0.026223493000
+relative error from invsqrt : 5.12917428e-14
+relative error from invsqrt : 4.49442037e-14
+time spent on two calls to invsqrt from SLEPc : 0.042027598000
+indirect measure of relative error (m=71) : 2.25808255e-04
+time spent on application of operators in Arnoldi : 0.520030609000
+time spent on orthogonalizations in Arnoldi : 0.027611586000
+time spent on application of operators in Arnoldi : 0.524060486000
+time spent on orthogonalizations in Arnoldi : 0.028122905000
+relative error from invsqrt : 8.35252891e-14
+relative error from invsqrt : 5.47518673e-14
+time spent on two calls to invsqrt from SLEPc : 0.039404275000
+indirect measure of relative error (m=73) : 2.07772671e-04
+time spent on application of operators in Arnoldi : 0.518540371000
+time spent on orthogonalizations in Arnoldi : 0.029538190000
+time spent on application of operators in Arnoldi : 0.528323883000
+time spent on orthogonalizations in Arnoldi : 0.027502464000
+relative error from invsqrt : 4.44344513e-14
+relative error from invsqrt : 4.95821512e-14
+time spent on two calls to invsqrt from SLEPc : 0.044561160000
+indirect measure of relative error (m=75) : 1.18249379e-04
+time spent on application of operators in Arnoldi : 0.517534654000
+time spent on orthogonalizations in Arnoldi : 0.028937865000
+time spent on application of operators in Arnoldi : 0.524582286000
+time spent on orthogonalizations in Arnoldi : 0.028421997000
+relative error from invsqrt : 1.04064824e-13
+relative error from invsqrt : 1.60442989e-13
+time spent on two calls to invsqrt from SLEPc : 0.061607892000
+indirect measure of relative error (m=77) : 1.00215521e-04
+time spent on application of operators in Arnoldi : 0.525248574000
+time spent on orthogonalizations in Arnoldi : 0.030260839000
+time spent on application of operators in Arnoldi : 0.522184652000
+time spent on orthogonalizations in Arnoldi : 0.030435982000
+relative error from invsqrt : 7.66144442e-14
+relative error from invsqrt : 8.12798291e-14
+time spent on two calls to invsqrt from SLEPc : 0.073363113000
+indirect measure of relative error (m=79) : 1.23285855e-04
+time spent on application of operators in Arnoldi : 0.526209246000
+time spent on orthogonalizations in Arnoldi : 0.029576381000
+time spent on application of operators in Arnoldi : 0.526229611000
+time spent on orthogonalizations in Arnoldi : 0.029919088000
+relative error from invsqrt : 9.84904947e-14
+relative error from invsqrt : 1.07986021e-13
+time spent on two calls to invsqrt from SLEPc : 0.074661978000
+indirect measure of relative error (m=81) : 9.83586251e-05
+time spent on application of operators in Arnoldi : 0.524079046000
+time spent on orthogonalizations in Arnoldi : 0.033478951000
+time spent on application of operators in Arnoldi : 0.526528339000
+time spent on orthogonalizations in Arnoldi : 0.047039871000
+relative error from invsqrt : 1.03620935e-13
+relative error from invsqrt : 1.30987607e-13
+time spent on two calls to invsqrt from SLEPc : 0.083682301000
+indirect measure of relative error (m=83) : 9.21616042e-05
+time spent on application of operators in Arnoldi : 0.529594612000
+time spent on orthogonalizations in Arnoldi : 0.031047266000
+time spent on application of operators in Arnoldi : 0.520868690000
+time spent on orthogonalizations in Arnoldi : 0.031507034000
+relative error from invsqrt : 1.09726267e-13
+relative error from invsqrt : 6.62184966e-14
+time spent on two calls to invsqrt from SLEPc : 0.084211951000
+indirect measure of relative error (m=85) : 8.38540610e-05
+time spent on application of operators in Arnoldi : 0.524916174000
+time spent on orthogonalizations in Arnoldi : 0.033519443000
+time spent on application of operators in Arnoldi : 0.522328295000
+time spent on orthogonalizations in Arnoldi : 0.030796311000
+relative error from invsqrt : 9.31344821e-14
+relative error from invsqrt : 1.27277080e-13
+time spent on two calls to invsqrt from SLEPc : 0.089522578000
+indirect measure of relative error (m=87) : 6.91168291e-05
+time spent on application of operators in Arnoldi : 0.530409308000
+time spent on orthogonalizations in Arnoldi : 0.035111744000
+time spent on application of operators in Arnoldi : 0.519985607000
+time spent on orthogonalizations in Arnoldi : 0.031389217000
+relative error from invsqrt : 1.38841486e-13
+relative error from invsqrt : 1.06067799e-13
+time spent on two calls to invsqrt from SLEPc : 0.092777325000
+indirect measure of relative error (m=89) : 6.45595543e-05
+time spent on application of operators in Arnoldi : 0.532159809000
+time spent on orthogonalizations in Arnoldi : 0.035821374000
+time spent on application of operators in Arnoldi : 0.520496644000
+time spent on orthogonalizations in Arnoldi : 0.034634877000
+relative error from invsqrt : 1.27174796e-13
+relative error from invsqrt : 1.46729833e-13
+time spent on two calls to invsqrt from SLEPc : 0.096953901000
+indirect measure of relative error (m=91) : 5.16264518e-05
+time spent on application of operators in Arnoldi : 0.522682743000
+time spent on orthogonalizations in Arnoldi : 0.034845776000
+time spent on application of operators in Arnoldi : 0.525820352000
+time spent on orthogonalizations in Arnoldi : 0.035566936000
+relative error from invsqrt : 9.33786793e-14
+relative error from invsqrt : 8.14150101e-14
+time spent on two calls to invsqrt from SLEPc : 0.115553085000
+indirect measure of relative error (m=93) : 6.33218141e-05
+time spent on application of operators in Arnoldi : 0.526922410000
+time spent on orthogonalizations in Arnoldi : 0.034378901000
+time spent on application of operators in Arnoldi : 0.526850668000
+time spent on orthogonalizations in Arnoldi : 0.034073763000
+relative error from invsqrt : 8.81282289e-14
+relative error from invsqrt : 1.10447584e-13
+time spent on two calls to invsqrt from SLEPc : 0.110565120000
+indirect measure of relative error (m=95) : 4.39568877e-05
+time spent on application of operators in Arnoldi : 0.523817899000
+time spent on orthogonalizations in Arnoldi : 0.037136719000
+time spent on application of operators in Arnoldi : 0.523130229000
+time spent on orthogonalizations in Arnoldi : 0.034417787000
+relative error from invsqrt : 9.43222588e-14
+relative error from invsqrt : 7.73673647e-14
+time spent on two calls to invsqrt from SLEPc : 0.117999667000
+indirect measure of relative error (m=97) : 4.81186316e-05
+time spent on application of operators in Arnoldi : 0.526995388000
+time spent on orthogonalizations in Arnoldi : 0.037717685000
+time spent on application of operators in Arnoldi : 0.520498926000
+time spent on orthogonalizations in Arnoldi : 0.038662463000
+relative error from invsqrt : 8.81235347e-14
+relative error from invsqrt : 8.07542568e-14
+time spent on two calls to invsqrt from SLEPc : 0.114343174000
+indirect measure of relative error (m=99) : 6.17845915e-05
+time spent on application of operators in Arnoldi : 0.525974479000
+time spent on orthogonalizations in Arnoldi : 0.036684252000
+time spent on application of operators in Arnoldi : 0.521604320000
+time spent on orthogonalizations in Arnoldi : 0.037085215000
+relative error from invsqrt : 7.30864733e-14
+relative error from invsqrt : 1.05989538e-13
+time spent on two calls to invsqrt from SLEPc : 0.122033025000
+indirect measure of relative error (m=101) : 6.21161406e-05
+time spent on application of operators in Arnoldi : 0.526541468000
+time spent on orthogonalizations in Arnoldi : 0.039168349000
+time spent on application of operators in Arnoldi : 0.523011922000
+time spent on orthogonalizations in Arnoldi : 0.037499028000
+relative error from invsqrt : 9.38613650e-14
+relative error from invsqrt : 1.03870865e-13
+time spent on two calls to invsqrt from SLEPc : 0.127581399000
+indirect measure of relative error (m=103) : 7.29028654e-05
+time spent on application of operators in Arnoldi : 0.524976395000
+time spent on orthogonalizations in Arnoldi : 0.037339833000
+time spent on application of operators in Arnoldi : 0.521713369000
+time spent on orthogonalizations in Arnoldi : 0.040175800000
+relative error from invsqrt : 1.01116208e-13
+relative error from invsqrt : 1.91368989e-13
+time spent on two calls to invsqrt from SLEPc : 0.146964854000
+indirect measure of relative error (m=105) : 7.09638515e-05
+time spent on application of operators in Arnoldi : 0.526430918000
+time spent on orthogonalizations in Arnoldi : 0.040235506000
+time spent on application of operators in Arnoldi : 0.526578311000
+time spent on orthogonalizations in Arnoldi : 0.038790430000
+relative error from invsqrt : 1.32655090e-13
+relative error from invsqrt : 9.69195736e-14
+time spent on two calls to invsqrt from SLEPc : 0.143809552000
+indirect measure of relative error (m=107) : 5.67566353e-05
+time spent on application of operators in Arnoldi : 0.526684010000
+time spent on orthogonalizations in Arnoldi : 0.041457729000
+time spent on application of operators in Arnoldi : 0.526178472000
+time spent on orthogonalizations in Arnoldi : 0.040088041000
+relative error from invsqrt : 1.07262722e-13
+relative error from invsqrt : 1.85768224e-13
+time spent on two calls to invsqrt from SLEPc : 0.157424227000
+indirect measure of relative error (m=109) : 5.15547205e-05
+time spent on application of operators in Arnoldi : 0.527908421000
+time spent on orthogonalizations in Arnoldi : 0.041592890000
+time spent on application of operators in Arnoldi : 0.527049649000
+time spent on orthogonalizations in Arnoldi : 0.039855491000
+relative error from invsqrt : 8.12460068e-14
+relative error from invsqrt : 1.67873648e-13
+time spent on two calls to invsqrt from SLEPc : 0.159465320000
+indirect measure of relative error (m=111) : 4.13970927e-05
+time spent on application of operators in Arnoldi : 0.524977714000
+time spent on orthogonalizations in Arnoldi : 0.040425180000
+time spent on application of operators in Arnoldi : 0.524908658000
+time spent on orthogonalizations in Arnoldi : 0.040597037000
+relative error from invsqrt : 1.52089086e-13
+relative error from invsqrt : 8.90697585e-14
+time spent on two calls to invsqrt from SLEPc : 0.175929741000
+indirect measure of relative error (m=113) : 4.03509280e-05
+time spent on application of operators in Arnoldi : 0.534975812000
+time spent on orthogonalizations in Arnoldi : 0.043802451000
+time spent on application of operators in Arnoldi : 0.522561550000
+time spent on orthogonalizations in Arnoldi : 0.041910937000
+relative error from invsqrt : 1.55024829e-13
+relative error from invsqrt : 1.06388125e-13
+time spent on two calls to invsqrt from SLEPc : 0.178776307000
+indirect measure of relative error (m=115) : 2.89810374e-05
+time spent on application of operators in Arnoldi : 0.532552143000
+time spent on orthogonalizations in Arnoldi : 0.046821238000
+time spent on application of operators in Arnoldi : 0.525579367000
+time spent on orthogonalizations in Arnoldi : 0.042972235000
+relative error from invsqrt : 1.12373703e-13
+relative error from invsqrt : 1.48670166e-13
+time spent on two calls to invsqrt from SLEPc : 0.172710972000
+indirect measure of relative error (m=117) : 1.34344440e-05
+
+some specific timings from Arnoldi (including invsqrt_time=3.064697942001) :
+
++----------------------------------------------------------+
+| elapsed wall clock time: 67.3733  seconds                |
+|  consumed core minutes*: 5.75e+02 (solve only)           |
+|    max used mem/MPIproc: 2.68e-01 GB                     |
++----------------------------------------------------------+
+*: only correct if #MPIprocs*#threads == #CPUs
+
+
++----------------------------------------------------------+
+| solver profiling                                         |
++----------------------------------------------------------+
+| depth:   0 / level:   1                time    ( count ) |
++----------------------------------------------------------+
+|          global inner product, double: 2.07e+00(   7021) |
+|      2 flop vector operations, double: 2.07e-02(    118) |
+|      6 flop vector operations, double: 4.18e+00(  15274) |
+|      8 flop vector operations, double: 4.45e+00(  22178) |
+|               copy operations, double: 8.32e-02(    470) |
+|          set value operations, double: 3.05e-02(    235) |
+|             neighbor coupling, double: 5.19e+01(  15274) |
+|            operator comm init, double: 2.49e-01(  91644) |
+|            operator comm wait, double: 1.15e+01(  91644) |
+|                    allreduces, double: 1.23e+00(   7021) |
++----------------------------------------------------------+
+| flop/lattice site:  2.48e+07                             |
+| flop/s/MPIprocess:  1.51e+09                             |
++----------------------------------------------------------+
+
+total time spent on Arnoldi : 67.373823 seconds
+
+relative error from invsqrt : 1.48670166e-13
+
+time spent on invsqrt_of_H : 0.090906
+
+time spent on Vm*b1 : 0.014739
+
+relative error in sign^2=1 : 4.93844807e-06
+[31mwarning: amount of not freed memory/MPIproc: -0.000717 MB
+[0m(handleFWMessage:) KVS process 0x01c41710[452:5904] finished
