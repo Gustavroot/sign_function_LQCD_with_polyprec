@@ -87,6 +87,8 @@ void check_rel_err( int j, gmres_double_struct *p ){
     check_fctr++;
   }
 
+  //if ( j<1450 ) { return; }
+
   if ( j>1 && j%check_fctr==0 ) {
     t1 = 0.0;
     t1 -= MPI_Wtime();
@@ -94,6 +96,7 @@ void check_rel_err( int j, gmres_double_struct *p ){
     invsqrt_of_H( p->Hb2, p->H, j+1 );
     t1 += MPI_Wtime();
     printf0( "time spent on two calls to invsqrt from SLEPc : %.12f\n",t1 );
+    g.invsqrt_time += t1;
 
     // compute the indirect measure of the relative error from p->Hb1 and p->Hb2
     int ix;
@@ -113,6 +116,8 @@ void check_rel_err( int j, gmres_double_struct *p ){
     }
 
     printf0( "indirect measure of relative error (m=%d) : %.8e\n",j+1,sqrt(normx1/normx2) );
+
+    if ( sqrt(normx1/normx2) < g.tol ) { p->converged = 1; }
 
     // save data for next iter
     // FIXME : should we just swap pointers here ?
@@ -209,19 +214,21 @@ int arnoldi_double( gmres_double_struct *p, level_struct *l, struct Thread *thre
       // after a certain number of Arnoldi steps, compute an indirect measure of the error
       check_rel_err( j, p );
 
+      if ( p->converged==1 ) { break; }
+
     } // end of a single restart
 
     //compute_solution_double( p->x, (p->preconditioner&&p->kind==_RIGHT)?p->Z:p->V,
     //                            p->y, p->gamma, p->H, j, (res==_NO_RES)?ol:1, p, l, threading );
 
-  } // end of fgmres
+  }
 
   START_LOCKED_MASTER(threading)
   if ( l->depth == 0 ) { t1 = MPI_Wtime(); g.total_time = t1-t0; g.iter_count = iter; g.norm_res = gamma_jp1/norm_r0; }
   END_LOCKED_MASTER(threading)
   
   if ( p->print ) {
-    printf0( "\nsome specific timings from Arnoldi :\n\n" );
+    printf0( "\nsome specific timings from Arnoldi (including invsqrt_time=%.12f) :\n\n",g.invsqrt_time );
   //  beta = gamma_jp1;
     START_MASTER(threading)
   //  g.norm_res = creal(beta)/norm_r0;
@@ -382,25 +389,28 @@ void sign_function_double( gmres_double_struct *p, level_struct *l, struct Threa
 
   //printf0( "\nCOMPUTING THE SIGN FUNCTION NOW\n\n" );
 
+  p->converged = 0;
+  g.invsqrt_time = 0.0;
+
   // call the Arnoldi relation on the preconditioned system
   t0 = MPI_Wtime();
-  arnoldi_double( p, l, threading );
+  int arnoldi_iters = arnoldi_double( p, l, threading );
   t1 = MPI_Wtime();
   printf0( "total time spent on Arnoldi : %f seconds\n\n", t1-t0 );
 
   // create the first unit vector and buffer vector
   complex_double* e1 = NULL;
   complex_double* b1 = NULL;
-  MALLOC( e1, complex_double, p->restart_length );
-  MALLOC( b1, complex_double, p->restart_length );
+  MALLOC( e1, complex_double, arnoldi_iters );
+  MALLOC( b1, complex_double, arnoldi_iters );
 
   // create buffer small matrix for storing H^{-1/2}
   complex_double** His = NULL;
-  MALLOC( His, complex_double*, p->restart_length );
+  MALLOC( His, complex_double*, arnoldi_iters );
   His[0] = NULL;
-  MALLOC( His[0], complex_double, p->restart_length*p->restart_length );
-  for ( i=1;i<p->restart_length;i++ ) {
-    His[i] = His[0] + i*p->restart_length;
+  MALLOC( His[0], complex_double, arnoldi_iters*arnoldi_iters );
+  for ( i=1;i<arnoldi_iters;i++ ) {
+    His[i] = His[0] + i*arnoldi_iters;
   }
 
   //// and create another buffer to store H^{2}
@@ -425,19 +435,19 @@ void sign_function_double( gmres_double_struct *p, level_struct *l, struct Threa
   // compute H^{-1/2}
   t0 = MPI_Wtime();
   START_MASTER(threading)
-  invsqrt_of_H( His, p->H, p->restart_length );
-  //invsqrt_of_H( His, Hsq, p->restart_length );
+  invsqrt_of_H( His, p->H, arnoldi_iters );
+  //invsqrt_of_H( His, Hsq, arnoldi_iters );
   END_MASTER(threading)
   t1 = MPI_Wtime();
   printf0( "\ntime spent on invsqrt_of_H : %f\n", t1-t0 );
 
   // do (H^{2})^{-1/2}*e1
-  memcpy( b1, His[0], p->restart_length*sizeof(complex_double) );
+  memcpy( b1, His[0], arnoldi_iters*sizeof(complex_double) );
 
   // do Vm*b1 and store this in p->w
   t0 = MPI_Wtime();
   vector_double_define( p->w, 0, start, end, l );
-  for ( i=0;i<p->restart_length;i++ ) {
+  for ( i=0;i<arnoldi_iters;i++ ) {
     vector_double_saxpy( p->w, p->w, p->V[i], b1[i], start, end, l );
   }
   t1 = MPI_Wtime();
@@ -448,10 +458,10 @@ void sign_function_double( gmres_double_struct *p, level_struct *l, struct Threa
   // finally, scale with p->gamma[0]
   vector_double_scale( p->x, p->x, p->gamma[0], start, end, l );
 
-  FREE( e1, complex_double, p->restart_length );
-  FREE( b1, complex_double, p->restart_length );
-  FREE( His[0], complex_double, p->restart_length*p->restart_length );
-  FREE( His, complex_double*, p->restart_length );
+  FREE( e1, complex_double, arnoldi_iters );
+  FREE( b1, complex_double, arnoldi_iters );
+  FREE( His[0], complex_double, arnoldi_iters*arnoldi_iters );
+  FREE( His, complex_double*, arnoldi_iters );
 }
 
 

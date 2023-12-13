@@ -99,6 +99,7 @@ void print_vector_PRECISION( char* desc, vector_PRECISION w, int n)
 
 void harmonic_ritz_PRECISION( gmres_PRECISION_struct *p )
 {
+#ifdef USE_HARM_RITZ
   int i, j, d;
   complex_PRECISION h_dd;
 
@@ -115,6 +116,11 @@ void harmonic_ritz_PRECISION( gmres_PRECISION_struct *p )
 
   for (i=0; i<d; i++)
     p->polyprec_PRECISION->Hc[d-1][i] += h_dd*h_dd*p->polyprec_PRECISION->dirctslvr.x[i];
+#else
+
+  // do nothing, because p->polyprec_PRECISION->Hc already contains what we want to plug into the eigensolver
+
+#endif
     
   p->polyprec_PRECISION->eigslvr.eigslvr_PRECISION(&p->polyprec_PRECISION->eigslvr);
 }

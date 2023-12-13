@@ -130,7 +130,8 @@
     operator_PRECISION_struct *op;
     PRECISION tol;
     int num_restart, restart_length, timing, print, kind,
-        initial_guess_zero, layout, v_start, v_end, total_storage;
+        initial_guess_zero, layout, v_start, v_end, total_storage,
+        converged;
 #ifdef POLYPREC
     struct polyprec_double_struct *polyprec_double;
     struct polyprec_float_struct  *polyprec_float;

@@ -423,6 +423,7 @@
     int polyprec_d;
     int use_polyprec;
     double global_shift;
+    double invsqrt_time;
 #endif
 
 #ifdef WITH_CHEM_POT
