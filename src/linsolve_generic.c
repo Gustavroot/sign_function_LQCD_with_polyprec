@@ -106,7 +106,7 @@ void fgmres_PRECISION_struct_alloc( int m, int n, int vl, PRECISION tol, const i
   total += (m+1)*m; // Hessenberg matrix
   MALLOC( p->H, complex_PRECISION*, m );
 
-  total += (8+m)*vl; // x, r, b, w, wy, wx, wz, V
+  total += (9+m)*vl; // x, r, b, w, wy, wx, wz, V, invsqrt_sol
   MALLOC( p->V, complex_PRECISION*, m+1 );
 
   if ( precond != NULL ) {
@@ -167,6 +167,8 @@ void fgmres_PRECISION_struct_alloc( int m, int n, int vl, PRECISION tol, const i
   for ( i=0; i<m+1; i++ ) {
     p->V[i] = p->H[0] + total; total += vl;
   }
+  // invsqrt_sol
+  p->invsqrt_sol = p->H[0] + total; total += vl;
   // Z
   for ( i=0; i<k; i++ ) {
     p->Z[i] = p->H[0] + total; total += vl;
@@ -1011,35 +1013,43 @@ int arnoldi_step_PRECISION( vector_PRECISION *V, vector_PRECISION *Z, vector_PRE
     // IMPORTANT : when p->polyprec_PRECISION->apply is 0, it means we are building the
     //             polynomial, otherwise we call sign_function_prec_pow2(...)
 
+#ifdef POLYPREC
     if ( p->polyprec_PRECISION->apply==1 ) {
 
       double t1x = 0.0;
+      START_MASTER(threading)
       t1x -= MPI_Wtime();
+      END_MASTER(threading)
       apply_operator_PRECISION( p->wy, V[j], p, l, threading ); // wx = D*wy
       apply_operator_PRECISION( p->wx, p->wy, p, l, threading ); // w = D*wx
-      if ( g.global_shift != 0.0 ) {
-        int startx, endx;
-        compute_core_start_end_custom( p->v_start, p->v_end, &startx, &endx, l, threading, l->num_lattice_site_var );
-        vector_PRECISION_saxpy( p->wx, p->wx, V[j], g.global_shift, startx, endx, l );
-      }
+      //if ( g.global_shift != 0.0 ) {
+      //  int startx, endx;
+      //  compute_core_start_end_custom( p->v_start, p->v_end, &startx, &endx, l, threading, l->num_lattice_site_var );
+      //  vector_PRECISION_saxpy( p->wx, p->wx, V[j], g.global_shift, startx, endx, l );
+      //}
       sign_function_prec_pow2( p->wy, p->wx, p, l, threading ); // Z[j] = q(D)*V[j]
       sign_function_prec_pow2( w, p->wy, p, l, threading ); // wy = q(D)*Z[j]
+      START_MASTER(threading)
       t1x += MPI_Wtime();
       printf0( "time spent on application of operators in Arnoldi : %.12f\n",t1x );
+      END_MASTER(threading)
 
 //      sign_function_prec_pow2( Z[j], V[j], p, l, threading ); // Z[j] = q(D)*V[j]
 //      sign_function_prec_pow2( p->wy, Z[j], p, l, threading ); // wy = q(D)*Z[j]
 //      apply_operator_PRECISION( p->wx, p->wy, p, l, threading ); // wx = D*wy
 //      apply_operator_PRECISION( w, p->wx, p, l, threading ); // w = D*wx
     } else {
+#endif
       apply_operator_PRECISION( p->wy, V[j], p, l, threading ); // wy = D*V[j]
       apply_operator_PRECISION( p->w, p->wy, p, l, threading ); // w = D*wy
-      if ( g.global_shift != 0.0 ) {
-        int startx, endx;
-        compute_core_start_end_custom( p->v_start, p->v_end, &startx, &endx, l, threading, l->num_lattice_site_var );
-        vector_PRECISION_saxpy( p->w, p->w, V[j], g.global_shift, startx, endx, l );
-      }
+      //if ( g.global_shift != 0.0 ) {
+      //  int startx, endx;
+      //  compute_core_start_end_custom( p->v_start, p->v_end, &startx, &endx, l, threading, l->num_lattice_site_var );
+      //  vector_PRECISION_saxpy( p->w, p->w, V[j], g.global_shift, startx, endx, l );
+      //}
+#ifdef POLYPREC
     }
+#endif
 
     if ( shift ) vector_PRECISION_saxpy( w, w, V[j], shift, start, end, l );
   }
@@ -1062,6 +1072,7 @@ int arnoldi_step_PRECISION( vector_PRECISION *V, vector_PRECISION *Z, vector_PRE
   }
   END_MASTER(threading)
   SYNC_MASTER_TO_ALL(threading)
+  SYNC_CORES(threading)
   for( i=0; i<=j; i++ )
     vector_PRECISION_saxpy( w, w, V[i], -H[j][i], start, end, l );
 
@@ -1069,13 +1080,22 @@ int arnoldi_step_PRECISION( vector_PRECISION *V, vector_PRECISION *Z, vector_PRE
 #else
 
   double t2x = 0.0;
+  START_MASTER(threading)
   t2x -= MPI_Wtime();
+  END_MASTER(threading)
   for ( i=0;i<j+1;i++ ) {
-    H[j][i] = global_inner_product_PRECISION( V[i], w, start, end, l, threading );
+    //H[j][i] = global_inner_product_PRECISION( V[i], w, start, end, l, threading );
+    complex_double dot_prod_buff = global_inner_product_PRECISION( V[i], w, p->v_start, p->v_end, l, threading );
+    START_MASTER(threading)
+    H[j][i] = dot_prod_buff;
+    END_MASTER(threading)
+    SYNC_MASTER_TO_ALL(threading)
     vector_PRECISION_saxpy( w, w, V[i], -H[j][i], start, end, l );
   }
+  START_MASTER(threading)
   t2x += MPI_Wtime();
   printf0( "time spent on orthogonalizations in Arnoldi : %.12f\n",t2x );
+  END_MASTER(threading)
 
 #endif
 
@@ -1106,7 +1126,8 @@ int arnoldi_step_PRECISION( vector_PRECISION *V, vector_PRECISION *Z, vector_PRE
   H[j][j+1] = tmp2;
   END_MASTER(threading)
   SYNC_MASTER_TO_ALL(threading)
-  
+  SYNC_CORES(threading)
+
   // V_j+1 = w / H_j+1,j
   if ( cabs_PRECISION( H[j][j+1] ) > 1e-15 )
     vector_PRECISION_real_scale( V[j+1], w, 1/H[j][j+1], start, end, l );
@@ -1118,11 +1139,14 @@ int arnoldi_step_PRECISION( vector_PRECISION *V, vector_PRECISION *Z, vector_PRE
 
   // copy of Hesselnberg matrix
 #if defined(POLYPREC)
+  START_MASTER(threading)
   if (l->dup_H==1 )
   {
     memcpy( p->polyprec_PRECISION->eigslvr.Hc[jx], H[jx], sizeof(complex_PRECISION)*(jx+2) );
     memset( p->polyprec_PRECISION->eigslvr.Hc[jx]+jx+2, 0.0, sizeof(complex_PRECISION)*(p->restart_length + 1 - (jx+2)) );
   }
+  END_MASTER(threading)
+  SYNC_MASTER_TO_ALL(threading)
 #endif
 
   return 1;

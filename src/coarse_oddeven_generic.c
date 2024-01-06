@@ -432,10 +432,9 @@ void coarse_oddeven_free_PRECISION( level_struct *l ) {
   for ( mu=0; mu<4; mu++ ) {
     bs = 1;
     for ( nu=0; nu<4; nu++ )
-      if ( mu != nu )
-        bs *= ll[nu];
-      
-      FREE( l->oe_op_PRECISION.c.boundary_table[2*mu], int, bs );
+      if ( mu != nu ) bs *= ll[nu];
+
+    FREE( l->oe_op_PRECISION.c.boundary_table[2*mu], int, bs );
     l->oe_op_PRECISION.c.boundary_table[2*mu+1] = NULL;
   }
   

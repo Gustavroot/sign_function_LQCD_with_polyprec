@@ -80,36 +80,103 @@ int wilson_driver( vector_double solution, vector_double source, level_struct *l
 
   vector_double_copy( rhs, source, start, end, l );
 
+  int save_solution_to_file = g.save_solution_to_file; //0;
+  int check_sign2_eq_Id = g.check_sign2_eq_Id; //1;
+  //char save_solution_filename[] = g.; //"sign_invsqrt_solution.dat";
+  char save_solution_filename[500]; strcpy( save_solution_filename,g.save_solution_filename );
+
+  if ( g.check_with_large_vecs==1 ) {
+    START_MASTER(threading)
+    lime_read_vector( (double*)g.p.invsqrt_sol,save_solution_filename );
+    END_MASTER(threading)
+    SYNC_MASTER_TO_ALL(threading)
+  }
+
   // simple timings test
   timings_probe_matvec_vs_dotprod( l, threading );
 
 #ifdef POLYPREC
   // construct the polynomial preconditioner and test it
-  set_up_polynomial_and_test_double( &(g.p), l, threading );
+  if ( g.use_polyprec==1 ) {
+    int buffz = g.check_do;
+    START_MASTER(threading)
+    g.check_do = 0;
+    END_MASTER(threading)
+    SYNC_MASTER_TO_ALL(threading)
+
+    set_up_polynomial_and_test_double( &(g.p), l, threading );
+
+    START_MASTER(threading)
+    g.check_do = buffz;
+    END_MASTER(threading)
+    SYNC_MASTER_TO_ALL(threading)
+  }
 #endif
 
   // calling a simple Arnoldi
-  //check_arnoldi_double( &(g.p), l, threading );
+  int buffx = g.p.restart_length;
+  int buffy = g.check_do;
+  START_MASTER(threading)
+  g.p.restart_length = 10;
+  g.check_do = 0;
+  END_MASTER(threading)
+  SYNC_MASTER_TO_ALL(threading)
+  check_arnoldi_double( &(g.p), l, threading );
+  START_MASTER(threading)
+  g.p.restart_length = buffx;
+  g.check_do = buffy;
+  END_MASTER(threading)
+  SYNC_MASTER_TO_ALL(threading)
 
   // print matrix out, to do checks in MATLAB
   //export_matrix_double( &(g.p), l, threading );
 
+  if ( g.read_rhs_from_file==1 ) {
+    START_MASTER(threading)
+    lime_read_vector( (double*)g.p.b,g.read_rhs_filename );
+    END_MASTER(threading)
+    SYNC_MASTER_TO_ALL(threading)
+  }
+
   // computing the sign function
   sign_function_double( &(g.p), l, threading );
 
-  // and repeat, to verify that sign^2=1
+  if ( save_solution_to_file==1 ) {
+    // save g.p.x
+    START_MASTER(threading)
+    lime_write_vector( (double*)g.p.x,save_solution_filename );
+    END_MASTER(threading)
+    SYNC_MASTER_TO_ALL(threading)
 
-  // for this, first back up the RHS from the previous "solve"
-  vector_double_copy( g.p.wz, g.p.b, start, end, l );
-  // then, set the RHS to the previous solution
-  vector_double_copy( g.p.b, g.p.x, start, end, l );
-  // then, "solve"
-  sign_function_double( &(g.p), l, threading );
-  // after that sign function application, x should be "similar" to wz
-  double norm_bef = global_norm_double( g.p.wz, g.p.v_start, g.p.v_end, l, threading );
-  vector_double_minus( g.p.wz, g.p.wz, g.p.x, start, end, l );
-  double norm_aft = global_norm_double( g.p.wz, g.p.v_start, g.p.v_end, l, threading );
-  printf0( "relative error in sign^2=1 : %.8e\n",norm_aft/norm_bef );
+    //START_MASTER(threading)
+    //lime_read_vector( (double*)g.p.r,save_solution_filename );
+    //END_MASTER(threading)
+    //SYNC_MASTER_TO_ALL(threading)
+
+    //vector_double_minus( g.p.r, g.p.r, g.p.x, start, end, l );
+    //double normbff = global_norm_double( g.p.r, g.p.v_start, g.p.v_end, l, threading );
+    //START_MASTER(threading)
+    //printf0( "diff vecs = %.12f\n",normbff );
+    //END_MASTER(threading)
+  }
+
+  if ( check_sign2_eq_Id==1 ) {
+    // and repeat, to verify that sign^2=1
+
+    // for this, first back up the RHS from the previous "solve"
+    vector_double_copy( g.p.wz, g.p.b, start, end, l );
+    // then, set the RHS to the previous solution
+    vector_double_copy( g.p.b, g.p.x, start, end, l );
+    // then, "solve"
+    sign_function_double( &(g.p), l, threading );
+    // after that sign function application, x should be "similar" to wz
+    double norm_bef = global_norm_double( g.p.wz, g.p.v_start, g.p.v_end, l, threading );
+    vector_double_minus( g.p.wz, g.p.wz, g.p.x, start, end, l );
+    double norm_aft = global_norm_double( g.p.wz, g.p.v_start, g.p.v_end, l, threading );
+    START_MASTER(threading)
+    printf0( "relative error in sign^2=1 : %.8e\n",norm_aft/norm_bef );
+    END_MASTER(threading)
+  }
 
   /*
 

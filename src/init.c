@@ -863,10 +863,35 @@ void read_solver_parameters( FILE *in, level_struct *l ) {
   save_pt = &(g.polyprec_d); g.polyprec_d = 5;
   read_parameter( &save_pt, "polyprec_d:", "%d", 1, in, _DEFAULT_SET );
   g.polyprec_d++;
+#endif
+
+  save_pt = &(g.read_rhs_from_file); g.read_rhs_from_file = 0;
+  read_parameter( &save_pt, "read rhs from file:", "%d", 1, in, _DEFAULT_SET );
+  save_pt = &(g.read_rhs_filename);
+  read_parameter( &save_pt, "read rhs filename:", "%s", 1, in, _DEFAULT_SET );
+
+  save_pt = &(g.check_k); g.check_k = 5;
+  read_parameter( &save_pt, "check k:", "%d", 1, in, _DEFAULT_SET );
+  save_pt = &(g.check_freq); g.check_freq = 10;
+  read_parameter( &save_pt, "check freq:", "%d", 1, in, _DEFAULT_SET );
+  save_pt = &(g.check_at_end); g.check_at_end = 1;
+  read_parameter( &save_pt, "check at end:", "%d", 1, in, _DEFAULT_SET );
+  save_pt = &(g.check_do); g.check_do = 1;
+  read_parameter( &save_pt, "check do:", "%d", 1, in, _DEFAULT_SET );
+  save_pt = &(g.check_with_large_vecs); g.check_with_large_vecs = 1;
+  read_parameter( &save_pt, "check with large vecs:", "%d", 1, in, _DEFAULT_SET );
+
+  save_pt = &(g.save_solution_to_file); g.save_solution_to_file = 0;
+  read_parameter( &save_pt, "save solution to file:", "%d", 1, in, _DEFAULT_SET );
+  save_pt = &(g.check_sign2_eq_Id); g.check_sign2_eq_Id = 1;
+  read_parameter( &save_pt, "check sign2 eq Id:", "%d", 1, in, _DEFAULT_SET );
+  save_pt = &(g.save_solution_filename);
+  read_parameter( &save_pt, "save solution filename:", "%s", 1, in, _DEFAULT_SET );
+  save_pt = &(g.read_solution_from_file); g.read_solution_from_file = 0;
+  read_parameter( &save_pt, "read solution from file:", "%d", 1, in, _DEFAULT_SET );
 
   save_pt = &(g.use_polyprec); g.use_polyprec = 1;
   read_parameter( &save_pt, "use_polyprec:", "%d", 1, in, _DEFAULT_SET );
-#endif
 
   save_pt = &(g.global_shift); g.global_shift = 0.0;
   read_parameter( &save_pt, "global shift:", "%lf", 1, in, _NO_DEFAULT_SET );

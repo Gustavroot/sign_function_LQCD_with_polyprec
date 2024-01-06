@@ -35,7 +35,7 @@ PetscErrorCode MatInvSqrt(FN fn,Mat A,PetscViewer viewer,PetscBool verbose,Petsc
   PetscScalar    tau,eta,*Sx;
   //PetscComplex   *Sx;
   PetscReal      nrm;
-  PetscBool      set,flg;
+  //PetscBool      set,flg;
   PetscInt       n;
   Mat            S,R,Acopy;
   Vec            v,f0;
@@ -102,7 +102,7 @@ PetscErrorCode _small_dense_invsqrt( int argcx,char **argvx, complex_double **Hi
 {
   FN             fn;
   Mat            A=NULL;
-  PetscScalar    x,y,yp,*As;
+  PetscScalar    *As;
   //PetscComplex   *As;
   PetscViewer    viewer;
   PetscInt       i,j;
@@ -154,8 +154,8 @@ PetscErrorCode _small_dense_invsqrt( int argcx,char **argvx, complex_double **Hi
 void small_dense_invsqrt( complex_double **His, complex_double **H, int n ) {
 
   int i,j,k;
-  PetscRandom    myrand;
-  double         v;
+  //PetscRandom    myrand;
+  //double         v;
 
   //complex_double **His;
   //gmres_double_struct *p = &(g.p);
@@ -188,7 +188,7 @@ void small_dense_invsqrt( complex_double **His, complex_double **H, int n ) {
 
   // 'input' options in dynamic form
   strcpy( argvx[0],str0 );
-  strcpy( argvx[1],str2 );
+  strcpy( argvx[1],str1 );
   strcpy( argvx[2],str2 );
   strcpy( argvx[3],str3 );
   strcpy( argvx[4],str4 );
@@ -269,7 +269,7 @@ void small_dense_invsqrt( complex_double **His, complex_double **H, int n ) {
   free( B );
   free( C );
 
-  return His;
+  //return His;
 }
 
 /*TEST

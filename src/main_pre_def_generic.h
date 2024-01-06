@@ -124,7 +124,7 @@
 #endif
 
   typedef struct {
-    vector_PRECISION x, b, r, w, wy, wx, wz, *V, *Z;
+    vector_PRECISION x, b, r, w, wy, wx, wz, *V, *Z, invsqrt_sol;
     complex_PRECISION **H, *y, *gamma, *c, *s, shift, **Hb1, **Hb2;
     config_PRECISION *D, *clover;
     operator_PRECISION_struct *op;

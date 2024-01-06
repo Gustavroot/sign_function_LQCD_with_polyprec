@@ -26,46 +26,62 @@
 
 void set_up_polynomial_and_test_PRECISION( gmres_PRECISION_struct *p, level_struct *l, struct Thread *threading ) {
 
-  int i;
+  int i,start,end;
+
+  compute_core_start_end( p->v_start, p->v_end, &start, &end, l, threading);
 
   // setting the degree of the polynomial from the global struct g
   //l->p_PRECISION.polyprec_PRECISION.d_poly = g.polyprec_d;
+  START_MASTER(threading)
   p->polyprec_PRECISION->d_poly = g.polyprec_d;
 
   printf0(GREEN"\n--------------------------------------------------------\n");
   printf0("***************** BUILDING POLYNOMIAL ******************\n");
   printf0("--------------------------------------------------------\n\n"RESET);
+  END_MASTER(threading)
+
+  SYNC_MASTER_TO_ALL(threading)
+  SYNC_CORES(threading)
 
   re_construct_lejas_PRECISION( l, threading );
 
   //p->preconditioner = p->polyprec_PRECISION.preconditioner;
 
+  START_MASTER(threading)
   printf0( "the Lejas have been computed, ordered appropriately and stored\n" );
 
   printf0(GREEN"\n--------------------------------------------------------\n");
   printf0("***************** CHECKING POLYNOMIAL ******************\n");
   printf0("--------------------------------------------------------\n\n"RESET);
+  END_MASTER(threading)
 
   for (i=0;i<10;i++) {
     // set p->b to random and apply D to it
+    START_MASTER(threading)
     vector_PRECISION_define_random( p->b, p->v_start, p->v_end, l );
+    END_MASTER(threading)
+    SYNC_MASTER_TO_ALL(threading)
+    SYNC_CORES(threading)
+
     apply_operator_PRECISION( p->wy, p->b, p, l, threading );
     apply_operator_PRECISION( p->w, p->wy, p, l, threading );
-    if ( g.global_shift != 0.0 ) {
-      int startx, endx;
-      compute_core_start_end_custom( p->v_start, p->v_end, &startx, &endx, l, threading, l->num_lattice_site_var );
-      vector_PRECISION_saxpy( p->w, p->w, p->b, g.global_shift, startx, endx, l );
-    }
+    //if ( g.global_shift != 0.0 ) {
+    //  int startx, endx;
+    //  compute_core_start_end_custom( p->v_start, p->v_end, &startx, &endx, l, threading, l->num_lattice_site_var );
+    //  vector_PRECISION_saxpy( p->w, p->w, p->b, g.global_shift, startx, endx, l );
+    //}
     // and then p(D), which should approximately restore the original vector
     apply_polyprec_PRECISION( p->wy, NULL, p->w, 0, l, threading );
     apply_polyprec_PRECISION( p->x, NULL, p->wy, 0, l, threading );
 
     // check the relative error
-    vector_PRECISION_minus( p->x, p->x, p->b, p->v_start, p->v_end, l );
+    vector_PRECISION_minus( p->x, p->x, p->b, start, end, l );
     double normx = global_norm_PRECISION( p->x, p->v_start, p->v_end, l, threading );
     double normb = global_norm_PRECISION( p->b, p->v_start, p->v_end, l, threading );
 
+    START_MASTER(threading)
     printf0( "check #%d, relative error : %f\n",i,normx/normb );
+    END_MASTER(threading)
   }
 }
 
@@ -248,7 +264,7 @@ int update_lejas_PRECISION( gmres_PRECISION_struct *p, level_struct *l, struct T
   vector_PRECISION buff4;
 
   int buff1;
-  int fgmres_itersx;
+  //int fgmres_itersx;
 
   buff0 = p->b;
   buff1 = p->restart_length;
@@ -263,20 +279,22 @@ int update_lejas_PRECISION( gmres_PRECISION_struct *p, level_struct *l, struct T
   p->x = p->polyprec_PRECISION->xtmp;
   l->dup_H = 1;
   vector_PRECISION_define_random( random_rhs, p->v_start, p->v_end, l );
+
+  p->polyprec_PRECISION->apply = 0;
   END_MASTER(threading)
 
   SYNC_MASTER_TO_ALL(threading)
   SYNC_CORES(threading)
 
-  p->polyprec_PRECISION->apply = 0;
   //fgmres_itersx = fgmres_PRECISION(p, l, threading);
   arnoldi_double( p,l,threading );
-  p->polyprec_PRECISION->apply = 1;
 
   SYNC_MASTER_TO_ALL(threading)
   SYNC_CORES(threading)
 
   START_MASTER(threading)
+  p->polyprec_PRECISION->apply = 1;
+
   l->dup_H = 0;
   p->b = buff0;
   p->restart_length = buff1;
@@ -356,11 +374,11 @@ void apply_polyprec_PRECISION( vector_PRECISION phi, vector_PRECISION Dphi, vect
     //apply_operator_PRECISION(temp, product, &l->p_PRECISION, l, threading);
     apply_operator_PRECISION(phi, product, p, l, threading);
     apply_operator_PRECISION(temp, phi, p, l, threading);
-    if ( g.global_shift != 0.0 ) {
-      int startx, endx;
-      compute_core_start_end_custom( p->v_start, p->v_end, &startx, &endx, l, threading, l->num_lattice_site_var );
-      vector_PRECISION_saxpy( temp, temp, product, g.global_shift, startx, endx, l );
-    }
+    //if ( g.global_shift != 0.0 ) {
+    //  int startx, endx;
+    //  compute_core_start_end_custom( p->v_start, p->v_end, &startx, &endx, l, threading, l->num_lattice_site_var );
+    //  vector_PRECISION_saxpy( temp, temp, product, g.global_shift, startx, endx, l );
+    //}
 
     vector_PRECISION_saxpy(product, temp, product, -lejas[i-1], start, end, l);
     vector_PRECISION_saxpy(accum_prod, accum_prod, product, coeffs[i], start, end, l);

@@ -30,6 +30,9 @@
   static inline void apply_operator_PRECISION( vector_PRECISION output, vector_PRECISION input, gmres_PRECISION_struct *p, level_struct *l, struct Thread *threading ) {
     p->eval_operator( output, input, p->op, l, threading );
 
+    SYNC_MASTER_TO_ALL(threading)
+    SYNC_CORES(threading)
+
     if ( p->shift ) {
       int start, end;
       compute_core_start_end_custom(p->v_start, p->v_end, &start, &end, l, threading, l->num_lattice_site_var );
@@ -38,6 +41,9 @@
 
 #ifdef USE_OVERLAP
     gamma5_PRECISION( output, output, l, threading );
+
+    SYNC_MASTER_TO_ALL(threading)
+    SYNC_CORES(threading)
 #endif
 
     //if ( g.global_shift != 0.0 ) {
