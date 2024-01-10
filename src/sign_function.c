@@ -95,12 +95,14 @@ void check_rel_err_conseq( int j, gmres_double_struct *p, level_struct *l, struc
   if ( g.use_polyprec==1 && check_at_end==0 ) {
     check_fctr /= p->polyprec_double->d_poly;
     check_fctr++;
+    k /= p->polyprec_double->d_poly;
+    k++;
   }
 #endif
 
   //if ( j<1450 ) { return; }
 
-  if ( j>1 && (j+1)%check_fctr==0 ) {
+  if ( (j+1)>k && (j+1)%check_fctr==0 ) {
 
     printf0( "CHECKING at j+1=%d\n",j+1 );
 

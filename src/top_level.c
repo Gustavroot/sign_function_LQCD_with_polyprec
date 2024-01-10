@@ -163,6 +163,11 @@ int wilson_driver( vector_double solution, vector_double source, level_struct *l
   if ( check_sign2_eq_Id==1 ) {
     // and repeat, to verify that sign^2=1
 
+    START_MASTER(threading)
+    g.check_with_large_vecs = 0;
+    END_MASTER(threading)
+    SYNC_MASTER_TO_ALL(threading)
+
     // for this, first back up the RHS from the previous "solve"
     vector_double_copy( g.p.wz, g.p.b, start, end, l );
     // then, set the RHS to the previous solution

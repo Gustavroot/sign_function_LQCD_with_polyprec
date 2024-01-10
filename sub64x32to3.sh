@@ -7,7 +7,7 @@
 #SBATCH --threads-per-core=1
 #SBATCH --output=mpi_out_%j.txt
 #SBATCH --error=mpi_err_%j.txt
-#SBATCH --time=00:59:00
+#SBATCH --time=04:59:00
 #SBATCH --partition=batch
 
 export SRUN_CPUS_PER_TASK=${SLURM_CPUS_PER_TASK}
