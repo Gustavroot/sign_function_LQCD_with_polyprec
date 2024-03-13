@@ -310,7 +310,7 @@ TEST*/
 PetscErrorCode eig_op( Mat A, Vec x, Vec y )
 {
   g.eig_ctr++;
-  printf0( "Call to eig_op number %d\n",g.eig_ctr );
+  printf0( "Call to eig_op # %d\n",g.eig_ctr );
 
   void              *ctx;
   //int                lo,i,j;
@@ -377,7 +377,50 @@ int _eig_via_slepc( int argc, char **argv, level_struct *l ){
   PetscCall(EPSSetFromOptions(eps));
 
   // solve the eigensystem
+  printf0(GREEN"\n--------------------------------------------------------\n");
+  printf0("********************** EIGENSOLVE **********************\n");
+  printf0("--------------------------------------------------------\n\n"RESET);
   PetscCall(EPSSolve(eps));
+
+  // save the computed right eigenvectors
+
+  gmres_double_struct *p = &(g.p);
+  int nconv,i;
+  EPSGetConverged(eps,&nconv);
+  nev = MIN(nconv,g.number_of_lr_deflation_vecs);
+  g.number_of_lr_deflation_vecs = nev;
+  if ( g.number_of_lr_deflation_vecs==0 ) { error0( "No deflation vectors converged!\n" ); }
+  Vec xbuff;
+  PetscCall( MatCreateVecs( A, &xbuff, NULL ) );
+  PetscCall(VecAssemblyBegin(xbuff));
+  PetscCall(VecAssemblyEnd(xbuff));
+  //PetscCall(EPSSetInitialSpace(eps,1,&xbuff));
+
+  int vl = p->polyprec_double->syst_size;
+  MALLOC( p->right_def_vecs, complex_double*, g.number_of_lr_deflation_vecs );
+  MALLOC( p->right_def_vecs[0], complex_double, g.number_of_lr_deflation_vecs * vl );
+  for ( i=1;i<g.number_of_lr_deflation_vecs;i++ ){
+    p->right_def_vecs[i] = p->right_def_vecs[0] + i*vl;
+  }
+  MALLOC( p->def_evals, PetscScalar, g.number_of_lr_deflation_vecs );
+
+  PetscScalar *xbuff_raw;
+  int start, end;
+
+  for ( i=0;i<g.number_of_lr_deflation_vecs;i++ ) {
+    EPSGetEigenpair( eps, i, p->def_evals+i, NULL, xbuff, NULL );
+
+    PetscCall(VecGetArray(xbuff,&xbuff_raw));
+
+    // transfer data to DDalphaAMG
+    start = p->v_start;
+    end = p->v_end;
+    vector_double_copy( p->right_def_vecs[i], xbuff_raw, start, end, l );
+
+    PetscCall(VecRestoreArray(xbuff,&xbuff_raw));
+  }
+
+  PetscCall(VecDestroy(&xbuff));
 
   // optional: Get some information from the solver and display it
   PetscCall(EPSGetType(eps,&type));
@@ -402,6 +445,29 @@ int _eig_via_slepc( int argc, char **argv, level_struct *l ){
   PetscCall(MatDestroy(&A));
   //PetscCall(VecDestroy(&v0));
   PetscCall(SlepcFinalize());
+
+  // check a-la DDalphaAMG
+
+  printf0( "\nNow, we check eigen-residuals with DDalphaAMG functions only\n\n" );
+
+  for ( i=0;i<g.number_of_lr_deflation_vecs;i++ ) {
+
+    start = p->v_start;
+    end = p->v_end;
+
+    apply_operator_double( p->wy, p->right_def_vecs[i], p, l, g.threading ); // wx = D*wy
+    apply_operator_double( p->wx, p->wy, p, l, g.threading ); // w = D*wx
+    sign_function_prec_pow2( p->wy, p->wx, p, l, g.threading ); // Z[j] = q(D)*V[j]
+    sign_function_prec_pow2( p->r, p->wy, p, l, g.threading ); // wy = q(D)*Z[j]
+
+    vector_double_saxpy( p->r, p->r, p->right_def_vecs[i], -p->def_evals[i], start, end, l );
+
+    double norm_num = global_norm_double( p->r, start, end, l, g.threading );
+    double norm_den = global_norm_double( p->right_def_vecs[i], start, end, l, g.threading );
+
+    printf0( "Relative eigen-residual of eigenpair # %d : %e\n", i, norm_num/norm_den/cabs_double(p->def_evals[i]) );
+
+  }
 
   return 0;
 }

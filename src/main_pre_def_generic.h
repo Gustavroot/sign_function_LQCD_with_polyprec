@@ -138,6 +138,11 @@
 #endif
     void (*preconditioner)();
     void (*eval_operator)();
+
+    // LR deflation vectors and evals
+    vector_PRECISION *right_def_vecs;
+    vector_PRECISION *left_def_vecs;
+    complex_PRECISION* def_evals;
   } gmres_PRECISION_struct;
 
   typedef struct {

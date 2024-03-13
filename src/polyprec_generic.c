@@ -56,8 +56,6 @@ void set_up_polynomial_and_test_PRECISION( gmres_PRECISION_struct *p, level_stru
   END_MASTER(threading)
 
   for (i=0;i<10;i++) {
-    // disabling poly check atm
-    break;
 
     // set p->b to random and apply D to it
     START_MASTER(threading)

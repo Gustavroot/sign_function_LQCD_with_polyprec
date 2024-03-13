@@ -302,6 +302,9 @@ void fgmres_PRECISION_struct_alloc( int m, int n, int vl, PRECISION tol, const i
   p->polyprec_PRECISION->apply = 1;
 #endif
 
+  // number of converged LR deflation vectors
+  //g.number_of_lr_deflation_vecs = 0;
+
 }
 
 
@@ -383,6 +386,11 @@ void fgmres_PRECISION_struct_free( gmres_PRECISION_struct *p, level_struct *l ) 
   FREE( p->polyprec_float, polyprec_float_struct, 1);
 #endif
 
+  if ( g.number_of_lr_deflation_vecs!=0 ) {
+    FREE( p->right_def_vecs[0], complex_PRECISION, g.number_of_lr_deflation_vecs * vl );
+    FREE( p->right_def_vecs, complex_PRECISION*, g.number_of_lr_deflation_vecs );
+    FREE( p->def_evals, complex_PRECISION, g.number_of_lr_deflation_vecs );
+  }
 }
 
 
