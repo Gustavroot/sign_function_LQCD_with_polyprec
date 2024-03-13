@@ -6,3 +6,5 @@ mpi_out*
 trash/
 
 dependencies/qio/
+dependencies/lapack-3.9.0.tar.gz
+dependencies/slepc.tar.gz

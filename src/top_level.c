@@ -62,7 +62,7 @@ void rhs_define( vector_double rhs, level_struct *l, struct Thread *threading ) 
 
 
 int wilson_driver( vector_double solution, vector_double source, level_struct *l, struct Thread *threading ) {
-  
+
   int iter = 0, start = threading->start_index[l->depth], end = threading->end_index[l->depth];
   
   vector_double rhs = g.mixed_precision==2?g.p_MP.dp.b:g.p.b;
@@ -112,6 +112,11 @@ int wilson_driver( vector_double solution, vector_double source, level_struct *l
     SYNC_MASTER_TO_ALL(threading)
   }
 #endif
+
+  g.threading = threading;
+  g.eig_ctr = 0;
+  eig_via_slepc( l );
+  return 0;
 
   // calling a simple Arnoldi
   int buffx = g.p.restart_length;

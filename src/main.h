@@ -439,6 +439,10 @@
     int read_rhs_from_file;
     char read_rhs_filename[500];
 
+    struct Thread *threading;
+
+    int eig_ctr;
+
   } global_struct;
 
   extern global_struct g;

@@ -24,4 +24,6 @@
 
   void small_dense_invsqrt( complex_double** His, complex_double** H, int n );
 
+  void eig_via_slepc();
+
 #endif

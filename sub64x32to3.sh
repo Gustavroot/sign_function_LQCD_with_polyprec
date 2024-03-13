@@ -1,9 +1,9 @@
 #!/bin/bash
 
 #SBATCH --account=mul-tra
-#SBATCH --nodes=64
-#SBATCH --ntasks-per-node=2
-#SBATCH --cpus-per-task=24
+#SBATCH --nodes=8
+#SBATCH --ntasks-per-node=32
+#SBATCH --cpus-per-task=1
 #SBATCH --threads-per-core=1
 #SBATCH --output=mpi_out_%j.txt
 #SBATCH --error=mpi_err_%j.txt
