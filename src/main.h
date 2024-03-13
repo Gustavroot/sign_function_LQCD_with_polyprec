@@ -430,7 +430,7 @@
     double chem_potential,chem_potential_fctr_min,chem_potential_fctr_pls;
 #endif
 
-    int check_k,check_freq,check_at_end,check_do;
+    int check_k,check_freq,check_at_end,check_do,number_of_lr_deflation_vecs;
 
     int save_solution_to_file,check_sign2_eq_Id,read_solution_from_file;
     char save_solution_filename[500];

@@ -313,7 +313,7 @@ PetscErrorCode eig_op( Mat A, Vec x, Vec y )
   printf0( "Call to eig_op number %d\n",g.eig_ctr );
 
   void              *ctx;
-  int                lo,i,j;
+  //int                lo,i,j;
   const PetscScalar *px;
   PetscScalar       *py;
   level_struct *l;
@@ -325,10 +325,10 @@ PetscErrorCode eig_op( Mat A, Vec x, Vec y )
   PetscCall(VecGetArrayRead(x,&px));
   PetscCall(VecGetArray(y,&py));
 
-  int start,end;
+  //int start,end;
   gmres_double_struct *p = &(g.p);
-  start = p->v_start;
-  end = p->v_end;
+  //start = p->v_start;
+  //end = p->v_end;
 
   // this mimics the identity matrix
   //vector_double_copy( py, px, start, end, l );
@@ -347,21 +347,19 @@ PetscErrorCode eig_op( Mat A, Vec x, Vec y )
 
 int _eig_via_slepc( int argc, char **argv, level_struct *l ){
 
-  Vec            v0;              /* initial vector */
+  //Vec            v0;              /* initial vector */
   Mat            A;               /* operator matrix */
   EPS            eps;             /* eigenproblem solver context */
   EPSType        type;
-  PetscInt       N,nev;
+  PetscInt       nev;
   level_struct   *lx = l;
-  PetscMPIInt    rank;
+  //PetscMPIInt    rank;
   PetscBool      terse;
 
   PetscFunctionBeginUser;
   PetscCall(SlepcInitialize(&argc,&argv,(char*)0,help));
 
   // create the shell for the operator
-
-  gmres_double_struct *p = &(g.p);
 
   int nx = l->inner_vector_size;
   int Nx = nx*g.num_processes;
@@ -424,7 +422,7 @@ void eig_via_slepc( level_struct *l ){
   char str0[100] = "a.out";
   char str1[100] = "-eps_smallest_magnitude";
   char str2[100] = "-eps_nev";
-  char str3[100] = "5";
+  char str3[100]; sprintf(str3,"%d",g.number_of_lr_deflation_vecs);
   char str4[100] = "-eps_two_sided";
   char str5[100] = "0";
   char str6[100] = "-eps_krylovschur_locking";

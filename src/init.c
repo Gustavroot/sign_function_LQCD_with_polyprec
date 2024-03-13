@@ -872,6 +872,8 @@ void read_solver_parameters( FILE *in, level_struct *l ) {
 
   save_pt = &(g.check_k); g.check_k = 5;
   read_parameter( &save_pt, "check k:", "%d", 1, in, _DEFAULT_SET );
+  save_pt = &(g.number_of_lr_deflation_vecs); g.number_of_lr_deflation_vecs = 5;
+  read_parameter( &save_pt, "number of lr deflation vecs:", "%d", 1, in, _DEFAULT_SET );
   save_pt = &(g.check_freq); g.check_freq = 10;
   read_parameter( &save_pt, "check freq:", "%d", 1, in, _DEFAULT_SET );
   save_pt = &(g.check_at_end); g.check_at_end = 1;
