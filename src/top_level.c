@@ -117,6 +117,8 @@ int wilson_driver( vector_double solution, vector_double source, level_struct *l
 
   g.threading = threading;
   g.eig_ctr = 0;
+  g.eigH_ctr = 0;
+  g.eigT_ctr = 0;
   eig_via_slepc( l );
   return 0;
 

@@ -360,8 +360,8 @@ void QQpQpQ_H( vector_double py, vector_double px, gmres_double_struct *p, level
 
 PetscErrorCode eig_op_T( Mat A, Vec x, Vec y )
 {
-  g.eig_ctr++;
-  printf0( "Call to eig_op # %d\n",g.eig_ctr );
+  g.eigT_ctr++;
+  printf0( "Call to eig_op_T # %d\n",g.eigT_ctr );
 
   void              *ctx;
   const PetscScalar *px;
@@ -395,8 +395,8 @@ PetscErrorCode eig_op_T( Mat A, Vec x, Vec y )
 
 PetscErrorCode eig_op_H( Mat A, Vec x, Vec y )
 {
-  g.eig_ctr++;
-  printf0( "Call to eig_op # %d\n",g.eig_ctr );
+  g.eigH_ctr++;
+  printf0( "Call to eig_op_H # %d\n",g.eigH_ctr );
 
   void              *ctx;
   const PetscScalar *px;

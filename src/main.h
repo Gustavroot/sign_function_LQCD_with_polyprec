@@ -441,7 +441,7 @@
 
     struct Thread *threading;
 
-    int eig_ctr;
+    int eig_ctr, eigH_ctr, eigT_ctr;
     int applying_eig_op_H;
 
   } global_struct;
