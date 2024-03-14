@@ -365,7 +365,11 @@ void apply_polyprec_PRECISION( vector_PRECISION phi, vector_PRECISION Dphi, vect
 
   vector_PRECISION_copy( product, eta, start, end, l );
   vector_PRECISION_define( accum_prod, 0.0, start, end, l );
-  vector_PRECISION_saxpy( accum_prod, accum_prod, product, coeffs[0], start, end, l );
+  if ( g.applying_eig_op_H==1 ) {
+    vector_PRECISION_saxpy( accum_prod, accum_prod, product, conj_PRECISION(coeffs[0]), start, end, l );
+  } else {
+    vector_PRECISION_saxpy( accum_prod, accum_prod, product, coeffs[0], start, end, l );
+  }
 
   for (i = 1; i < d_poly; i++)
   {
@@ -380,9 +384,13 @@ void apply_polyprec_PRECISION( vector_PRECISION phi, vector_PRECISION Dphi, vect
     //  compute_core_start_end_custom( p->v_start, p->v_end, &startx, &endx, l, threading, l->num_lattice_site_var );
     //  vector_PRECISION_saxpy( temp, temp, product, g.global_shift, startx, endx, l );
     //}
-
-    vector_PRECISION_saxpy(product, temp, product, -lejas[i-1], start, end, l);
-    vector_PRECISION_saxpy(accum_prod, accum_prod, product, coeffs[i], start, end, l);
+    if ( g.applying_eig_op_H==1 ) {
+      vector_PRECISION_saxpy(product, temp, product, -conj_PRECISION(lejas[i-1]), start, end, l);
+      vector_PRECISION_saxpy(accum_prod, accum_prod, product, conj_PRECISION(coeffs[i]), start, end, l);
+    } else {
+      vector_PRECISION_saxpy(product, temp, product, -lejas[i-1], start, end, l);
+      vector_PRECISION_saxpy(accum_prod, accum_prod, product, coeffs[i], start, end, l);
+    }
   }
 
   vector_PRECISION_copy( phi, accum_prod, start, end, l );

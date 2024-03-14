@@ -285,6 +285,17 @@ void vector_PRECISION_scale( vector_PRECISION z, vector_PRECISION x, complex_PRE
 }
 #endif
 
+void vector_PRECISION_conjugate( vector_PRECISION z, vector_PRECISION x, int start, int end, level_struct *l ) {
+
+  int thread = omp_get_thread_num();
+  if(thread == 0 && start != end)
+  PROF_PRECISION_START( _LA6 );
+
+  VECTOR_FOR( int i=start, i<end, z[i] = conj_PRECISION(x[i]), i++, l );
+
+  if(thread == 0 && start != end)
+  PROF_PRECISION_STOP( _LA6, (double)(end-start)/(double)l->inner_vector_size );
+}
 
 void vector_PRECISION_real_scale( vector_PRECISION z, vector_PRECISION x, complex_PRECISION alpha,
                                   int start, int end, level_struct *l ) {

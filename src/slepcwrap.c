@@ -307,13 +307,98 @@ void small_dense_invsqrt( complex_double **His, complex_double **H, int n ) {
 
 TEST*/
 
+void QQpQpQ( vector_double py, vector_double px, gmres_double_struct *p, level_struct *l ){
+
+  apply_operator_double( p->wy, px, p, l, g.threading ); // wx = D*wy
+  apply_operator_double( p->wx, p->wy, p, l, g.threading ); // w = D*wx
+  sign_function_prec_pow2( p->wy, p->wx, p, l, g.threading ); // Z[j] = q(D)*V[j]
+  sign_function_prec_pow2( py, p->wy, p, l, g.threading ); // wy = q(D)*Z[j]
+
+}
+
 PetscErrorCode eig_op( Mat A, Vec x, Vec y )
 {
   g.eig_ctr++;
   printf0( "Call to eig_op # %d\n",g.eig_ctr );
 
   void              *ctx;
-  //int                lo,i,j;
+  const PetscScalar *px;
+  PetscScalar       *py;
+  level_struct *l;
+  gmres_double_struct *p = &(g.p);
+
+  PetscFunctionBeginUser;
+  PetscCall(MatShellGetContext(A,&ctx));
+  l = (level_struct*)ctx;
+
+  PetscCall(VecGetArrayRead(x,&px));
+  PetscCall(VecGetArray(y,&py));
+
+  QQpQpQ( py, px, p, l );
+
+  PetscCall(VecRestoreArrayRead(x,&px));
+  PetscCall(VecRestoreArray(y,&py));
+  PetscFunctionReturn(PETSC_SUCCESS);
+}
+
+void QQpQpQ_H( vector_double py, vector_double px, gmres_double_struct *p, level_struct *l ){
+
+  // for this Hermitian op, negate the chemical potential
+  g.chem_potential_fctr_min = exp(g.chem_potential);
+  g.chem_potential_fctr_pls = exp(-g.chem_potential);
+
+  g.applying_eig_op_H = 1;
+
+  QQpQpQ( py, px, p, l );
+
+  // for this Hermitian op, restore the chemical potential factors
+  g.chem_potential_fctr_min = exp(-g.chem_potential);
+  g.chem_potential_fctr_pls = exp(g.chem_potential);
+
+  g.applying_eig_op_H = 0;
+}
+
+PetscErrorCode eig_op_T( Mat A, Vec x, Vec y )
+{
+  g.eig_ctr++;
+  printf0( "Call to eig_op # %d\n",g.eig_ctr );
+
+  void              *ctx;
+  const PetscScalar *px;
+  PetscScalar       *py;
+  level_struct *l;
+  int start,end;
+
+  PetscFunctionBeginUser;
+  PetscCall(MatShellGetContext(A,&ctx));
+  l = (level_struct*)ctx;
+
+  PetscCall(VecGetArrayRead(x,&px));
+  PetscCall(VecGetArray(y,&py));
+
+  gmres_double_struct *p = &(g.p);
+  start = p->v_start;
+  end = p->v_end;
+
+  // to apply the transpose, first, conjugate the input
+  vector_double_conjugate( p->w, px, start, end, l );
+
+  QQpQpQ_H( p->w, p->w, p, l );
+
+  // and conjugate again at the end, now the output
+  vector_double_conjugate( py, p->w, start, end, l );
+
+  PetscCall(VecRestoreArrayRead(x,&px));
+  PetscCall(VecRestoreArray(y,&py));
+  PetscFunctionReturn(PETSC_SUCCESS);
+}
+
+PetscErrorCode eig_op_H( Mat A, Vec x, Vec y )
+{
+  g.eig_ctr++;
+  printf0( "Call to eig_op # %d\n",g.eig_ctr );
+
+  void              *ctx;
   const PetscScalar *px;
   PetscScalar       *py;
   level_struct *l;
@@ -325,20 +410,9 @@ PetscErrorCode eig_op( Mat A, Vec x, Vec y )
   PetscCall(VecGetArrayRead(x,&px));
   PetscCall(VecGetArray(y,&py));
 
-  //int start,end;
   gmres_double_struct *p = &(g.p);
-  //start = p->v_start;
-  //end = p->v_end;
 
-  // this mimics the identity matrix
-  //vector_double_copy( py, px, start, end, l );
-
-  //apply_operator_double( py, px, p, l, g.threading ); // p->wy
-
-  apply_operator_double( p->wy, px, p, l, g.threading ); // wx = D*wy
-  apply_operator_double( p->wx, p->wy, p, l, g.threading ); // w = D*wx
-  sign_function_prec_pow2( p->wy, p->wx, p, l, g.threading ); // Z[j] = q(D)*V[j]
-  sign_function_prec_pow2( py, p->wy, p, l, g.threading ); // wy = q(D)*Z[j]
+  QQpQpQ_H( p->w, p->w, p, l );
 
   PetscCall(VecRestoreArrayRead(x,&px));
   PetscCall(VecRestoreArray(y,&py));
@@ -365,6 +439,8 @@ int _eig_via_slepc( int argc, char **argv, level_struct *l ){
   int Nx = nx*g.num_processes;
   PetscCall(MatCreateShell(PETSC_COMM_WORLD,PETSC_DECIDE,PETSC_DECIDE,Nx,Nx,lx,&A));
   PetscCall(MatShellSetOperation(A,MATOP_MULT,(void(*)(void))eig_op));
+  PetscCall(MatShellSetOperation(A,MATOP_MULT_TRANSPOSE,(void(*)(void))eig_op_T));
+  PetscCall(MatShellSetOperation(A,MATOP_MULT_HERMITIAN_TRANSPOSE,(void(*)(void))eig_op_H));
 
   // create eigensolver context
   PetscCall(EPSCreate(PETSC_COMM_WORLD,&eps));
@@ -375,6 +451,17 @@ int _eig_via_slepc( int argc, char **argv, level_struct *l ){
 
   // set solver parameters at runtime
   PetscCall(EPSSetFromOptions(eps));
+
+  //// the following hermiticity check indicates that QQpQpQ_H is indeed the H of
+  //// QQpQpQ
+  //gmres_double_struct *px = &(g.p);
+  //vector_double_define_random( px->x, px->v_start, px->v_end, l );
+  //apply_operator_double( px->w, px->x, px, l, g.threading );
+  //QQpQpQ( px->r, px->x, px, l );
+  //QQpQpQ_H( px->r, px->r, px, l );
+  //complex_double buff_inn_prod = global_inner_product_double( px->x, px->r, px->v_start, px->v_end, l, g.threading );
+  //printf0( "%f + %f\n", CSPLIT(buff_inn_prod) );
+  //return 0;
 
   // solve the eigensystem
   printf0(GREEN"\n--------------------------------------------------------\n");
@@ -402,6 +489,11 @@ int _eig_via_slepc( int argc, char **argv, level_struct *l ){
   for ( i=1;i<g.number_of_lr_deflation_vecs;i++ ){
     p->right_def_vecs[i] = p->right_def_vecs[0] + i*vl;
   }
+  MALLOC( p->left_def_vecs, complex_double*, g.number_of_lr_deflation_vecs );
+  MALLOC( p->left_def_vecs[0], complex_double, g.number_of_lr_deflation_vecs * vl );
+  for ( i=1;i<g.number_of_lr_deflation_vecs;i++ ){
+    p->left_def_vecs[i] = p->left_def_vecs[0] + i*vl;
+  }
   MALLOC( p->def_evals, PetscScalar, g.number_of_lr_deflation_vecs );
 
   PetscScalar *xbuff_raw;
@@ -411,12 +503,19 @@ int _eig_via_slepc( int argc, char **argv, level_struct *l ){
     EPSGetEigenpair( eps, i, p->def_evals+i, NULL, xbuff, NULL );
 
     PetscCall(VecGetArray(xbuff,&xbuff_raw));
-
     // transfer data to DDalphaAMG
     start = p->v_start;
     end = p->v_end;
     vector_double_copy( p->right_def_vecs[i], xbuff_raw, start, end, l );
+    PetscCall(VecRestoreArray(xbuff,&xbuff_raw));
 
+    EPSGetLeftEigenvector(eps, i, xbuff, NULL);
+
+    PetscCall(VecGetArray(xbuff,&xbuff_raw));
+    // transfer data to DDalphaAMG
+    start = p->v_start;
+    end = p->v_end;
+    vector_double_copy( p->left_def_vecs[i], xbuff_raw, start, end, l );
     PetscCall(VecRestoreArray(xbuff,&xbuff_raw));
   }
 
@@ -455,18 +554,27 @@ int _eig_via_slepc( int argc, char **argv, level_struct *l ){
     start = p->v_start;
     end = p->v_end;
 
-    apply_operator_double( p->wy, p->right_def_vecs[i], p, l, g.threading ); // wx = D*wy
-    apply_operator_double( p->wx, p->wy, p, l, g.threading ); // w = D*wx
-    sign_function_prec_pow2( p->wy, p->wx, p, l, g.threading ); // Z[j] = q(D)*V[j]
-    sign_function_prec_pow2( p->r, p->wy, p, l, g.threading ); // wy = q(D)*Z[j]
+    // right eigenvectors
+
+    QQpQpQ( p->r, p->right_def_vecs[i], p, l );
 
     vector_double_saxpy( p->r, p->r, p->right_def_vecs[i], -p->def_evals[i], start, end, l );
 
     double norm_num = global_norm_double( p->r, start, end, l, g.threading );
     double norm_den = global_norm_double( p->right_def_vecs[i], start, end, l, g.threading );
 
-    printf0( "Relative eigen-residual of eigenpair # %d : %e\n", i, norm_num/norm_den/cabs_double(p->def_evals[i]) );
+    printf0( "Relative eigen-residual of right eigenvector # %d : %e\n", i, norm_num/norm_den/cabs_double(p->def_evals[i]) );
 
+    // left eigenvectors
+
+    QQpQpQ_H( p->r, p->left_def_vecs[i], p, l );
+
+    vector_double_saxpy( p->r, p->r, p->left_def_vecs[i], -conj_double(p->def_evals[i]), start, end, l );
+
+    norm_num = global_norm_double( p->r, start, end, l, g.threading );
+    norm_den = global_norm_double( p->left_def_vecs[i], start, end, l, g.threading );
+
+    printf0( "Relative eigen-residual of left eigenvector # %d : %e\n", i, norm_num/norm_den/cabs_double(conj_double(p->def_evals[i])) );
   }
 
   return 0;
@@ -490,7 +598,7 @@ void eig_via_slepc( level_struct *l ){
   char str2[100] = "-eps_nev";
   char str3[100]; sprintf(str3,"%d",g.number_of_lr_deflation_vecs);
   char str4[100] = "-eps_two_sided";
-  char str5[100] = "0";
+  char str5[100] = "1";
   char str6[100] = "-eps_krylovschur_locking";
   char str7[100] = "0";
   char str8[100] = "-ds_parallel";
